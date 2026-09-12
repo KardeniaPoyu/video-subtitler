@@ -21,6 +21,9 @@ env/
 *.srt
 *.ass
 *.vtt
+subtitles_*.json
+generate_*.py
+accurate_*.py
 !tests/assets/*
 
 # Model caches

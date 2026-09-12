@@ -97,12 +97,34 @@ python -m subtitler "D:\videos\demo.mp4"
 python -m subtitler "D:\videos\vlog.mp4" --style shorts_punchy
 ```
 
-#### 3. 启用 AI 大模型校对纠错（修正同音字、专有名词与标点）
+#### 3. 挂载领域知识库与术语库（消除专有名词机翻与口误）
 ```bash
-# 设置任意 OpenAI 兼容的 API Key（支持 DeepSeek, OpenAI, Groq, Ollama 等）
-set OPENAI_API_KEY=your_key_here
-python -m subtitler "D:\videos\interview.mp4" --proofread
+# 挂载游戏与任天堂专库（精准识别《星之卡比》、Switch 2、游戏黑话）
+python -m subtitler "D:\videos\game_direct.mp4" --kb gaming_nintendo --translate zh
+
+# 挂载科技与大模型专库（精准识别 LLM, PyTorch, LoRA, CUDA 等）
+python -m subtitler "D:\videos\ai_talk.mp4" --kb tech_ai
+
+# 挂载动漫与 ACG 专库
+python -m subtitler "D:\videos\anime_review.mp4" --kb anime_acg
 ```
+
+---
+
+### 📚 领域知识库与术语增强系统 (Knowledge Base & Glossary System)
+
+针对语音识别与机翻中最致命的**专有名词识别错误**（如将《星之卡比》听成“卡比/星辰小宝”，将“完全新作”听成“感转进削”），本项目构建了双重知识库增强体系：
+
+1. **ASR 识别前注入（Hotwords Injection）**：自动提取领域高频专有名词，注入 Whisper 的 `initial_prompt`，从源头提高识别准确率；
+2. **同音错词自愈（Phonetic Error Correction）**：基于发音失真映射表，自动校正 ASR 转写文本；
+3. **权威术语表强制对齐（Glossary Alignment）**：翻译时严格锁定官方标准中文译名，彻底告别离谱机翻。
+
+| 内置知识库 | 涵盖领域 | 核心词条举例 |
+| :--- | :--- | :--- |
+| `gaming_nintendo.json` | 游戏、任天堂全家桶、卡比、主机 | 星之卡比、探索发现、超越世界、Switch 2、任天堂直面会、大招压轴 |
+| `tech_ai.json` | 人工智能、大语言模型、软件工程 | ChatGPT、DeepSeek、Faster-Whisper、LoRA量化、模型推理、上下文窗口 |
+| `anime_acg.json` | 动漫番剧、声优、制作委员会、网梗 | 京都动画、ufotable、圣地巡礼、异世界转生、作画崩坏、封神名回 |
+| `vlogger_slang.json` | 视频博主、自媒体、直播杂谈黑话 | 一键三连、订阅点赞、切片剪辑、游戏实况、生放送、高评价 |
 
 #### 4. 生成双语双层字幕（如中英双语）
 ```bash

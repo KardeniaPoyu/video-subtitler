@@ -52,9 +52,15 @@ def main():
         help="Visual style template (e.g. bilibili_standard, shorts_punchy, cinema_minimal)"
     )
     parser.add_argument(
+        "--kb", "--topic",
+        default=None,
+        dest="kb",
+        help="Domain knowledge base / glossary to load (e.g. 'gaming_nintendo', 'tech_ai', 'anime_acg', 'vlogger_slang')"
+    )
+    parser.add_argument(
         "--translate",
         default=None,
-        help="Target language code for AI translation (e.g. 'en', 'zh'). Requires OPENAI_API_KEY."
+        help="Target language code for AI translation (e.g. 'en', 'zh')."
     )
     parser.add_argument(
         "--no-bilingual",
@@ -112,7 +118,8 @@ def main():
             proofread=args.proofread,
             translate=args.translate,
             bilingual=not args.no_bilingual,
-            style=args.style
+            style=args.style,
+            topic=args.kb
         )
         print("\n================ Processing Complete ================")
         print(f"Subtitle: {result['subtitle_path']}")

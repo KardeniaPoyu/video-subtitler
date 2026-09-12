@@ -1,0 +1,35 @@
+{
+  "domain": "tech_ai",
+  "description": "Knowledge base for Artificial Intelligence, Machine Learning, LLMs, and Software Engineering.",
+  "hotwords": [
+    "人工智能", "大语言模型", "深度学习", "强化学习", "神经网络", "变换器",
+    "ChatGPT", "OpenAI", "Claude", "Gemini", "DeepSeek", "Llama", "Mistral",
+    "Whisper", "Faster-Whisper", "PyTorch", "TensorFlow", "CUDA", "NVENC",
+    "CTranslate2", "ONNX", "HuggingFace", "LangChain", "Agent", "MCP", "RAG",
+    "量化", "微调", "LoRA", "上下文窗口", "提示词工程", "推理", "吞吐量"
+  ],
+  "asr_phonetic_corrections": {
+    "chat gpt": "ChatGPT",
+    "open ai": "OpenAI",
+    "deep seek": "DeepSeek",
+    "claud": "Claude",
+    "pie torch": "PyTorch",
+    "tensor flow": "TensorFlow",
+    "hug in face": "HuggingFace",
+    "lang chain": "LangChain"
+  },
+  "glossary": {
+    "LLM": "大语言模型 (LLM)",
+    "Agent": "智能体 (Agent)",
+    "MCP": "模型上下文协议 (MCP)",
+    "RAG": "检索增强生成 (RAG)",
+    "Fine-tuning": "模型微调",
+    "Quantization": "模型量化",
+    "Prompt Engineering": "提示工程",
+    "Context Window": "上下文窗口",
+    "Zero-shot": "零样本",
+    "Few-shot": "少样本",
+    "Inference": "模型推理",
+    "Throughput": "吞吐率"
+  }
+}

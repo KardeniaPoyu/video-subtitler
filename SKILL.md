@@ -42,6 +42,7 @@ python -m subtitler "<VIDEO_OR_AUDIO_PATH>" [OPTIONS]
 | **Bilibili / YouTube High Contrast**| `python -m subtitler "D:\video.mp4" --style bilibili_standard` |
 | **AI LLM Proofreading** | `python -m subtitler "D:\video.mp4" --proofread` |
 | **Bilingual Subtitles (e.g. English)**| `python -m subtitler "D:\video.mp4" --translate en --style dual_contrast` |
+| **Domain Knowledge Base (e.g. Gaming)**| `python -m subtitler "D:\video.mp4" --kb gaming_nintendo` |
 | **Subtitles Only (No video burn)** | `python -m subtitler "D:\video.mp4" --no-burn` |
 
 ---
