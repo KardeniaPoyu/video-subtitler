@@ -13,22 +13,24 @@
 <a name="中文说明"></a>
 ## 🇨🇳 中文说明
 
-**Video-Subtitler** 是一款轻量、高速、高度可扩展的**下一代 AI 视频字幕自动生成与硬字幕压制工具**。不同于传统沉重笨拙的桌面工具或单一功能的脚本，本项目采用**微内核 + 可扩展插件化架构**，不仅支持毫秒级语音转录与硬字幕渲染，更内建了 **LLM 智能同音字纠错**、**上下文感知双语翻译**与**短视频爆款视觉模板**。
+**Video-Subtitler** 是一款轻量、高速、模块化的 **AI 视频字幕生成与硬字幕压制引擎**。
 
-原生支持作为 **Antigravity / Cursor / Claude Code AI Agent 技能**，让 AI 助手在对话中即可全自动处理视频并压制交付！
+开源社区中已有许多优秀的字幕工具（如功能全面的桌面端 GUI 工具 `pyvideotrans`，经典的命令行工具 `auto-subtitle`，以及擅长词级对齐的 `whisperX`）。**Video-Subtitler** 的定位则专注于：
+1. **轻量微内核与插件化扩展**（模块化接入 AI 润色、双语翻译与视觉样式）；
+2. **AI Agent 生态原生集成**（作为 Antigravity / Cursor / Claude Code 的对话技能与 MCP 工具直接调度）；
+3. **开箱即用的自动化压制体验**（自动环境探测、高质量断句排版与视觉模板）。
 
 ---
 
-### 🌟 核心差异化与优势对比
+### 🎯 设计取向与生态定位对比
 
-| 维度 / 特性 | 传统高星项目 (`pyvideotrans`, `auto-subtitle`) | 🔬 **Video-Subtitler (本项目)** |
-| :--- | :--- | :--- |
-| **系统架构** | 臃肿庞大的桌面客户端 (数百MB/几个G) 或僵化单脚本 | **微内核 + 插件体系** (`subtitler.plugins`)，极其轻巧灵活 |
-| **AI Agent 原生** | ❌ 无，只能人工在界面反复点选 | ✅ **自带 Antigravity Skill**，自然语言对话即可调度完成 |
-| **同音字错别字** | ❌ 无法解决 ASR 同音错字、专有名词乱码 | ✅ **LLM Proofreader 插件**，智能上下文纠偏与标点规范 |
-| **双语字幕制作** | ⚠️ 僵硬逐句机翻，缺少上下文，双语排版难调 | ✅ **上下文双语翻译插件**，自动生成上下双层对齐字幕 |
-| **视觉样式模板** | ⚠️ 默认仅支持简陋白字 | ✅ **内置预设视觉模板**（B站/YouTube清晰风、TikTok爆款高对比、电影极简风） |
-| **跨平台零配置** | ⚠️ 需手动配置庞大的系统级 FFmpeg 路径 | ✅ **智能双重探测**，自带嵌入式静态二进制回退，开箱即用 |
+| 维度 / 取向 | 桌面 GUI 交互类工具 (如 `pyvideotrans`) | 基础 CLI 类工具 (如 `auto-subtitle`) | 🔬 **Video-Subtitler (本项目)** |
+| :--- | :--- | :--- | :--- |
+| **主要定位** | 独立图形界面，适合无终端经验的桌面用户直观操作 | 极简转录压制，适合基础命令行流水线 | **轻量微内核 + 插件总线**，兼顾 CLI 与 AI Agent 自动化驱动 |
+| **Agent 协作** | 依赖鼠标手动交互，不易被智能体直接调度 | 需自定义封装驱动 | **原生内置 Skill 规范**，自然语言直接下发任务并交付成品 |
+| **扩展机制** | 模块与 GUI 深度耦合 | 功能相对单一固定 | **插件化微内核** (`subtitler.plugins`)，后处理、翻译与样式可自由拔插 |
+| **文本与样式** | 提供界面配置项，依赖用户手动微调 | 输出默认字体排版 | **内置爆款模板与 LLM 校对插件**，支持同音字自愈与双语排版 |
+| **部署与依赖** | 需下载较完整的应用运行环境 | 依赖系统全局安装的 FFmpeg | **智能双轨探测**，支持系统环境与内嵌便携执行文件自动回退 |
 
 ---
 
@@ -40,7 +42,7 @@
                        └───────────┬───────────┘
                                    │
                        ┌───────────▼───────────┐
-                       │     FFmpeg Engine     │  (Zero-config detection)
+                       │     FFmpeg Engine     │  (Auto-detection & portable fallback)
                        └───────────┬───────────┘
                                    │
                        ┌───────────▼───────────┐
@@ -90,7 +92,7 @@ pip install -r requirements.txt
 python -m subtitler "D:\videos\demo.mp4"
 ```
 
-#### 2. 使用短视频爆款黄色高对比模板（TikTok / Reels / 抖音）
+#### 2. 使用短视频高对比模板（TikTok / Reels / 抖音）
 ```bash
 python -m subtitler "D:\videos\vlog.mp4" --style shorts_punchy
 ```
@@ -126,22 +128,22 @@ python -m subtitler "D:\videos\podcast.mp4" --no-burn
 
 ---
 
-### 🔌 编写你自己的插件
+### 🔌 编写自定义插件
 
-编写新插件只需继承 `PostProcessPlugin` 或 `TranslationPlugin`：
+只需继承 `PostProcessPlugin` 或 `TranslationPlugin` 即可接入插件流：
 
 ```python
 from subtitler.plugins.base import PostProcessPlugin
 from subtitler.asr import SubtitleSegment
 from typing import List
 
-class CensorFilterPlugin(PostProcessPlugin):
-    name = "censor_filter"
-    description = "过滤敏感词或替换指定专有名词"
+class CustomFilterPlugin(PostProcessPlugin):
+    name = "custom_filter"
+    description = "自定义过滤或替换指定关键词"
 
     def process(self, segments: List[SubtitleSegment]) -> List[SubtitleSegment]:
         for seg in segments:
-            seg.text = seg.text.replace("badword", "***")
+            seg.text = seg.text.replace("旧词", "新词")
         return segments
 ```
 
@@ -150,12 +152,12 @@ class CensorFilterPlugin(PostProcessPlugin):
 <a name="english"></a>
 ## 🌐 English
 
-**Video-Subtitler** is a lightweight, extensible, and plugin-driven AI subtitling and hardsub-burning engine powered by `faster-whisper`, `FFmpeg`, and modern LLM refinement plugins.
+**Video-Subtitler** is a lightweight, extensible, and plugin-driven AI subtitling and hardsub-burning engine designed for developers and AI Agent workflows.
 
 ### Highlights
-- **Plugin Ecosystem**: Pluggable post-processing, LLM homophone proofreading, bilingual translations, and visual templates.
-- **Zero-Config FFmpeg**: Automated binary detection and fallback.
-- **AI Agent Skill Native**: Equipped with `SKILL.md` for seamless tool use in Antigravity or other agent environments.
+- **Plugin-Driven Architecture**: Clean micro-kernel supporting pluggable post-processing, LLM homophone proofreading, bilingual translation, and aesthetic styling.
+- **Agent-Ready**: Native Antigravity skill specification for seamless invocation via natural language.
+- **Zero-Config Portability**: Automatic environment detection and bundled portable fallback.
 
 ### Quickstart
 ```bash
@@ -163,7 +165,7 @@ git clone https://github.com/KardeniaPoyu/video-subtitler.git
 cd video-subtitler
 pip install -r requirements.txt
 
-# Run with punchy TikTok-style subtitles
+# Run with punchy viral subtitles
 python -m subtitler "path/to/video.mp4" --style shorts_punchy
 ```
 
