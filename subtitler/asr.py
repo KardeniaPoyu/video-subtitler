@@ -52,9 +52,15 @@ class WhisperTranscriber:
                 compute_type=compute_type,
                 download_root=download_root
             )
+            # Verify CUDA runtime is truly operational (e.g. cuBLAS DLLs present)
+            if device == "cuda":
+                import numpy as np
+                dummy_audio = np.zeros(16000, dtype=np.float32)
+                test_gen, _ = self.model.transcribe(dummy_audio)
+                next(iter(test_gen), None)
         except Exception as e:
             if device == "cuda":
-                print(f"[WhisperTranscriber] CUDA initialization failed ({e}). Falling back to CPU...")
+                print(f"[WhisperTranscriber] CUDA runtime unavailable ({e}). Falling back to CPU (int8)...")
                 self.device = "cpu"
                 self.compute_type = "int8"
                 self.model = WhisperModel(
