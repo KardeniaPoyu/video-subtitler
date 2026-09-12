@@ -14,17 +14,21 @@ class StyleTemplate:
     name: str
     description: str
     font_name: str = "Microsoft YaHei"
-    font_size: int = 20
+    font_size: int = 38
     primary_color: str = "&H00FFFFFF"    # White (&HAABBGGRR)
     secondary_color: str = "&H000000FF"
     outline_color: str = "&H00000000"    # Black
     back_color: str = "&H80000000"
     bold: bool = True
     italic: bool = False
-    outline_width: int = 2
+    outline_width: int = 3
     shadow_depth: int = 1
     alignment: int = 2                  # 2 = Bottom Center
-    margin_v: int = 30
+    margin_v: int = 45
+    margin_l: int = 80
+    margin_r: int = 80
+    play_res_x: int = 1920
+    play_res_y: int = 1080
     extra_ass_styles: Optional[str] = None
 
 
