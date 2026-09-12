@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "video-subtitler"
+version = "0.1.0"
+description = "AI-powered automated video subtitle generator and hardsub burner using Faster-Whisper and FFmpeg."
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "Antigravity & Open Source Community" }
+]
+keywords = ["whisper", "faster-whisper", "subtitles", "srt", "ass", "ffmpeg", "video-processing", "asr"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "faster-whisper>=1.0.0",
+    "imageio-ffmpeg>=0.5.0",
+]
+
+[project.scripts]
+subtitler = "subtitler.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/your-username/video-subtitler"
+Repository = "https://github.com/your-username/video-subtitler.git"
