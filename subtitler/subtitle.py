@@ -1,10 +1,12 @@
 """
 Subtitle formatting utilities.
-Supports exporting to SRT, VTT, and styled ASS formats.
+Supports exporting to SRT, VTT, and styled ASS formats with template support.
 """
 
-from typing import List
+from typing import List, Optional, Union
 from subtitler.asr import SubtitleSegment
+from subtitler.plugins.base import StyleTemplate
+from subtitler.plugins.templates import get_template
 
 
 def format_timestamp_srt(seconds: float) -> str:
@@ -60,18 +62,22 @@ def save_to_vtt(segments: List[SubtitleSegment], output_path: str, encoding: str
 def save_to_ass(
     segments: List[SubtitleSegment],
     output_path: str,
-    font_name: str = "Microsoft YaHei",
-    font_size: int = 20,
-    primary_color: str = "&H00FFFFFF",  # BGR format: White
-    outline_color: str = "&H00000000",  # BGR format: Black
-    outline_width: int = 2,
-    margin_v: int = 30,
+    template: Optional[Union[str, StyleTemplate]] = None,
     encoding: str = "utf-8"
 ) -> str:
     """
-    Save segments to a styled ASS (Advanced SubStation Alpha) file.
-    Gives a modern, high-contrast look suitable for YouTube, Bilibili, and TikTok.
+    Save segments to a styled ASS (Advanced SubStation Alpha) file using a StyleTemplate.
     """
+    if isinstance(template, str):
+        style = get_template(template)
+    elif isinstance(template, StyleTemplate):
+        style = template
+    else:
+        style = get_template("default")
+
+    bold_val = -1 if style.bold else 0
+    italic_val = -1 if style.italic else 0
+
     header = f"""[Script Info]
 Title: Subtitled by Video-Subtitler
 ScriptType: v4.00+
@@ -81,7 +87,7 @@ YCbCr Matrix: None
 
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
-Style: Default,{font_name},{font_size},{primary_color},&H000000FF,{outline_color},&H80000000,-1,0,0,0,100,100,0,0,1,{outline_width},1,2,20,20,{margin_v},1
+Style: Default,{style.font_name},{style.font_size},{style.primary_color},{style.secondary_color},{style.outline_color},{style.back_color},{bold_val},{italic_val},0,0,100,100,0,0,1,{style.outline_width},{style.shadow_depth},{style.alignment},20,20,{style.margin_v},1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -90,7 +96,6 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     for seg in segments:
         start_str = format_timestamp_ass(seg.start)
         end_str = format_timestamp_ass(seg.end)
-        # Escape special ASS characters if necessary
         text = seg.text.replace("\n", "\\N")
         dialogue_lines.append(f"Dialogue: 0,{start_str},{end_str},Default,,0,0,0,,{text}")
 

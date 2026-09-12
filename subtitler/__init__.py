@@ -9,8 +9,9 @@ from subtitler.ffmpeg_utils import get_ffmpeg_path, extract_audio
 from subtitler.asr import WhisperTranscriber, SubtitleSegment
 from subtitler.subtitle import save_to_srt, save_to_vtt, save_to_ass
 from subtitler.burner import burn_subtitles_to_video
+from subtitler.plugins.manager import PluginManager
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 
 def process_video(
@@ -23,14 +24,21 @@ def process_video(
     subtitle_format: str = "srt",
     keep_audio: bool = False,
     device: Optional[str] = None,
-    initial_prompt: Optional[str] = None
+    initial_prompt: Optional[str] = None,
+    proofread: bool = False,
+    translate: Optional[str] = None,
+    bilingual: bool = True,
+    style: str = "default",
+    plugin_manager: Optional[PluginManager] = None
 ) -> Dict[str, Any]:
     """
-    Complete end-to-end pipeline:
+    Complete end-to-end pipeline with plugin architecture:
     1. Extract audio from video
     2. Transcribe using faster-whisper
-    3. Generate subtitle file (.srt / .ass / .vtt)
-    4. Burn hard subtitles into video (if burn=True)
+    3. Run Post-Processing plugins (e.g. LLM proofreading)
+    4. Run Translation plugins (e.g. Bilingual subtitles)
+    5. Generate subtitle file (.srt / .ass / .vtt) with selected StyleTemplate
+    6. Burn hard subtitles into video (if burn=True)
     
     :return: Dictionary containing output paths and metadata.
     """
@@ -38,14 +46,15 @@ def process_video(
         raise FileNotFoundError(f"Video file not found: {video_path}")
 
     base, _ = os.path.splitext(video_path)
+    pm = plugin_manager or PluginManager()
 
     # 1. Extract audio
-    print(f"\n[1/4] Extracting audio from {os.path.basename(video_path)}...")
+    print(f"\n[1/5] Extracting audio from {os.path.basename(video_path)}...")
     temp_audio = extract_audio(video_path)
 
     try:
         # 2. Transcribe
-        print(f"\n[2/4] Transcribing audio with Whisper '{model_size}' model...")
+        print(f"\n[2/5] Transcribing audio with Whisper '{model_size}' model...")
         transcriber = WhisperTranscriber(model_size=model_size, device=device)
         segments = transcriber.transcribe(
             temp_audio,
@@ -56,14 +65,29 @@ def process_video(
         if not segments:
             print("[Warning] No speech detected in video.")
 
-        # 3. Generate Subtitles
-        print(f"\n[3/4] Exporting {subtitle_format.upper()} subtitle file...")
+        # 3. Apply Plugins: Post-processing (LLM Proofreading)
+        if proofread:
+            print("\n[3/5] Applying Post-Processing plugins (Proofreading)...")
+            segments = pm.apply_post_processing(segments, enable_proofread=True)
+
+        # 4. Apply Plugins: Translation / Bilingual
+        if translate:
+            print(f"\n[4/5] Applying Translation plugin (Target: {translate})...")
+            segments = pm.apply_translation(
+                segments,
+                target_lang=translate,
+                source_lang=language,
+                bilingual=bilingual
+            )
+
+        # 5. Generate Subtitles
+        print(f"\n[5/5] Exporting {subtitle_format.upper()} subtitle file with style '{style}'...")
         sub_ext = f".{subtitle_format.lower()}"
         if output_subtitle_path is None:
             output_subtitle_path = f"{base}{sub_ext}"
 
         if subtitle_format.lower() == "ass":
-            save_to_ass(segments, output_subtitle_path)
+            save_to_ass(segments, output_subtitle_path, template=style)
         elif subtitle_format.lower() == "vtt":
             save_to_vtt(segments, output_subtitle_path)
         else:
@@ -71,28 +95,28 @@ def process_video(
 
         print(f"Subtitle saved to: {output_subtitle_path}")
 
-        # 4. Burn subtitles into video
+        # Burn subtitles into video
         final_video = None
         if burn:
-            print(f"\n[4/4] Burning hard subtitles into video...")
+            print(f"\nBurning hard subtitles into video using style '{style}'...")
             final_video = burn_subtitles_to_video(
                 video_path=video_path,
                 subtitle_path=output_subtitle_path,
                 output_video_path=output_video_path
             )
         else:
-            print("\n[4/4] Skipping video burn as requested (--no-burn).")
+            print("\nSkipping video burn as requested (--no-burn).")
 
         return {
             "success": True,
             "subtitle_path": output_subtitle_path,
             "video_path": final_video,
             "segment_count": len(segments),
-            "model": model_size
+            "model": model_size,
+            "style": style
         }
 
     finally:
-        # Clean up temporary audio file unless requested to keep
         if not keep_audio and os.path.exists(temp_audio):
             try:
                 os.remove(temp_audio)
