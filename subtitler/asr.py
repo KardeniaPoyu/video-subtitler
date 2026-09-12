@@ -31,11 +31,10 @@ class WhisperTranscriber:
         :param compute_type: 'int8', 'float16', 'int8_float16', etc.
         :param download_root: Path to cache models.
         """
-        from faster_whisper import WhisperModel
-        import torch
+        import ctranslate2
 
         if device is None:
-            device = "cuda" if torch.cuda.is_available() else "cpu"
+            device = "cuda" if ctranslate2.get_cuda_device_count() > 0 else "cpu"
 
         if compute_type is None:
             compute_type = "float16" if device == "cuda" else "int8"
