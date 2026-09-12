@@ -31,6 +31,7 @@ class WhisperTranscriber:
         :param compute_type: 'int8', 'float16', 'int8_float16', etc.
         :param download_root: Path to cache models.
         """
+        from faster_whisper import WhisperModel
         import ctranslate2
 
         if device is None:
