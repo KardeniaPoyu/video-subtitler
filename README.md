@@ -34,6 +34,31 @@
 
 ---
 
+### 🔬 核心工程方法论：六阶字幕复核流水线 (6-Stage Verification Pipeline)
+
+在面对游戏、动漫、科技前沿、学术讲座等高密度领域视频时，单纯依靠端到端 ASR + 逐句机翻无法满足专业发布要求。**Video-Subtitler** 沉淀了一套严密的**六阶复核方法论**：
+
+```mermaid
+graph TD
+    A["Stage 1: 声学先验注入 (ASR Hotwords Conditioning)"] --> B["Stage 2: 画面字卡跨模态校验 (Telop / OCR Cross-Check)"]
+    B --> C["Stage 3: 音素映射与专名纠偏 (Phonetic & Domain Alignment)"]
+    C --> D["Stage 4: 滑动窗口语境审校 (Contextual LLM Proofreading)"]
+    D --> E["Stage 5: 排版边界与安全距离复核 (Typographic & Boundary Audit)"]
+    E --> F["Stage 6: 关键帧视觉抽检 (Visual Spot-Check & Smoke Test)"]
+```
+
+1. **Stage 1: 声学先验注入 (ASR Hotwords Conditioning)**：提取领域核心专有名词注入 Whisper `initial_prompt`，从底层偏置声学校验，大幅降低冷门片假名与术语漏识别率。
+2. **Stage 2: 画面字卡跨模态校验 (Telop / OCR Cross-Check)**：针对语速极快或混杂 BGM 的片段，若视频画面带有作者自带原文字卡（如游戏关卡名、角色名），以视觉 OCR 为基准地面真值校正听觉误差。
+3. **Stage 3: 音素映射与专名纠偏 (Phonetic & Domain Alignment)**：挂载领域专库（如任天堂全家桶、卡比宇宙、AI 技术栈），通过音素失真表与正则置换，强制锁定官方标准译名（例：杜绝将“プププランド”误听为“台北”）。
+4. **Stage 4: 滑动窗口语境审校 (Contextual LLM Proofreading)**：杜绝单句孤立翻译，向大模型传入前后 5~10 句上下文窗口，理解叙事逻辑与说话人口吻，消灭离谱幻觉机翻，润色为符合当代中文互联网语感的自然口语。
+5. **Stage 5: 排版边界与安全距离复核 (Typographic & Boundary Audit)**：
+   - **字数上限**：单行严格限制 20~22 中文字符（约 40 英文字符）；
+   - **语义断行**：禁止在英文单词/数字中硬拆，仅在标点、助词与语义顿挫处折行；
+   - **贴边视觉基准**：默认采用贴边距离（1080p 画布下 `MarginV: 45~50`），保持画面开阔清爽；当遇到底部密集信息条时，支持无缝切换至避让高度（`MarginV: 180~200`）。
+6. **Stage 6: 关键帧视觉抽检 (Visual Spot-Check & Smoke Test)**：成片导出前，自动截取多时间轴关键帧，人工/智能多模态抽检双语对齐、字体描边对比度与贴边舒适度。
+
+---
+
 ### 🧩 插件化架构 (Plugin Architecture)
 
 ```
