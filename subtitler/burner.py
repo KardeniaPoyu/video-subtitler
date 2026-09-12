@@ -22,11 +22,25 @@ def format_ffmpeg_filter_path(path: str) -> str:
     return abs_path
 
 
+def is_nvenc_available() -> bool:
+    """Check if NVIDIA NVENC hardware encoding is available."""
+    try:
+        ffmpeg = get_ffmpeg_path()
+        res = subprocess.run(
+            [ffmpeg, "-f", "lavfi", "-i", "color=c=black:s=64x64:d=0.1", "-c:v", "h264_nvenc", "-f", "null", "-"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE
+        )
+        return res.returncode == 0
+    except Exception:
+        return False
+
+
 def burn_subtitles_to_video(
     video_path: str,
     subtitle_path: str,
     output_video_path: Optional[str] = None,
-    use_nvenc: bool = False,
+    use_nvenc: Optional[bool] = None,
     crf: int = 22,
     preset: str = "fast"
 ) -> str:
@@ -71,6 +85,11 @@ def burn_subtitles_to_video(
         "-i", video_path,
         "-vf", vf_filter,
     ]
+
+    if use_nvenc is None:
+        use_nvenc = is_nvenc_available()
+        if use_nvenc:
+            print("[Burner] Detected NVIDIA GPU. Using NVENC hardware acceleration (h264_nvenc)...")
 
     if use_nvenc:
         cmd.extend([
