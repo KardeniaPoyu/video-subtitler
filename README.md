@@ -112,27 +112,55 @@ pip install -r requirements.txt
 
 ### 💻 命令行玩法 (CLI)
 
-#### 1. 一键全自动（生成字幕并压制成新视频）
+先自检环境（FFmpeg / libass / CUDA / NVENC / 字体 / 磁盘空间 / LLM 配置）：
 ```bash
-python -m subtitler "D:\videos\demo.mp4"
+python -m subtitler doctor
 ```
 
-#### 2. 使用短视频高对比模板（TikTok / Reels / 抖音）
+#### 1. 一键全自动（生成字幕并压制成新视频）
 ```bash
-python -m subtitler "D:\videos\vlog.mp4" --style shorts_punchy
+python -m subtitler "D:ideos\demo.mp4"                       # 等价于 subtitler run ...
+python -m subtitler "D:ideoslog.mp4" --style shorts_punchy
+python -m subtitler "D:ideos\podcast.mp4" --no-burn
+```
+
+#### 2. 精校工作流（推荐：AI 助手 / 人工逐批翻译校对）
+一键模式适合快速出片；要做到“专有名词 100% 正确、口语自然”的成片，请用分步工作流。
+所有中间结果存放在可编辑的工程文件 `视频名.subtitler.json` 中：
+
+```bash
+# ① 转写：faster-whisper + 领域热词 + 同音错词修正 -> 工程文件
+python -m subtitler transcribe "D:ideos\direct.mp4" -l ja --kb gaming_nintendo --to zh        --notes "任天堂直面会卡比新作 reaction，语气轻松"
+
+# ② 分批输出待翻译行（带上下文 + 术语表提示），翻译后写成 JSON 回填；循环直到完成
+python -m subtitler batch  "D:ideos\direct.mp4" --size 60
+python -m subtitler apply  "D:ideos\direct.mp4" batch1.json   # {"12": "译文", "13": {"text": "修正原文", "translation": "译文"}}
+#    或者配置了 OpenAI 兼容 API 时直接：python -m subtitler translate "D:ideos\direct.mp4"
+
+# ③ 质检：未翻译 / 超过两行 / 超宽 / 阅读速度 / 重叠 / 日文残留 / 术语不一致
+python -m subtitler check  "D:ideos\direct.mp4"
+
+# ④ 渲染双语字幕 + 关键帧预览（会输出 contact_sheet.jpg 一张图看全）
+python -m subtitler render  "D:ideos\direct.mp4" --style bilingual        # 底部有原字卡时用 bilingual_avoid
+python -m subtitler preview "D:ideos\direct.mp4" "D:ideos\direct.ass"
+
+# ⑤ 压制（NVENC 自动检测，失败回退 CPU；--start/--end 可先压 10 秒试看）
+python -m subtitler burn "D:ideos\direct.mp4" "D:ideos\direct.ass"
+
+# ⑥ 章节：B站进度条时间轴文本 + 无损写入 MP4 章节
+python -m subtitler chapters "D:ideos\direct_subtitled.mp4" chapters.txt --embed
 ```
 
 #### 3. 挂载领域知识库与术语库（消除专有名词机翻与口误）
 ```bash
-# 挂载游戏与任天堂专库（精准识别《星之卡比》、Switch 2、游戏黑话）
-python -m subtitler "D:\videos\game_direct.mp4" --kb gaming_nintendo --translate zh
-
-# 挂载科技与大模型专库（精准识别 LLM, PyTorch, LoRA, CUDA 等）
-python -m subtitler "D:\videos\ai_talk.mp4" --kb tech_ai
-
-# 挂载动漫与 ACG 专库
-python -m subtitler "D:\videos\anime_review.mp4" --kb anime_acg
+python -m subtitler kb list                                   # 查看内置知识库
+python -m subtitler transcribe game.mp4 --kb gaming_nintendo,anime_acg
+python -m subtitler transcribe game.mp4 --kb gaming_nintendo --kb-file my_video.kb.json   # 单视频专用词典
 ```
+
+#### LLM 配置（可选）
+`translate` / `proofread` / `run --translate` 使用任意 OpenAI 兼容接口（OpenAI、DeepSeek、Gemini、Ollama…）：
+`SUBTITLER_LLM_API_KEY`（或 `OPENAI_API_KEY`）、`SUBTITLER_LLM_BASE_URL`、`SUBTITLER_LLM_MODEL`。
 
 ---
 
@@ -140,9 +168,11 @@ python -m subtitler "D:\videos\anime_review.mp4" --kb anime_acg
 
 针对语音识别与机翻中最致命的**专有名词识别错误**（如将《星之卡比》听成“卡比/星辰小宝”，将“完全新作”听成“感转进削”），本项目构建了双重知识库增强体系：
 
-1. **ASR 识别前注入（Hotwords Injection）**：自动提取领域高频专有名词，注入 Whisper 的 `initial_prompt`，从源头提高识别准确率；
+1. **ASR 识别前注入（Hotwords Injection）**：自动提取领域高频专有名词，作为 faster-whisper 的 `hotwords` 注入每一个 30 秒解码窗口，从源头提高识别准确率；
 2. **同音错词自愈（Phonetic Error Correction）**：基于发音失真映射表，自动校正 ASR 转写文本；
-3. **权威术语表强制对齐（Glossary Alignment）**：翻译时严格锁定官方标准中文译名，彻底告别离谱机翻。
+3. **权威术语表强制对齐（Glossary Alignment）**：翻译时作为提示提供给译者，回填后再强制替换残留的原文术语，并在 `check` 中报告不一致。
+
+替换是单次正则扫描、最长优先、已正确的目标词受保护（不会把 `エヴァンゲリオン` 再替换一遍）；英文键按单词边界匹配（`ai` 不会命中 `rain`）。只适用于某一个视频的修正请写进单独的 `--kb-file`，不要污染通用词库。
 
 | 内置知识库 | 涵盖领域 | 核心词条举例 |
 | :--- | :--- | :--- |
@@ -167,11 +197,16 @@ python -m subtitler "D:\videos\podcast.mp4" --no-burn
 
 | 模板名称 | 风格特征 | 推荐场景 |
 | :--- | :--- | :--- |
-| `default` | 纯白加粗 + 2px 纯黑外描边，下中对齐 | 通用视频、日常记录 |
+| `default` | 纯白加粗 + 3px 纯黑外描边，下中对齐 | 通用视频、日常记录 |
 | `bilibili_standard` | 大字号高对比加粗 + 深黑粗描边 | B站 / YouTube 知识科普、科技数码 |
 | `shorts_punchy` | 炫彩醒目金黄 + 4px 粗描边 + 底部抬升 | 抖音、TikTok、YouTube Shorts、Reels |
 | `cinema_minimal` | 宋体/衬线微弱阴影、经典电影下沉微距 | 影视解说、微电影、纪录片 |
 | `dual_contrast` | 双层对比对齐排版（上层母语，下层译文） | 跨国演讲、双语教程、影视外语翻译 |
+| `bilingual` | **双语字阶标准**：译文 52 粗体 3.5px 描边 + 原文 34 常规 #EAEAEA，MarginV 48 贴边 | B站搬运/翻译（默认推荐） |
+| `bilingual_avoid` | 同上，MarginV 190 避让原视频底部字卡 / 弹幕框 | 原视频底部有作者字幕时 |
+| `single_large` | 单语 54 粗体 3.5px 描边，MarginV 48 | 只要中文字幕时 |
+
+所有 ASS 输出会按视频真实宽高比设置画布（竖屏不再被横向拉伸，并自动缩小字号、抬高到短视频 UI 之上），按字号与可用宽度自动计算换行宽度。
 
 ---
 
@@ -214,6 +249,17 @@ pip install -r requirements.txt
 
 # Run with punchy viral subtitles
 python -m subtitler "path/to/video.mp4" --style shorts_punchy
+
+# Step-by-step, review-grade workflow (project file = video.subtitler.json)
+python -m subtitler doctor
+python -m subtitler transcribe video.mp4 -l ja --kb gaming_nintendo --to zh
+python -m subtitler batch  video.mp4          # lines + context + glossary for the translator
+python -m subtitler apply  video.mp4 edits.json
+python -m subtitler check  video.mp4          # untranslated / rows / width / CPS / overlaps / glossary
+python -m subtitler render video.mp4 --style bilingual
+python -m subtitler preview video.mp4 video.ass
+python -m subtitler burn   video.mp4 video.ass
+python -m subtitler chapters video_subtitled.mp4 chapters.txt --embed
 ```
 
 ---

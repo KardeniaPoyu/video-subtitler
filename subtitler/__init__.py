@@ -1,24 +1,96 @@
 """
-Video-Subtitler: Automated Video Subtitle Generator and Hardsub Burner.
+Video-Subtitler: Whisper transcription, domain-aware correction, LLM / agent translation,
+styled bilingual subtitles, quality checks, hardsub burning and chapters.
 """
 
+from __future__ import annotations
+
 import os
-from typing import Optional, Dict, Any
+from typing import Any, Dict, List, Optional, Sequence
 
-from subtitler.ffmpeg_utils import get_ffmpeg_path, extract_audio
-from subtitler.asr import WhisperTranscriber, SubtitleSegment
-from subtitler.subtitle import save_to_srt, save_to_vtt, save_to_ass
+from subtitler.asr import SubtitleSegment, WhisperTranscriber
 from subtitler.burner import burn_subtitles_to_video
+from subtitler.ffmpeg_utils import extract_audio, get_ffmpeg_path, probe_video
 from subtitler.plugins.manager import PluginManager
+from subtitler.subtitle import save_subtitles, save_to_ass, save_to_srt, save_to_vtt
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
+
+
+def _domains_arg(topic) -> Optional[List[str]]:
+    if not topic:
+        return None
+    return [t.strip() for t in (topic.split(",") if isinstance(topic, str) else topic) if t.strip()]
+
+
+def transcribe_video(
+    video_path: str,
+    model_size: str = "auto",
+    language: Optional[str] = None,
+    device: Optional[str] = None,
+    initial_prompt: Optional[str] = None,
+    topic=None,
+    kb_files: Sequence[str] = (),
+    keep_audio: bool = False,
+    knowledge_engine=None,
+    word_split: bool = True,
+):
+    """
+    Extract audio, run Whisper with domain hotwords, apply phonetic corrections.
+    Returns (segments, meta) where meta has detected language, domains, video info, model.
+    """
+    from subtitler.knowledge import KnowledgeEngine
+
+    if not os.path.exists(video_path):
+        raise FileNotFoundError(f"Video file not found: {video_path}")
+    ke = knowledge_engine or KnowledgeEngine(extra_files=kb_files)
+    domains = _domains_arg(topic) or ([d] if (d := ke.auto_detect_domain(video_path)) else [])
+    if domains:
+        print(f"[Knowledge] Domains: {', '.join(domains)}")
+
+    info = probe_video(video_path)
+    print(f"[Video] {info.width}x{info.height} @ {info.fps:g}fps, {info.duration:.1f}s, audio={info.has_audio}")
+    if not info.has_audio:
+        raise RuntimeError("The input has no audio stream - nothing to transcribe.")
+
+    import tempfile
+    audio_dir = os.path.dirname(os.path.abspath(video_path)) if keep_audio else tempfile.gettempdir()
+    audio_path = os.path.join(audio_dir, os.path.splitext(os.path.basename(video_path))[0] + "_audio_16k.wav")
+    print("[1/3] Extracting 16 kHz audio...")
+    extract_audio(video_path, audio_path)
+    try:
+        hotwords = ke.get_asr_prompt(domains, max_words=60) if domains else None
+        print("[2/3] Transcribing" + (" (with domain hotwords)" if hotwords else "") + "...")
+        tr = WhisperTranscriber(model_size=model_size, device=device)
+        segments = tr.transcribe(audio_path, language=language, initial_prompt=initial_prompt,
+                                 hotwords=hotwords, word_split=word_split)
+        lang = language or getattr(tr, "detected_language", None)
+    finally:
+        if not keep_audio and os.path.exists(audio_path):
+            try:
+                os.remove(audio_path)
+            except OSError:
+                pass
+
+    if not domains and segments:
+        domains = ke.detect_from_segments(segments)
+        if domains:
+            print(f"[Knowledge] Detected from transcript: {', '.join(domains)}")
+    raw = [s.text for s in segments]
+    if domains:
+        for s in segments:
+            s.text = ke.correct_phonetics(s.text, domains)
+        fixed = sum(a != s.text for a, s in zip(raw, segments))
+        print(f"[3/3] Applied ASR corrections to {fixed} lines.")
+    meta = {"language": lang, "domains": domains, "video_info": info, "model": tr.model_size, "raw": raw}
+    return segments, meta
 
 
 def process_video(
     video_path: str,
     output_video_path: Optional[str] = None,
     output_subtitle_path: Optional[str] = None,
-    model_size: str = "small",
+    model_size: str = "auto",
     language: Optional[str] = None,
     burn: bool = True,
     subtitle_format: str = "srt",
@@ -27,119 +99,84 @@ def process_video(
     initial_prompt: Optional[str] = None,
     proofread: bool = False,
     translate: Optional[str] = None,
+    bilingual: bool = True,
     style: str = "default",
-    topic: Optional[str] = None,
+    topic=None,
+    kb_files: Sequence[str] = (),
     plugin_manager: Optional[PluginManager] = None,
-    knowledge_engine: Optional[Any] = None
+    knowledge_engine: Optional[Any] = None,
+    save_project: bool = True,
 ) -> Dict[str, Any]:
     """
-    Complete end-to-end pipeline with plugin & knowledge base architecture:
-    1. Extract audio from video
-    2. Condition Whisper with domain hotwords & transcribe
-    3. Run KnowledgeBase phonetic error corrections (カビー -> カービィ)
-    4. Run Post-Processing & Translation plugins
-    5. Enforce domain glossary translations
-    6. Generate subtitle file (.srt / .ass / .vtt) with selected StyleTemplate
-    7. Burn hard subtitles into video (if burn=True)
-    
-    :return: Dictionary containing output paths and metadata.
+    One-shot pipeline: transcribe -> (proofread) -> (translate) -> glossary -> subtitles -> (burn).
+    Also writes ``<video>.subtitler.json`` so the result can be refined with the CLI afterwards.
     """
-    if not os.path.exists(video_path):
-        raise FileNotFoundError(f"Video file not found: {video_path}")
-
     from subtitler.knowledge import KnowledgeEngine
-    ke = knowledge_engine or KnowledgeEngine()
-    detected_topic = topic or ke.auto_detect_domain(video_path)
-    if detected_topic:
-        print(f"[KnowledgeEngine] Activated domain knowledge base: '{detected_topic}'")
+    from subtitler.project import Project, default_project_path
+
+    ke = knowledge_engine or KnowledgeEngine(extra_files=kb_files)
+    pm = plugin_manager or PluginManager()
+    segments, meta = transcribe_video(video_path, model_size, language, device, initial_prompt,
+                                      topic, kb_files, keep_audio, ke)
+    domains = meta["domains"]
+    if not segments:
+        print("[Warning] No speech detected.")
+
+    if proofread and segments:
+        for p in pm.post_processors:
+            if hasattr(p, "hotwords"):
+                p.hotwords = ke.get_hotwords(domains) if domains else []
+        segments = pm.apply_post_processing(segments, enable_proofread=True)
+
+    if translate and segments:
+        for t in pm.translators:
+            if hasattr(t, "glossary_hints") and domains:
+                t.glossary_hints = lambda text, _d=domains: ke.glossary_hints(text, _d)
+        segments = pm.apply_translation(segments, target_lang=translate,
+                                        source_lang=meta["language"], bilingual=bilingual)
+        if domains:
+            for s in segments:
+                if s.translation:
+                    s.translation = ke.apply_glossary(s.translation, domains)
+
+    info = meta["video_info"]
+    project_path = None
+    if save_project:
+        proj = Project.from_segments(default_project_path(video_path), segments,
+                                     video=os.path.abspath(video_path),
+                                     video_info={"width": info.width, "height": info.height,
+                                                 "duration": info.duration, "fps": info.fps},
+                                     source_lang=meta["language"], target_lang=translate,
+                                     domains=domains, kb_files=list(kb_files), model=meta["model"])
+        for seg, raw in zip(proj.segments, meta["raw"]):
+            seg["asr"] = raw
+        project_path = proj.save()
 
     base, _ = os.path.splitext(video_path)
-    pm = plugin_manager or PluginManager()
+    fmt = subtitle_format.lower()
+    if output_subtitle_path is None:
+        output_subtitle_path = f"{base}.{fmt}"
+    mode = "bilingual" if (translate and bilingual) else ("target" if translate else "source")
+    if fmt == "ass":
+        save_to_ass(segments, output_subtitle_path, template=style, mode=mode, video_size=info.size)
+    elif fmt == "vtt":
+        save_to_vtt(segments, output_subtitle_path, mode=mode)
+    else:
+        save_to_srt(segments, output_subtitle_path, mode=mode)
+    print(f"Subtitle saved to: {output_subtitle_path}")
 
-    # 1. Extract audio
-    print(f"\n[1/5] Extracting audio from {os.path.basename(video_path)}...")
-    temp_audio = extract_audio(video_path)
+    final_video = None
+    if burn and segments:
+        final_video = burn_subtitles_to_video(video_path, output_subtitle_path, output_video_path)
 
-    try:
-        # 2. Transcribe with knowledge base prompt conditioning
-        asr_prompt = initial_prompt or (ke.get_asr_prompt(detected_topic) if detected_topic else None)
-        print(f"\n[2/5] Transcribing audio with Whisper '{model_size}' model...")
-        if asr_prompt:
-            print(f"[KnowledgeEngine] Injecting domain hotwords into ASR prompt...")
-
-        transcriber = WhisperTranscriber(model_size=model_size, device=device)
-        segments = transcriber.transcribe(
-            temp_audio,
-            language=language,
-            initial_prompt=asr_prompt
-        )
-
-        if not segments:
-            print("[Warning] No speech detected in video.")
-
-        # Apply KnowledgeBase phonetic corrections to segments
-        if detected_topic and segments:
-            for s in segments:
-                s.text = ke.correct_phonetics(s.text, domain=detected_topic)
-
-        # 3. Apply Plugins: Post-processing (LLM Proofreading)
-        if proofread:
-            print("\n[3/5] Applying Post-Processing plugins (Proofreading)...")
-            segments = pm.apply_post_processing(segments, enable_proofread=True)
-
-        # 4. Apply Plugins: Translation / Bilingual
-        if translate:
-            print(f"\n[4/5] Applying Translation plugin (Target: {translate})...")
-            segments = pm.apply_translation(
-                segments,
-                target_lang=translate,
-                source_lang=language,
-                bilingual=bilingual
-            )
-            # Enforce authoritative domain glossary translations
-            if detected_topic:
-                for s in segments:
-                    s.text = ke.apply_glossary(s.text, domain=detected_topic)
-
-        # 5. Generate Subtitles
-        print(f"\n[5/5] Exporting {subtitle_format.upper()} subtitle file with style '{style}'...")
-        sub_ext = f".{subtitle_format.lower()}"
-        if output_subtitle_path is None:
-            output_subtitle_path = f"{base}{sub_ext}"
-
-        if subtitle_format.lower() == "ass":
-            save_to_ass(segments, output_subtitle_path, template=style)
-        elif subtitle_format.lower() == "vtt":
-            save_to_vtt(segments, output_subtitle_path)
-        else:
-            save_to_srt(segments, output_subtitle_path)
-
-        print(f"Subtitle saved to: {output_subtitle_path}")
-
-        # Burn subtitles into video
-        final_video = None
-        if burn:
-            print(f"\nBurning hard subtitles into video using style '{style}'...")
-            final_video = burn_subtitles_to_video(
-                video_path=video_path,
-                subtitle_path=output_subtitle_path,
-                output_video_path=output_video_path
-            )
-        else:
-            print("\nSkipping video burn as requested (--no-burn).")
-
-        return {
-            "success": True,
-            "subtitle_path": output_subtitle_path,
-            "video_path": final_video,
-            "segment_count": len(segments),
-            "model": model_size,
-            "style": style
-        }
-
-    finally:
-        if not keep_audio and os.path.exists(temp_audio):
-            try:
-                os.remove(temp_audio)
-            except OSError:
-                pass
+    return {
+        "success": True,
+        "subtitle_path": output_subtitle_path,
+        "video_path": final_video,
+        "project_path": project_path,
+        "segment_count": len(segments),
+        "model": meta["model"],
+        "style": style,
+        "domains": domains,
+        "language": meta["language"],
+    }

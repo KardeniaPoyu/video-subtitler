@@ -11,7 +11,8 @@ from subtitler.plugins.translator import LLMTranslatorPlugin
 
 
 class PluginManager:
-    def __init__(self):
+    def __init__(self, verbose: bool = False):
+        self.verbose = verbose
         self.post_processors: List[PostProcessPlugin] = []
         self.translators: List[TranslationPlugin] = []
         self._register_default_plugins()
@@ -25,10 +26,12 @@ class PluginManager:
         """Register a plugin instance into the manager."""
         if isinstance(plugin, PostProcessPlugin):
             self.post_processors.append(plugin)
-            print(f"[PluginManager] Registered PostProcess plugin: {plugin.name} v{plugin.version}")
         elif isinstance(plugin, TranslationPlugin):
             self.translators.append(plugin)
-            print(f"[PluginManager] Registered Translation plugin: {plugin.name} v{plugin.version}")
+        else:
+            return
+        if self.verbose:
+            print(f"[PluginManager] Registered {type(plugin).__name__}: {plugin.name} v{plugin.version}")
 
     def apply_post_processing(
         self,

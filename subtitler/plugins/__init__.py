@@ -12,6 +12,7 @@ from subtitler.plugins.manager import PluginManager
 from subtitler.plugins.templates import STYLE_TEMPLATES, get_template
 from subtitler.plugins.corrector import LLMProofreaderPlugin
 from subtitler.plugins.translator import LLMTranslatorPlugin
+from subtitler.plugins.llm import LLMClient
 
 __all__ = [
     "BasePlugin",
@@ -23,4 +24,5 @@ __all__ = [
     "get_template",
     "LLMProofreaderPlugin",
     "LLMTranslatorPlugin",
+    "LLMClient",
 ]

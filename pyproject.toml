@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "video-subtitler"
-version = "0.1.0"
+version = "0.3.0"
 description = "AI-powered automated video subtitle generator and hardsub burner using Faster-Whisper and FFmpeg."
 readme = "README.md"
 license = { text = "MIT" }
@@ -34,3 +34,13 @@ subtitler = "subtitler.cli:main"
 [project.urls]
 Homepage = "https://github.com/your-username/video-subtitler"
 Repository = "https://github.com/your-username/video-subtitler.git"
+
+[tool.setuptools.packages.find]
+include = ["subtitler*"]
+
+[tool.setuptools.package-data]
+"subtitler.knowledge" = ["data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_default_fixture_loop_scope = "function"
