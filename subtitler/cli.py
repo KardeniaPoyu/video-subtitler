@@ -270,8 +270,9 @@ def cmd_render(a) -> int:
     from subtitler.plugins.templates import get_template
     from subtitler.project import PROJECT_SUFFIX
     from subtitler.subtitle import save_subtitles
+    from subtitler.asr import close_gaps
     proj = _load_project(a.project)
-    segs = proj.to_segments()
+    segs = close_gaps(proj.to_segments())
     if a.output:
         base = a.output
     elif proj.video:
@@ -326,7 +327,7 @@ def cmd_burn(a) -> int:
     from subtitler.burner import burn_subtitles_to_video
     nvenc = True if a.nvenc else (False if a.cpu else None)
     burn_subtitles_to_video(a.video, a.subtitle, a.output, use_nvenc=nvenc, crf=a.crf,
-                            fonts_dir=a.fonts_dir,
+                            fonts_dir=a.fonts_dir, bitrate_cap=a.bitrate_cap,
                             start=_parse_time(a.start) if a.start else None,
                             end=_parse_time(a.end) if a.end else None)
     return 0
@@ -500,6 +501,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("subtitle")
     sp.add_argument("-o", "--output", default=None)
     sp.add_argument("--crf", type=int, default=20)
+    sp.add_argument("--bitrate-cap", type=float, default=1.6,
+                    help="max bitrate = N x source bitrate (keeps file size sane); 0 = uncapped")
     g = sp.add_mutually_exclusive_group()
     g.add_argument("--nvenc", action="store_true")
     g.add_argument("--cpu", action="store_true")

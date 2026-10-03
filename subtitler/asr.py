@@ -183,11 +183,22 @@ class WhisperTranscriber:
               f"duration {info.duration:.1f}s")
 
         results: List[SubtitleSegment] = []
+        # Word timings from all Whisper segments are pooled and re-segmented together, so event
+        # boundaries follow pauses and punctuation instead of Whisper's internal segment cuts
+        # (which otherwise leave fragments like "But this" / "is actually a bad idea").
+        words: List[Any] = []
+
+        def flush_words():
+            if words:
+                results.extend(resegment_words(words, max_event_chars, max_event_seconds))
+                words.clear()
+
         last_report = 0.0
         for s in segments:
             if word_split and getattr(s, "words", None):
-                results.extend(resegment_words(s.words, max_event_chars, max_event_seconds))
+                words.extend(s.words)
             else:
+                flush_words()
                 text = s.text.strip()
                 if text:
                     results.append(SubtitleSegment(s.start, s.end, text))
@@ -195,6 +206,7 @@ class WhisperTranscriber:
                 last_report = s.end
                 print(f"[ASR] ... {s.end / info.duration * 100:5.1f}%  ({s.end:.0f}/{info.duration:.0f}s)")
 
+        flush_words()
         results = collapse_repeats(results)
         results = normalize_timing(results)
         print(f"[ASR] Transcribed {len(results)} subtitle events.")
@@ -289,14 +301,26 @@ def collapse_repeats(segments: List[SubtitleSegment], max_repeat: int = 2) -> Li
     return out
 
 
+def close_gaps(segments: List[SubtitleSegment], max_gap: float = 0.3) -> List[SubtitleSegment]:
+    """Chain consecutive lines whose gap is shorter than ``max_gap`` (the subtitle would otherwise
+    blink off for a frame or two between them)."""
+    for a, b in zip(segments, segments[1:]):
+        if 0 < b.start - a.end < max_gap:
+            a.end = b.start
+    return segments
+
+
 def normalize_timing(segments: List[SubtitleSegment], min_duration: float = 0.8,
-                     linger: float = 0.25, min_gap: float = 0.04) -> List[SubtitleSegment]:
-    """Remove overlaps, enforce a minimum on-screen time and let lines linger briefly after speech."""
+                     linger: float = 0.25, chain_gap: float = 0.3) -> List[SubtitleSegment]:
+    """Remove overlaps, enforce a minimum on-screen time, let lines linger briefly after speech and
+    chain lines separated by less than ``chain_gap`` seconds."""
     segs = sorted(segments, key=lambda s: s.start)
     for i, s in enumerate(segs):
         want = max(s.end + linger, s.start + min_duration)
         if i + 1 < len(segs):
-            want = min(want, segs[i + 1].start - min_gap)  # never overlap the next line
+            nxt = segs[i + 1].start
+            if want > nxt or nxt - want < chain_gap:
+                want = nxt  # never overlap; close tiny gaps
         s.start = round(s.start, 3)
         s.end = round(max(want, s.start + 0.3), 3)
     return segs

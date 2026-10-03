@@ -2,7 +2,7 @@
 name: video-subtitler
 description: >-
   End-to-end video subtitling and localization toolkit (faster-whisper + FFmpeg/libass). Transcribes
-  speech from video/audio, fixes domain terms (games/Nintendo, anime/ACG, AI/tech, vlogger slang),
+  speech from video/audio, fixes domain terms (games/Nintendo, VALORANT/FPS, anime/ACG, AI/tech, vlogger slang),
   translates line-by-line with context (the agent itself or an OpenAI-compatible LLM), renders styled
   bilingual ASS/SRT/VTT, runs automatic subtitle QA, renders preview frames, burns hard subtitles
   (NVENC/CPU), and creates Bilibili timeline + MP4 chapters. Use whenever the user wants to transcribe,
@@ -51,7 +51,7 @@ Quick one-shot (no review, for drafts only): `python -m subtitler VIDEO --style 
 
 ### Step 2 – Transcribe
 - Always pass `-l` when you know the language (auto-detect can misfire on music intros).
-- `--kb` accepts several domains: `gaming_nintendo,anime_acg`. `python -m subtitler kb list` shows them.
+- `--kb` accepts several domains: `gaming_nintendo,anime_acg` (also `gaming_valorant`, `tech_ai`, `vlogger_slang`). `python -m subtitler kb list` shows them.
   If omitted, the domain is guessed from the file name and then from the transcript.
 - `--notes` = speaker persona, topic, tone; it is shown in every batch so translations stay consistent.
 - Video-specific mishearings/names go into a project KB file (`--kb-file my_video.kb.json`, same JSON
@@ -91,7 +91,8 @@ Translation rules (these are what made past results good):
 Fix every **ERROR** (exit code 1): `untranslated`, `rows` (>2 rows → shorten, or split the line with a
 list value), `width`, `overlap`, `cps` (≥ 15.4 em/s → shorten text or extend `end`), `timing`.
 Review WARNs: `cps` (> 11 em/s; `--max-cps 9` for strict), `leftover` (kana left in Chinese),
-`glossary` (term not used), `short`/`long`, `same`. Fixes go through `apply`.
+`glossary` (term not used), `short`/`long`, `same`, `sparse` (few words over a long span = Whisper
+probably dropped speech: re-transcribe that clip, then fix with `text` + `start`/`end`). Fixes go through `apply`.
 
 ### Step 5 – Style & layout
 `python -m subtitler styles` lists presets. Choose by looking at the source video's bottom area:
@@ -113,7 +114,8 @@ For a quick encoded test: `burn VIDEO VIDEO.ass --start 1:30 --end 1:45 -o test.
 
 ### Step 7 – Burn
 NVENC (constant quality `-cq 20 -b:v 0`) is auto-detected with CPU x264 fallback; audio is copied
-(AAC re-encode fallback). `--crf 18` for higher quality, `--fonts-dir` for custom fonts. Progress
+(AAC re-encode fallback). Peak bitrate is capped at 1.6x the source (`--bitrate-cap`, 0 = off) so
+re-encoded web videos do not balloon 4x in size. `--crf 18` for higher quality, `--fonts-dir` for custom fonts. Progress
 and ETA are printed. Output defaults to `VIDEO_subtitled.mp4`.
 
 ### Step 8 – Chapters (videos ≳ 5 min)
@@ -144,6 +146,8 @@ and ETA are printed. Output defaults to `VIDEO_subtitled.mp4`.
   `from subtitler.project import Project`; `from subtitler.subtitle import save_to_ass`.
 - LLM env (optional): `SUBTITLER_LLM_API_KEY`/`OPENAI_API_KEY`, `SUBTITLER_LLM_BASE_URL`,
   `SUBTITLER_LLM_MODEL` (any OpenAI-compatible endpoint, incl. DeepSeek/Gemini/Ollama).
+- `examples/valorant_beginner_tips/`: a finished en→zh job (203 lines, `bilingual_avoid` over a game HUD,
+  18 chapters) – reference for FPS terminology and how ASR gaps / fixes were applied.
 - `examples/kirby_world_beyond/`: a finished ja→zh job (project KB file + 345 reviewed translations
   in `apply` format) – a good reference for translation tone and density.
 - Tests: `python -m pytest -q`.

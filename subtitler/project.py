@@ -37,7 +37,8 @@ def default_project_path(video_path: str) -> str:
 
 
 def _fmt_t(t: float) -> str:
-    m, s = divmod(max(0.0, t), 60)
+    t = round(max(0.0, t), 1)  # round first so 59.96 never prints as "60.0"
+    m, s = divmod(t, 60)
     h, m = divmod(int(m), 60)
     return f"{h}:{m:02d}:{s:04.1f}" if h else f"{m:02d}:{s:04.1f}"
 

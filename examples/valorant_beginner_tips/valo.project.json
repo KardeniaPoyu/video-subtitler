@@ -1,0 +1,1644 @@
+{
+ "version": 1,
+ "video": "15-Beginner-Tips-I-Wish-I-Knew-Sooner-in-VALORANT.mp4",
+ "video_info": {
+  "width": 1920,
+  "height": 1080,
+  "duration": 622.6,
+  "fps": 60.0
+ },
+ "source_lang": "en",
+ "target_lang": "zh",
+ "domains": [
+  "gaming_valorant"
+ ],
+ "kb_files": [],
+ "notes": "VALORANT beginner guide: '15 Beginner Tips I Wish I Knew Sooner'. Friendly, practical YouTuber tone; translate for Chinese 无畏契约 players using CN-server terms.",
+ "model": "small",
+ "segments": [
+  {
+   "id": 1,
+   "start": 0.0,
+   "end": 4.04,
+   "text": "If you're a beginner in VALORANT with 500 hours or less,",
+   "asr": "If you're a beginner in Valorant with 500 hours or less,",
+   "translation": "如果你是游戏时长 500 小时以内的无畏契约新手，"
+  },
+  {
+   "id": 2,
+   "start": 4.08,
+   "end": 5.76,
+   "text": "then you've clicked on the right video.",
+   "asr": "then you've clicked on the right video.",
+   "translation": "那你就点对视频了"
+  },
+  {
+   "id": 3,
+   "start": 5.8,
+   "end": 8.18,
+   "text": "As someone who has consistently been Immortal",
+   "asr": "As someone who has consistently been immortal",
+   "translation": "作为一个连续五年以上"
+  },
+  {
+   "id": 4,
+   "start": 8.22,
+   "end": 11.76,
+   "text": "for over 5 years and soloqueued to Radiant,",
+   "asr": "for over 5 years and soloqueued to Radiant,",
+   "translation": "稳定在超凡入圣、并且单排上过赋能战魂的玩家，"
+  },
+  {
+   "id": 5,
+   "start": 11.8,
+   "end": 15.36,
+   "text": "I'm going to give you 15 tips that will absolutely help you in",
+   "asr": "I'm going to give you 15 tips that will absolutely help you in",
+   "translation": "我会分享 15 个技巧，绝对能帮你"
+  },
+  {
+   "id": 6,
+   "start": 15.4,
+   "end": 18.7,
+   "text": "becoming a better player and climb the ranks as a beginner.",
+   "asr": "becoming a better player and climb the ranks as a beginner.",
+   "translation": "成为更强的玩家，让新手也能稳步上分"
+  },
+  {
+   "id": 7,
+   "start": 18.74,
+   "end": 22.44,
+   "text": "The first tip I have for you is to know when not to peek.",
+   "asr": "The first tip I have for you is to know when not to peek.",
+   "translation": "第一个技巧：要知道什么时候不该拉枪"
+  },
+  {
+   "id": 8,
+   "start": 22.48,
+   "end": 25.69,
+   "text": "Everyone always talks about peeking and playing aggressive,",
+   "asr": "Everyone always talks about peeking and playing aggressive,",
+   "translation": "大家总在说要多拉枪、打得激进一点，"
+  },
+  {
+   "id": 9,
+   "start": 25.8,
+   "end": 29.02,
+   "text": "but constantly taking dumb fights and overpeaking is",
+   "asr": "but constantly taking dumb fights and overpeaking is",
+   "translation": "但不停地打无脑对枪、过度拉枪，"
+  },
+  {
+   "id": 10,
+   "start": 29.06,
+   "end": 32.56,
+   "text": "something that I see almost all inexperienced players do.",
+   "asr": "something that I see almost all inexperienced players do.",
+   "translation": "几乎是所有缺乏经验的玩家都会犯的错"
+  },
+  {
+   "id": 11,
+   "start": 32.6,
+   "end": 33.93,
+   "text": "If you're up numbers,",
+   "asr": "If you're up numbers,",
+   "translation": "如果你们人数占优，"
+  },
+  {
+   "id": 12,
+   "start": 34.0,
+   "end": 38.95,
+   "text": "meaning your team has more players alive than the enemy team, not solopeaking,",
+   "asr": "meaning your team has more players alive than the enemy team, not solopeaking,",
+   "translation": "也就是我方存活人数比敌方多，那就别单独拉枪，"
+  },
+  {
+   "id": 13,
+   "start": 39.0,
+   "end": 41.62,
+   "text": "and instead playing with your team will make securing",
+   "asr": "and instead playing with your team will make securing",
+   "translation": "而是和队友一起打，这样拿下"
+  },
+  {
+   "id": 14,
+   "start": 41.66,
+   "end": 44.96,
+   "text": "rounds where your team got the first blood so much easier.",
+   "asr": "rounds where your team got the first blood so much easier.",
+   "translation": "我方已经拿到首杀的回合会容易得多"
+  },
+  {
+   "id": 15,
+   "start": 45.0,
+   "end": 47.32,
+   "text": "When the enemy team is down players,",
+   "asr": "When the enemy team is down players,",
+   "translation": "当敌方人数劣势时，"
+  },
+  {
+   "id": 16,
+   "start": 47.36,
+   "end": 51.54,
+   "text": "they are desperately looking to equalize and you overpeeking and peeking",
+   "asr": "they are desperately looking to equalize and you overheating and peeking",
+   "translation": "他们会拼命想把人数打平，而你在不该拉枪的时候"
+  },
+  {
+   "id": 17,
+   "start": 51.58,
+   "end": 54.94,
+   "text": "when you shouldn't is exactly what will help them win the round.",
+   "asr": "when you shouldn't is exactly what will help them win the round.",
+   "translation": "过度拉枪，正好会帮他们赢下这个回合"
+  },
+  {
+   "id": 18,
+   "start": 54.98,
+   "end": 58.04,
+   "text": "Setting up a crossfire, peeking off of your teammates,",
+   "asr": "Setting up a crossfire, peeking off of your teammates,",
+   "translation": "架好交叉火力、跟着队友补枪拉出，"
+  },
+  {
+   "id": 19,
+   "start": 58.08,
+   "end": 62.41,
+   "text": "and just working together will drastically increase your round win rate.",
+   "asr": "and just working together will drastically increase your round win rate.",
+   "translation": "多和队友配合，会大幅提高你的回合胜率"
+  },
+  {
+   "id": 20,
+   "start": 66.09,
+   "end": 70.66,
+   "text": "The second tip that I have for you is to find your perfect sensitivity.",
+   "asr": "The second tip that I have for you is to find your perfect sensitivity.",
+   "translation": "第二个技巧：找到最适合你的灵敏度"
+  },
+  {
+   "id": 21,
+   "start": 70.73,
+   "end": 71.74,
+   "text": "In my opinion,",
+   "asr": "In my opinion,",
+   "translation": "在我看来，"
+  },
+  {
+   "id": 22,
+   "start": 71.79,
+   "end": 74.41,
+   "text": "the easiest way to find it is to set your sensitivity",
+   "asr": "the easiest way to find it is to set your sensitivity",
+   "translation": "最简单的方法，就是根据你的 DPI"
+  },
+  {
+   "id": 23,
+   "start": 74.45,
+   "end": 77.53,
+   "text": "to one of these three depending on your dpi.",
+   "asr": "to one of these three depending on your dpi.",
+   "translation": "把灵敏度设为下面三个数值之一"
+  },
+  {
+   "id": 24,
+   "start": 77.57,
+   "end": 82.19,
+   "text": "If you're on 800 dpi, set your in-game sense to 0.35.",
+   "asr": "If you're on 800 dpi, set your in-game sense to 0.35.",
+   "translation": "如果你用 800 DPI，游戏内灵敏度设为 0.35"
+  },
+  {
+   "id": 25,
+   "start": 82.23,
+   "end": 88.39,
+   "text": "If you're on 1600 dpi, set your in-game sense to 0.175.",
+   "asr": "If you're on 1600 dpi, set your in-game sense to 0.175.",
+   "translation": "如果你用 1600 DPI，游戏内灵敏度设为 0.175"
+  },
+  {
+   "id": 26,
+   "start": 88.43,
+   "end": 93.19,
+   "text": "And if you're on 400 dpi, set your in-game sense to 0.7.",
+   "asr": "And if you're on 400 dpi, set your in-game sense to 0.7.",
+   "translation": "如果你用 400 DPI，游戏内灵敏度设为 0.7"
+  },
+  {
+   "id": 27,
+   "start": 93.23,
+   "end": 96.37,
+   "text": "Use this as your baseline starting sensitivity and",
+   "asr": "Use this as your baseline starting sensitivity and",
+   "translation": "把它作为你的基准起始灵敏度，"
+  },
+  {
+   "id": 28,
+   "start": 96.41,
+   "end": 99.45,
+   "text": "adjust it up or down depending on how it feels.",
+   "asr": "adjust it up or down depending on how it feels.",
+   "translation": "然后根据手感往上或往下微调"
+  },
+  {
+   "id": 29,
+   "start": 99.49,
+   "end": 100.27,
+   "text": "In VALORANT,",
+   "asr": "In VALORANT,",
+   "translation": "在无畏契约里，"
+  },
+  {
+   "id": 30,
+   "start": 100.31,
+   "end": 102.49,
+   "text": "you typically want to have a lower sense because",
+   "asr": "you typically want to have a lower sense because",
+   "translation": "通常建议用偏低的灵敏度，因为"
+  },
+  {
+   "id": 31,
+   "start": 102.53,
+   "end": 104.88,
+   "text": "most of the aiming is micro adjustments,",
+   "asr": "most of the aiming is micro adjustments,",
+   "translation": "大部分瞄准都是微调"
+  },
+  {
+   "id": 32,
+   "start": 104.97,
+   "end": 108.45,
+   "text": "but it's important to find a sense that is comfortable and works for you,",
+   "asr": "but it's important to find a sense that is comfortable and works for you,",
+   "translation": "但最重要的是找到一个让你舒服、适合你的灵敏度"
+  },
+  {
+   "id": 33,
+   "start": 108.49,
+   "end": 111.09,
+   "text": "and I see a lot of beginners playing on way too high",
+   "asr": "and I see a lot of beginners playing on way too high",
+   "translation": "我看到很多新手用的灵敏度高得离谱，"
+  },
+  {
+   "id": 34,
+   "start": 111.13,
+   "end": 113.33,
+   "text": "of a sensitivity just because they're used to it.",
+   "asr": "of a sensitivity just because they're used to it.",
+   "translation": "仅仅是因为他们习惯了"
+  },
+  {
+   "id": 35,
+   "start": 113.37,
+   "end": 115.0,
+   "text": "While we're on the topic of settings,",
+   "asr": "While we're on the topic of settings,",
+   "translation": "既然说到了设置，"
+  },
+  {
+   "id": 36,
+   "start": 115.13,
+   "end": 118.95,
+   "text": "you also want to make sure that your ping and network routing is optimized,",
+   "asr": "you also want to make sure that your ping and network routing is optimized,",
+   "translation": "你还要确保自己的延迟和网络路由已经优化好，"
+  },
+  {
+   "id": 37,
+   "start": 118.99,
+   "end": 121.81,
+   "text": "otherwise you'll experience lag and packet loss,",
+   "asr": "otherwise you'll experience lag and packet loss,",
+   "translation": "否则就会遇到卡顿和丢包，"
+  },
+  {
+   "id": 38,
+   "start": 121.85,
+   "end": 124.07,
+   "text": "which a lot of people have told me they're struggling with.",
+   "asr": "which a lot of people have told me they're struggling with.",
+   "translation": "很多人都跟我说过他们被这个问题困扰"
+  },
+  {
+   "id": 39,
+   "start": 124.11,
+   "end": 128.45,
+   "text": "This is exactly why I've partnered with ExitLag to fix this problem for good.",
+   "asr": "This is exactly why I've partnered with Exit Lag to fix this problem for good.",
+   "translation": "所以我和 ExitLag 合作，来彻底解决这个问题"
+  },
+  {
+   "id": 40,
+   "start": 128.49,
+   "end": 132.35,
+   "text": "ExitLag is a network routing optimization software that will help you",
+   "asr": "Exit Lag is a network routing optimization software that will help you",
+   "translation": "ExitLag 是一款网络路由优化软件，"
+  },
+  {
+   "id": 41,
+   "start": 132.39,
+   "end": 137.15,
+   "text": "get the best possible ping using AI routing optimization technology.",
+   "asr": "get the best possible ping using AI routing optimization technology.",
+   "translation": "通过 AI 路由优化技术帮你获得尽可能低的延迟"
+  },
+  {
+   "id": 42,
+   "start": 137.19,
+   "end": 140.07,
+   "text": "Simply create an account and install ExitLag,",
+   "asr": "Simply create an account and install Exit Lag,",
+   "translation": "只需注册账号并安装 ExitLag，"
+  },
+  {
+   "id": 43,
+   "start": 140.11,
+   "end": 142.14,
+   "text": "then select VALORANT as your game,",
+   "asr": "then select VALORANT as your game,",
+   "translation": "然后选择无畏契约作为你的游戏，"
+  },
+  {
+   "id": 44,
+   "start": 142.19,
+   "end": 145.47,
+   "text": "and then select which server you play on and hit apply routes,",
+   "asr": "and then select which server you play on and hit apply routes,",
+   "translation": "再选好你所在的服务器，点击“应用路由”，"
+  },
+  {
+   "id": 45,
+   "start": 145.51,
+   "end": 149.21,
+   "text": "and now you have the best most optimized ping and routing possible.",
+   "asr": "and now you have the best most optimized ping and routing possible.",
+   "translation": "你就拥有了最优的延迟和路由"
+  },
+  {
+   "id": 46,
+   "start": 149.25,
+   "end": 150.33,
+   "text": "It's really that easy.",
+   "asr": "It's really that easy.",
+   "translation": "就是这么简单"
+  },
+  {
+   "id": 47,
+   "start": 150.37,
+   "end": 154.19,
+   "text": "ExitLag is an extremely trusted software that millions of players,",
+   "asr": "Exit Lag is an extremely trusted software that millions of players,",
+   "translation": "ExitLag 是一款非常可靠的软件，数百万玩家"
+  },
+  {
+   "id": 48,
+   "start": 154.23,
+   "end": 155.71,
+   "text": "including myself use,",
+   "asr": "including myself use,",
+   "translation": "包括我自己都在用"
+  },
+  {
+   "id": 49,
+   "start": 155.75,
+   "end": 159.81,
+   "text": "so by clicking my link at the top of the description or scanning this QR code,",
+   "asr": "so by clicking my link at the top of the description or scanning this QR code,",
+   "translation": "点击简介顶部的链接，或扫描这个二维码，"
+  },
+  {
+   "id": 50,
+   "start": 159.85,
+   "end": 164.05,
+   "text": "you can get 50% off an annual plan plus 90 days for free.",
+   "asr": "you can get 50% off an annual plan plus 90 days for free.",
+   "translation": "年度方案可享五折，再额外赠送 90 天"
+  },
+  {
+   "id": 51,
+   "start": 164.09,
+   "end": 166.38,
+   "text": "Huge thank you to ExitLag for their partnership.",
+   "asr": "Huge thank you to Exit Lag for their partnership.",
+   "translation": "非常感谢 ExitLag 的赞助合作"
+  },
+  {
+   "id": 52,
+   "start": 166.45,
+   "end": 167.83,
+   "text": "Now let's get into the next tip.",
+   "asr": "Now let's get into the next tip.",
+   "translation": "下面进入下一个技巧"
+  },
+  {
+   "id": 53,
+   "start": 167.87,
+   "end": 172.22,
+   "text": "The third tip I have for you is to never rotate before contact.",
+   "asr": "The third tip I have for you is to never rotate before contact.",
+   "translation": "第三个技巧：在没有接触敌人之前，千万别转点"
+  },
+  {
+   "id": 54,
+   "start": 172.27,
+   "end": 176.53,
+   "text": "To explain what I mean, imagine you're on defense playing B on Ascent.",
+   "asr": "To explain what I mean, imagine you're on defense playing B on Ascent.",
+   "translation": "举个例子，假设你在亚海悬城防守 B 点"
+  },
+  {
+   "id": 55,
+   "start": 176.57,
+   "end": 179.75,
+   "text": "You peek B main and see absolutely nothing.",
+   "asr": "You peek B main and see absolutely nothing.",
+   "translation": "你探头看了一眼 B 主路，什么都没有"
+  },
+  {
+   "id": 56,
+   "start": 179.79,
+   "end": 182.57,
+   "text": "Most players will think to themselves, they aren't B,",
+   "asr": "Most players will think to themselves, they aren't B,",
+   "translation": "大多数玩家会心想：他们不在 B，"
+  },
+  {
+   "id": 57,
+   "start": 182.61,
+   "end": 185.21,
+   "text": "so I should rotate to A to go help out my team.",
+   "asr": "so I should rotate to A to go help out my team.",
+   "translation": "那我应该转去 A 点帮队友"
+  },
+  {
+   "id": 58,
+   "start": 185.25,
+   "end": 189.22,
+   "text": "But this is actually a bad idea, because if you look at the mini-map,",
+   "asr": "But this is actually a bad idea, because if you look at the mini-map,",
+   "translation": "但这其实是个坏主意，因为你看小地图，"
+  },
+  {
+   "id": 59,
+   "start": 189.27,
+   "end": 191.1,
+   "text": "they aren't pushing A either.",
+   "asr": "they aren't pushing A either.",
+   "translation": "他们也没有在打 A"
+  },
+  {
+   "id": 60,
+   "start": 191.15,
+   "end": 194.59,
+   "text": "The enemy team has not made contact anywhere on the map yet,",
+   "asr": "The enemy team has not made contact anywhere on the map yet,",
+   "translation": "敌方还没有在地图上任何地方和我们接触，"
+  },
+  {
+   "id": 61,
+   "start": 194.63,
+   "end": 196.99,
+   "text": "so you shouldn't rotate and instead hold your",
+   "asr": "so you shouldn't rotate and instead hold your",
+   "translation": "所以你不该转点，而是守住"
+  },
+  {
+   "id": 62,
+   "start": 197.03,
+   "end": 199.35,
+   "text": "position until you get more information.",
+   "asr": "position until you get more information.",
+   "translation": "自己的位置，直到获得更多信息"
+  },
+  {
+   "id": 63,
+   "start": 199.39,
+   "end": 202.09,
+   "text": "Too many players will instantly rotate because they",
+   "asr": "Too many players will instantly rotate because they",
+   "translation": "太多玩家只要在自己的位置"
+  },
+  {
+   "id": 64,
+   "start": 202.13,
+   "end": 204.42,
+   "text": "don't see or hear anything where they're playing,",
+   "asr": "don't see or hear anything where they're playing,",
+   "translation": "没看到、没听到动静，就马上转点"
+  },
+  {
+   "id": 65,
+   "start": 204.49,
+   "end": 207.35,
+   "text": "and it's a bad habit that allows the enemy team to play",
+   "asr": "and it's a bad habit that allows the enemy team to play",
+   "translation": "这是个坏习惯，会让敌方可以慢慢打，"
+  },
+  {
+   "id": 66,
+   "start": 207.39,
+   "end": 210.31,
+   "text": "slow and then take your site easily once you give it up.",
+   "asr": "slow and then take your site easily once you give it up.",
+   "translation": "等你一放弃点位，他们就能轻松拿下"
+  },
+  {
+   "id": 67,
+   "start": 210.35,
+   "end": 214.75,
+   "text": "The fourth tip I have for you is to use the 3 second spike rule.",
+   "asr": "The fourth tip I have for you is to use the 3 second spike rule.",
+   "translation": "第四个技巧：用好“3 秒爆能器法则”"
+  },
+  {
+   "id": 68,
+   "start": 214.79,
+   "end": 220.79,
+   "text": "To defuse the bomb, it takes 7 seconds, but to half it, it takes 3.5 seconds.",
+   "asr": "To defuse the bomb, it takes 7 seconds, but to half it, it takes 3.5 seconds.",
+   "translation": "拆包需要 7 秒，但拆到一半只需要 3.5 秒"
+  },
+  {
+   "id": 69,
+   "start": 220.83,
+   "end": 223.61,
+   "text": "If you're in a 1v1 post plant and the enemy team",
+   "asr": "If you're in a 1v1 post plant and the enemy team",
+   "translation": "如果你在下包后的 1v1 残局里，"
+  },
+  {
+   "id": 70,
+   "start": 223.65,
+   "end": 226.42,
+   "text": "taps the bomb when you don't have any utility,",
+   "asr": "taps the bomb when you don't have any utility,",
+   "translation": "敌人碰了一下包，而你手上没有技能，"
+  },
+  {
+   "id": 71,
+   "start": 226.57,
+   "end": 229.86,
+   "text": "count to 3 in your head and then peek on 3.",
+   "asr": "count to 3 in your head and then peek on 3.",
+   "translation": "就在心里数到 3，数到 3 时拉出去"
+  },
+  {
+   "id": 72,
+   "start": 234.52,
+   "end": 237.64,
+   "text": "This makes it so that if they were sticking the bomb to half it,",
+   "asr": "This makes it so that if they were sticking the bomb to half it,",
+   "translation": "这样如果他是想拆到一半，"
+  },
+  {
+   "id": 73,
+   "start": 237.68,
+   "end": 239.38,
+   "text": "you'd peek them right before they were able",
+   "asr": "you'd peek them right before they were able",
+   "translation": "你会正好在他拆到一半之前"
+  },
+  {
+   "id": 74,
+   "start": 239.42,
+   "end": 241.76,
+   "text": "to half it and get them off or kill them.",
+   "asr": "to half it and get them off or kill them.",
+   "translation": "拉到他，打断他或者直接击杀"
+  },
+  {
+   "id": 75,
+   "start": 241.8,
+   "end": 244.9,
+   "text": "It's also just long enough so that if they tap the bomb,",
+   "asr": "It's also just long enough so that if they tap the bomb,",
+   "translation": "这个时间也刚好够长，如果他只是假拆，"
+  },
+  {
+   "id": 76,
+   "start": 244.94,
+   "end": 248.22,
+   "text": "they'd likely be looking for you, giving you an easy kill.",
+   "asr": "they'd likely be looking for you, giving you an easy kill.",
+   "translation": "大概率正在找你，你就能轻松拿下击杀"
+  },
+  {
+   "id": 77,
+   "start": 248.26,
+   "end": 252.28,
+   "text": "My fifth tip is to start using your abilities before you take a fight,",
+   "asr": "My fifth tip is to start using your abilities before you take a fight,",
+   "translation": "第五个技巧：在对枪之前就开始用技能，"
+  },
+  {
+   "id": 78,
+   "start": 252.32,
+   "end": 254.14,
+   "text": "instead of using them reactively.",
+   "asr": "instead of using them reactively.",
+   "translation": "而不是被动地交技能"
+  },
+  {
+   "id": 79,
+   "start": 254.18,
+   "end": 257.66,
+   "text": "A lot of players will take a fight that they were half prepared for and",
+   "asr": "A lot of players will take a fight that they were half prepared for and",
+   "translation": "很多玩家会在只准备了一半的情况下去对枪，"
+  },
+  {
+   "id": 80,
+   "start": 257.7,
+   "end": 261.55,
+   "text": "then pull out their utility at a terrible time to try to save themselves.",
+   "asr": "then pull out your utility at a terrible time to try to save themselves.",
+   "translation": "然后在最糟糕的时机掏技能想自救"
+  },
+  {
+   "id": 81,
+   "start": 261.62,
+   "end": 266.54,
+   "text": "Instead, try to always plan ahead and use your utility before you take a fight.",
+   "asr": "Instead, try to always plan ahead and use your utility before you take a fight.",
+   "translation": "相反，要提前规划，在对枪之前就把技能用掉"
+  },
+  {
+   "id": 82,
+   "start": 266.58,
+   "end": 270.94,
+   "text": "For example, pop your Jett dash and then peek instead of dry fighting.",
+   "asr": "For example, pop your jet dash and then peek instead of dry fighting.",
+   "translation": "比如先交捷风的突进再拉枪，而不是干拉"
+  },
+  {
+   "id": 83,
+   "start": 270.98,
+   "end": 273.2,
+   "text": "Use your Sova dart before you peek to give",
+   "asr": "Use your sova dart before you peek to give",
+   "translation": "拉枪前先射一发猎枭的侦察箭，"
+  },
+  {
+   "id": 84,
+   "start": 273.24,
+   "end": 275.72,
+   "text": "the enemy something to distract or scan them.",
+   "asr": "the enemy something to distract or scan them.",
+   "translation": "给敌人制造干扰，或者直接扫出他们的位置"
+  },
+  {
+   "id": 85,
+   "start": 275.76,
+   "end": 278.92,
+   "text": "Throw your molly and flashes before you commit to the fight.",
+   "asr": "Throw your molly and flashes before you commit to the fight.",
+   "translation": "在决定开打之前，先丢燃烧弹和闪光"
+  },
+  {
+   "id": 86,
+   "start": 278.96,
+   "end": 280.36,
+   "text": "This might sound obvious,",
+   "asr": "This might sound obvious,",
+   "translation": "这听起来可能很显而易见，"
+  },
+  {
+   "id": 87,
+   "start": 280.4,
+   "end": 282.92,
+   "text": "but a lot of players don't know that they are about to get",
+   "asr": "but a lot of players don't know that they are about to get",
+   "translation": "但很多玩家根本意识不到自己马上"
+  },
+  {
+   "id": 88,
+   "start": 282.96,
+   "end": 286.22,
+   "text": "into a fight and don't plan ahead with their utility at all,",
+   "asr": "into a fight and don't plan ahead with their utility at all,",
+   "translation": "就要对枪了，也完全不提前规划技能，"
+  },
+  {
+   "id": 89,
+   "start": 286.26,
+   "end": 288.72,
+   "text": "causing them to die while pulling it out or losing",
+   "asr": "causing them to die while pulling it out or losing",
+   "translation": "结果在掏技能时被打死，或者输掉一场"
+  },
+  {
+   "id": 90,
+   "start": 288.76,
+   "end": 291.09,
+   "text": "a fight that could have been won with a flash,",
+   "asr": "a fight that could have been one with a flash,",
+   "translation": "本来可以靠一颗闪光、"
+  },
+  {
+   "id": 91,
+   "start": 291.2,
+   "end": 292.38,
+   "text": "scan or molly.",
+   "asr": "scan or molly.",
+   "translation": "侦察或燃烧弹赢下的对枪"
+  },
+  {
+   "id": 92,
+   "start": 292.42,
+   "end": 295.72,
+   "text": "My sixth tip is to reload your gun sparingly.",
+   "asr": "My sixth tip is to reload your gun sparingly.",
+   "translation": "第六个技巧：不要频繁换弹"
+  },
+  {
+   "id": 93,
+   "start": 295.76,
+   "end": 299.24,
+   "text": "A lot of players getting into VALORANT like to Call of Duty reload,",
+   "asr": "A lot of players getting into VALORANT like to call of duty reload,",
+   "translation": "很多刚入坑无畏契约的玩家喜欢“使命召唤式换弹”，"
+  },
+  {
+   "id": 94,
+   "start": 299.28,
+   "end": 301.0,
+   "text": "which basically means reloading whenever",
+   "asr": "which basically means reloading whenever",
+   "translation": "意思就是弹匣里"
+  },
+  {
+   "id": 95,
+   "start": 301.04,
+   "end": 303.24,
+   "text": "you have more than enough ammo in the mag.",
+   "asr": "you have more than enough ammo in the mag.",
+   "translation": "子弹还绰绰有余的时候就换弹"
+  },
+  {
+   "id": 96,
+   "start": 303.28,
+   "end": 307.2,
+   "text": "You can get an ace without reloading a single time and people don't",
+   "asr": "You can get an ace without reloading a single time and people don't",
+   "translation": "你完全可以一次弹都不换打出五杀，"
+  },
+  {
+   "id": 97,
+   "start": 307.24,
+   "end": 311.26,
+   "text": "understand how much 10 or 15 bullets actually is in this game.",
+   "asr": "understand how much 10 or 15 bullets actually is in this game.",
+   "translation": "很多人不知道在这个游戏里 10 到 15 发子弹有多够用"
+  },
+  {
+   "id": 98,
+   "start": 311.3,
+   "end": 314.74,
+   "text": "Reloading at a bad time will not only make yourself a sitting duck",
+   "asr": "Reloading at a bad time will not only make yourself a sitting duck",
+   "translation": "在错误的时机换弹，不仅会让你"
+  },
+  {
+   "id": 99,
+   "start": 314.78,
+   "end": 318.78,
+   "text": "without a gun but also give the enemies a sound cue that you are there.",
+   "asr": "without a gun but also give the enemies a sound cue that you are there.",
+   "translation": "没枪可用、变成活靶子，还会给敌人暴露你位置的声音提示"
+  },
+  {
+   "id": 100,
+   "start": 318.82,
+   "end": 323.0,
+   "text": "Only reload when you absolutely have to and when you're in a safe place to do",
+   "asr": "Only reload when you absolutely have to and when you're in a safe place to do",
+   "translation": "只在确实必要、并且处于安全位置时"
+  },
+  {
+   "id": 101,
+   "start": 323.04,
+   "end": 327.0,
+   "text": "so because I see people die this way so often and they don't even notice it.",
+   "asr": "so because I see people die this way so often and they don't even notice it.",
+   "translation": "再换弹，我经常看到有人这样死掉，自己还浑然不觉"
+  },
+  {
+   "id": 102,
+   "start": 327.04,
+   "end": 329.98,
+   "text": "Tip number seven is to abuse your minimap.",
+   "asr": "Tip number seven is to abuse your minimap.",
+   "translation": "第七个技巧：充分利用小地图"
+  },
+  {
+   "id": 103,
+   "start": 330.02,
+   "end": 333.3,
+   "text": "The minimap is one of the most overlooked things for beginners but",
+   "asr": "The minimap is one of the most overlooked things for beginners but",
+   "translation": "小地图是新手最容易忽视的东西之一，"
+  },
+  {
+   "id": 104,
+   "start": 333.34,
+   "end": 336.84,
+   "text": "the amount of information it gives you is crucial to winning rounds.",
+   "asr": "the amount of information it gives you is crucial to winning rounds.",
+   "translation": "但它提供的信息量对赢下回合至关重要"
+  },
+  {
+   "id": 105,
+   "start": 336.88,
+   "end": 338.96,
+   "text": "You can see who's fighting on the other side of the",
+   "asr": "You can see who's fighting on the other side of the",
+   "translation": "你可以看到地图另一边"
+  },
+  {
+   "id": 106,
+   "start": 339.0,
+   "end": 341.53,
+   "text": "map and where the enemy team is stacked towards.",
+   "asr": "map and where the enemy team is stacked towards.",
+   "translation": "谁在交火，以及敌方往哪边堆人"
+  },
+  {
+   "id": 107,
+   "start": 341.66,
+   "end": 345.94,
+   "text": "You can see if your no-comms teammate is holding the exact same angle that you are.",
+   "asr": "You can see if your nocom teammate is holding the exact same angle that you are.",
+   "translation": "还能看到不开麦的队友是不是和你架着同一个角度"
+  },
+  {
+   "id": 108,
+   "start": 345.98,
+   "end": 349.42,
+   "text": "You gather tons of information through your minimap so making sure",
+   "asr": "You gather tons of information through your minimap so making sure",
+   "translation": "小地图能给你大量信息，所以"
+  },
+  {
+   "id": 109,
+   "start": 349.46,
+   "end": 353.14,
+   "text": "you're constantly glancing at it is a super important habit to build.",
+   "asr": "you're constantly glancing at it is a super important habit to build.",
+   "translation": "养成时刻瞟一眼小地图的习惯非常重要"
+  },
+  {
+   "id": 110,
+   "start": 353.18,
+   "end": 357.76,
+   "text": "Tip number eight is learn how to silent jump and silent drop on ropes.",
+   "asr": "Tip number eight is learn how to silent jump and silent drop on ropes.",
+   "translation": "第八个技巧：学会静步跳和静音滑绳"
+  },
+  {
+   "id": 111,
+   "start": 357.8,
+   "end": 361.96,
+   "text": "To silent jump you just need to hold crouch jump and then let go",
+   "asr": "To silent jump you just need to hold crouch jump and then let go",
+   "translation": "静步跳只需要按住蹲同时起跳，"
+  },
+  {
+   "id": 112,
+   "start": 362.0,
+   "end": 365.59,
+   "text": "of crouch while midair and you will make no sound when you land.",
+   "asr": "of crouch while midair and you will make no sound when you land.",
+   "translation": "然后在空中松开蹲，落地时就不会发出声音"
+  },
+  {
+   "id": 113,
+   "start": 369.43,
+   "end": 371.05,
+   "text": "This is good for jump peeking to get",
+   "asr": "This is good for jump peeking to get",
+   "translation": "这很适合用来跳拉获取信息，"
+  },
+  {
+   "id": 114,
+   "start": 371.09,
+   "end": 373.47,
+   "text": "information without giving away your position.",
+   "asr": "information without giving away your position.",
+   "translation": "同时不暴露自己的位置"
+  },
+  {
+   "id": 115,
+   "start": 373.51,
+   "end": 377.45,
+   "text": "To silent drop down ropes hold shift and then hold S while",
+   "asr": "To silent drop down ropes hold shift and then hold S while",
+   "translation": "静音滑绳：按住 Shift，在下落时"
+  },
+  {
+   "id": 116,
+   "start": 377.49,
+   "end": 381.08,
+   "text": "you're falling to stop your forward momentum and then press F.",
+   "asr": "you're falling to stop your forward momentum and then press F.",
+   "translation": "按住 S 抵消前冲的惯性，然后按 F"
+  },
+  {
+   "id": 117,
+   "start": 383.18,
+   "end": 386.84,
+   "text": "This lets you drop down ropes way faster without making any noise",
+   "asr": "This lets you drop down ropes way faster without making any noise",
+   "translation": "这样下绳更快，而且不会发出任何声音，"
+  },
+  {
+   "id": 118,
+   "start": 386.88,
+   "end": 390.72,
+   "text": "and minimizes the time without your gun out helping you get timings.",
+   "asr": "and minimizes the time without your gun out helping you get timings.",
+   "translation": "还能缩短收枪的时间，帮你卡准时机"
+  },
+  {
+   "id": 119,
+   "start": 390.76,
+   "end": 394.15,
+   "text": "Tip number nine is to never let your crosshair float.",
+   "asr": "Tip number nine is to never let your crosshair float.",
+   "translation": "第九个技巧：永远不要让准星飘着"
+  },
+  {
+   "id": 120,
+   "start": 394.24,
+   "end": 396.44,
+   "text": "Floating your crosshair means your crosshair",
+   "asr": "Floating your crosshair means your crosshair",
+   "translation": "准星飘着，就是指你的准星"
+  },
+  {
+   "id": 121,
+   "start": 396.48,
+   "end": 398.5,
+   "text": "is pointed at somewhere that's impossible",
+   "asr": "is pointed at somewhere that's impossible",
+   "translation": "指向了一个敌人"
+  },
+  {
+   "id": 122,
+   "start": 398.54,
+   "end": 400.56,
+   "text": "for you to die from and this happens when",
+   "asr": "for you to die from and this happens when",
+   "translation": "根本不可能出现的地方，这往往是"
+  },
+  {
+   "id": 123,
+   "start": 400.6,
+   "end": 402.38,
+   "text": "you get lazy about where you're putting it.",
+   "asr": "you get lazy about where you're putting it.",
+   "translation": "你对准星位置变得懒散时发生的"
+  },
+  {
+   "id": 124,
+   "start": 402.42,
+   "end": 406.36,
+   "text": "This is probably the most common struggle that I see beginners have and",
+   "asr": "This is probably the most common struggle that I see beginners have and",
+   "translation": "这大概是我看到新手最常见的问题，"
+  },
+  {
+   "id": 125,
+   "start": 406.4,
+   "end": 410.6,
+   "text": "building this habit is a crucial fundamental that you need to pay attention to.",
+   "asr": "building this habit is a crucial fundamental that you need to pay attention to.",
+   "translation": "养成好习惯是你必须重视的关键基本功"
+  },
+  {
+   "id": 126,
+   "start": 410.64,
+   "end": 413.4,
+   "text": "90% of aim in this game is crosshair placement",
+   "asr": "90% of aim in this game is crosshair placement",
+   "translation": "这个游戏里 90% 的瞄准都是准星预瞄，"
+  },
+  {
+   "id": 127,
+   "start": 413.44,
+   "end": 415.26,
+   "text": "so training it and making sure you're",
+   "asr": "so training it and making sure you're",
+   "translation": "所以要多练，确保你"
+  },
+  {
+   "id": 128,
+   "start": 415.3,
+   "end": 419.12,
+   "text": "not letting your crosshair float out in the middle of nowhere is very important.",
+   "asr": "not letting your crosshair float out in the middle of nowhere is very important.",
+   "translation": "不会让准星飘到莫名其妙的地方，这非常重要"
+  },
+  {
+   "id": 129,
+   "start": 419.16,
+   "end": 422.2,
+   "text": "This leads me to tip 10 which is to use boxes",
+   "asr": "This leads me to tip 10 which is to use boxes",
+   "translation": "这就引出了第十个技巧：利用箱子"
+  },
+  {
+   "id": 130,
+   "start": 422.24,
+   "end": 424.8,
+   "text": "to line up and learn your crosshair placement.",
+   "asr": "to line up and learn your crosshair placement.",
+   "translation": "来对齐和练习你的准星预瞄"
+  },
+  {
+   "id": 131,
+   "start": 424.84,
+   "end": 428.86,
+   "text": "A lot of the boxes on most maps will be exactly at head height so",
+   "asr": "A lot of the boxes on most maps will be exactly at head height so",
+   "translation": "大部分地图上很多箱子刚好就在头的高度，"
+  },
+  {
+   "id": 132,
+   "start": 428.9,
+   "end": 432.14,
+   "text": "you'll know where headshot level is for your crosshair placement.",
+   "asr": "you'll know where headshot level is for your crosshair placement.",
+   "translation": "这样你就知道准星预瞄时爆头线在哪里"
+  },
+  {
+   "id": 133,
+   "start": 432.18,
+   "end": 435.26,
+   "text": "Of course eventually you'll need to get this down subconsciously",
+   "asr": "Of course eventually you'll need to get this down subconsciously",
+   "translation": "当然，最终你需要把它练成下意识的习惯，"
+  },
+  {
+   "id": 134,
+   "start": 435.3,
+   "end": 438.32,
+   "text": "but this is just an easy way to learn and improve upon it.",
+   "asr": "but this is just an easy way to learn and improve upon it.",
+   "translation": "但这是一个学习和提升的简单方法"
+  },
+  {
+   "id": 135,
+   "start": 438.36,
+   "end": 441.5,
+   "text": "Tip 11 is to find a main agent that you'd like to play.",
+   "asr": "Tip 11 is to",
+   "translation": "第十一个技巧：找一个你喜欢的英雄作为主玩"
+  },
+  {
+   "id": 136,
+   "start": 441.5,
+   "end": 445.4,
+   "text": "Think about Duelists, Sentinels, Initiators or Controllers.",
+   "asr": "find a They",
+   "translation": "可以考虑决斗者、哨卫、先锋或控场者"
+  },
+  {
+   "id": 137,
+   "start": 445.4,
+   "end": 447.1,
+   "text": "They all have different roles in",
+   "asr": "all have different roles in",
+   "translation": "它们在对局中定位各不相同，"
+  },
+  {
+   "id": 138,
+   "start": 447.14,
+   "end": 450.1,
+   "text": "a game so find one that speaks to you and try it out.",
+   "asr": "a game so find one that speaks to you and try it out.",
+   "translation": "所以找一个适合你的去试试"
+  },
+  {
+   "id": 139,
+   "start": 450.14,
+   "end": 453.0,
+   "text": "This will help you become consistent and makes learning the",
+   "asr": "This will help you become consistent and makes learning the",
+   "translation": "这能帮你打得更稳定，当你了解了"
+  },
+  {
+   "id": 140,
+   "start": 453.04,
+   "end": 456.4,
+   "text": "game much easier when you understand your agent's utility.",
+   "asr": "game much easier when you understand your agent's utility.",
+   "translation": "自己英雄的技能，学习这个游戏也会轻松很多"
+  },
+  {
+   "id": 141,
+   "start": 456.44,
+   "end": 460.48,
+   "text": "Tip number 12 is to always buy and save with your team.",
+   "asr": "Tip number 12 is to always buy and save with your team.",
+   "translation": "第十二个技巧：永远和队友一起起枪、一起存钱"
+  },
+  {
+   "id": 142,
+   "start": 460.52,
+   "end": 464.16,
+   "text": "Low elo economy gets really messy really fast but",
+   "asr": "Low elo economy gets really messy really fast but",
+   "translation": "低分段的经济很快就会变得一团糟，"
+  },
+  {
+   "id": 143,
+   "start": 464.2,
+   "end": 466.46,
+   "text": "one of the easiest ways to make sure that you don't",
+   "asr": "one of the easiest ways to make sure that you don't",
+   "translation": "要避免出现你拿着正义、"
+  },
+  {
+   "id": 144,
+   "start": 466.5,
+   "end": 468.54,
+   "text": "have a Sheriff while your four teammates have",
+   "asr": "have a sheriff while your four teammates have",
+   "translation": "而四个队友都拿着暴徒的情况，"
+  },
+  {
+   "id": 145,
+   "start": 468.58,
+   "end": 471.5,
+   "text": "Vandals is to buy and save with them every round.",
+   "asr": "vandals is to buy and save with them every round.",
+   "translation": "最简单的方法就是每回合都和队友同步起枪存钱"
+  },
+  {
+   "id": 146,
+   "start": 471.54,
+   "end": 474.87,
+   "text": "In the buy phase, press tab and look at your credits.",
+   "asr": "In the buy phase, press tab and look at your credits.",
+   "translation": "在购买阶段，按 Tab 查看大家的经济"
+  },
+  {
+   "id": 147,
+   "start": 474.94,
+   "end": 479.08,
+   "text": "If your whole team is buying rifle full armor then you should buy too.",
+   "asr": "If your whole team is buying rifle full armor then you should buy too.",
+   "translation": "如果全队都在起步枪加重甲，你也应该跟着起"
+  },
+  {
+   "id": 148,
+   "start": 479.12,
+   "end": 482.86,
+   "text": "If your team doesn't have money and needs to save then save with them.",
+   "asr": "If your team doesn't have money and needs to save then save with them.",
+   "translation": "如果队友没钱需要存，那就跟着一起存"
+  },
+  {
+   "id": 149,
+   "start": 482.9,
+   "end": 486.72,
+   "text": "I see so many beginners win pistol round and then proceed to save the",
+   "asr": "I see so many beginners win pistol round and then proceed to save the",
+   "translation": "我看到太多新手赢了手枪局之后，"
+  },
+  {
+   "id": 150,
+   "start": 486.76,
+   "end": 490.06,
+   "text": "next round right after and throw a round that they should have won.",
+   "asr": "next round right after and throw around that they should have won.",
+   "translation": "下一回合马上存钱，白白送掉一个本该赢的回合"
+  },
+  {
+   "id": 151,
+   "start": 490.1,
+   "end": 493.42,
+   "text": "You have more credits than the other team so make sure to buy up.",
+   "asr": "You have more credits than the other team so make sure to buy up.",
+   "translation": "你的经济比对面多，所以一定要起满"
+  },
+  {
+   "id": 152,
+   "start": 493.46,
+   "end": 496.92,
+   "text": "Tip number 13 is to play a lot of deathmatches.",
+   "asr": "Tip number 13 is to play a lot of deathmatches.",
+   "translation": "第十三个技巧：多打死斗模式"
+  },
+  {
+   "id": 153,
+   "start": 496.96,
+   "end": 498.98,
+   "text": "A lot of beginners will neglect practicing",
+   "asr": "A lot of beginners will neglect practicing",
+   "translation": "很多新手会忽视练习"
+  },
+  {
+   "id": 154,
+   "start": 499.02,
+   "end": 501.62,
+   "text": "and training their fundamentals so playing a",
+   "asr": "and training their fundamentals so playing a",
+   "translation": "和基本功训练，而多打"
+  },
+  {
+   "id": 155,
+   "start": 501.66,
+   "end": 503.74,
+   "text": "ton of deathmatches will be the fastest way",
+   "asr": "ton of deathmatches will be the fastest way",
+   "translation": "死斗是最快的方法，"
+  },
+  {
+   "id": 156,
+   "start": 503.78,
+   "end": 505.78,
+   "text": "for you to get better at winning gunfights.",
+   "asr": "for you to get better at winning gunfights.",
+   "translation": "能让你更擅长赢下对枪"
+  },
+  {
+   "id": 157,
+   "start": 505.82,
+   "end": 507.76,
+   "text": "Focus on your crosshair placement,",
+   "asr": "Focus on your crosshair placement,",
+   "translation": "专注于你的准星预瞄、"
+  },
+  {
+   "id": 158,
+   "start": 507.8,
+   "end": 510.4,
+   "text": "micro adjustments and movement and you'll already",
+   "asr": "micro adjustments and movement and you'll already",
+   "translation": "微调和身法，你就已经"
+  },
+  {
+   "id": 159,
+   "start": 510.44,
+   "end": 513.64,
+   "text": "be ahead of 90% of players in your ranked games.",
+   "asr": "be ahead of 90% of players in your ranked games.",
+   "translation": "领先排位里 90% 的玩家了"
+  },
+  {
+   "id": 160,
+   "start": 513.68,
+   "end": 517.09,
+   "text": "Tip number 14 is to abuse off angles.",
+   "asr": "Tip number 14 is to abuse off angles.",
+   "translation": "第十四个技巧：多利用非常规点位"
+  },
+  {
+   "id": 161,
+   "start": 517.22,
+   "end": 520.16,
+   "text": "Off angles are angles that people don't expect you to play",
+   "asr": "Off angles are angles that people don't expect you to play",
+   "translation": "非常规点位是敌人意想不到你会站的位置，"
+  },
+  {
+   "id": 162,
+   "start": 520.2,
+   "end": 523.32,
+   "text": "because there's typically no cover and awkward to fight.",
+   "asr": "because there's typically no cover and awkward to fight.",
+   "translation": "因为那里通常没有掩体，打起来也很别扭"
+  },
+  {
+   "id": 163,
+   "start": 523.36,
+   "end": 527.16,
+   "text": "An example of an off angle is this spot on Haven A Long.",
+   "asr": "An example of an off angle is this spot on Haven A Long.",
+   "translation": "举个例子，比如隐世修所 A 长的这个位置"
+  },
+  {
+   "id": 164,
+   "start": 527.2,
+   "end": 530.28,
+   "text": "If you have a teammate to break the Sova dart and bait for you,",
+   "asr": "If you have a teammate to break the sova dart and bait for you,",
+   "translation": "如果有队友帮你打掉猎枭的侦察箭并帮你钓人，"
+  },
+  {
+   "id": 165,
+   "start": 530.32,
+   "end": 532.36,
+   "text": "it's extremely hard for the enemies to clear",
+   "asr": "it's extremely hard for the enemies to clear",
+   "translation": "敌人就极难清掉"
+  },
+  {
+   "id": 166,
+   "start": 532.4,
+   "end": 534.58,
+   "text": "this spot and they will not be ready for you.",
+   "asr": "this spot and they will not be ready for you.",
+   "translation": "这个位置，他们根本不会防着你"
+  },
+  {
+   "id": 167,
+   "start": 534.62,
+   "end": 537.5,
+   "text": "These power positions will help you win rounds so",
+   "asr": "These power positions will help you win rounds so",
+   "translation": "这些强势点位能帮你"
+  },
+  {
+   "id": 168,
+   "start": 537.54,
+   "end": 539.88,
+   "text": "much more easily so make sure to start using them.",
+   "asr": "much more easily so make sure to start using them.",
+   "translation": "更轻松地赢下回合，所以赶紧用起来吧"
+  },
+  {
+   "id": 169,
+   "start": 539.92,
+   "end": 540.78,
+   "text": "And finally,",
+   "asr": "And finally,",
+   "translation": "最后，"
+  },
+  {
+   "id": 170,
+   "start": 540.82,
+   "end": 545.76,
+   "text": "tip number 15 is to focus on yourself and never blame your teammates.",
+   "asr": "tip number 15 is to focus on yourself and never blame your teammates.",
+   "translation": "第十五个技巧：专注于自己，永远不要甩锅队友"
+  },
+  {
+   "id": 171,
+   "start": 545.8,
+   "end": 547.22,
+   "text": "Trust me, I get it.",
+   "asr": "Trust me, I get it.",
+   "translation": "相信我，我懂这种感觉"
+  },
+  {
+   "id": 172,
+   "start": 547.26,
+   "end": 551.32,
+   "text": "Being the match MVP and losing because four of your teammates had single digit",
+   "asr": "Being the match MVP and losing because four of your teammates had single digit",
+   "translation": "拿了全场 MVP，却因为四个队友只有个位数"
+  },
+  {
+   "id": 173,
+   "start": 551.36,
+   "end": 554.32,
+   "text": "kills really sucks but this is a bad habit",
+   "asr": "kills really sucks but this is a bad habit",
+   "translation": "击杀而输掉，确实很难受，但这是个坏习惯，"
+  },
+  {
+   "id": 174,
+   "start": 554.36,
+   "end": 556.38,
+   "text": "because it shifts the blame off of you.",
+   "asr": "because it shifts the blame off of you.",
+   "translation": "因为它把责任从你身上推开了"
+  },
+  {
+   "id": 175,
+   "start": 556.42,
+   "end": 558.86,
+   "text": "If you put the accountability on yourself and",
+   "asr": "If you put the accountability on yourself and",
+   "translation": "如果你把责任放在自己身上，"
+  },
+  {
+   "id": 176,
+   "start": 558.9,
+   "end": 561.4,
+   "text": "ignore factors that are out of your control,",
+   "asr": "ignore factors that are out of your control,",
+   "translation": "忽略那些你无法控制的因素，"
+  },
+  {
+   "id": 177,
+   "start": 561.44,
+   "end": 563.08,
+   "text": "this will be the fastest way for you to",
+   "asr": "this will be the fastest way for you to",
+   "translation": "这才是让你"
+  },
+  {
+   "id": 178,
+   "start": 563.12,
+   "end": 565.4,
+   "text": "actually improve and become a better player.",
+   "asr": "actually improve and become a better player.",
+   "translation": "真正进步、成为更强玩家的最快方式"
+  },
+  {
+   "id": 179,
+   "start": 565.44,
+   "end": 566.02,
+   "text": "Of course,",
+   "asr": "Of course,",
+   "translation": "当然，"
+  },
+  {
+   "id": 180,
+   "start": 566.06,
+   "end": 570.2,
+   "text": "this is a lot easier said than done but the amount of silver players that I hear",
+   "asr": "this is a lot easier said than done but the amount of silver players that I hear",
+   "translation": "这说起来容易做起来难，但我听到太多白银玩家"
+  },
+  {
+   "id": 181,
+   "start": 570.24,
+   "end": 572.42,
+   "text": "saying that their teammates are the reason why",
+   "asr": "saying that their teammates are the reason why",
+   "translation": "说是队友害得他们"
+  },
+  {
+   "id": 182,
+   "start": 572.46,
+   "end": 575.08,
+   "text": "they're stuck in their rank is honestly insane.",
+   "asr": "they're stuck in their rank is honestly insane.",
+   "translation": "卡在这个段位，说实话这太离谱了"
+  },
+  {
+   "id": 183,
+   "start": 575.12,
+   "end": 576.59,
+   "text": "If you focus on yourself,",
+   "asr": "If you focus on yourself,",
+   "translation": "如果你专注于自己，"
+  },
+  {
+   "id": 184,
+   "start": 576.64,
+   "end": 579.89,
+   "text": "improve your fundamentals and just become a better player,",
+   "asr": "improve your fundamentals and just become a better player,",
+   "translation": "提升基本功，成为更强的玩家，"
+  },
+  {
+   "id": 185,
+   "start": 579.98,
+   "end": 581.56,
+   "text": "you will climb out of that rank.",
+   "asr": "you will climb out of that rank.",
+   "translation": "你一定能打出这个段位"
+  },
+  {
+   "id": 186,
+   "start": 581.6,
+   "end": 582.42,
+   "text": "I guarantee it.",
+   "asr": "I guarantee it.",
+   "translation": "我保证"
+  },
+  {
+   "id": 187,
+   "start": 582.46,
+   "end": 583.92,
+   "text": "With all of that being said,",
+   "asr": "With all of that being said,",
+   "translation": "说了这么多，"
+  },
+  {
+   "id": 188,
+   "start": 583.96,
+   "end": 586.92,
+   "text": "these are my 15 beginner tips that I wish I",
+   "asr": "there are my 15 beginner tips that I wish I",
+   "translation": "这就是我希望自己刚开始玩无畏契约时"
+  },
+  {
+   "id": 189,
+   "start": 586.96,
+   "end": 589.02,
+   "text": "knew sooner when I started playing VALORANT.",
+   "asr": "knew sooner when I started playing Valorant.",
+   "translation": "就能早点知道的 15 个新手技巧"
+  },
+  {
+   "id": 190,
+   "start": 589.06,
+   "end": 591.34,
+   "text": "If you practice this consistently and apply",
+   "asr": "If you practice is consistently and apply",
+   "translation": "如果你坚持练习，并运用"
+  },
+  {
+   "id": 191,
+   "start": 591.38,
+   "end": 593.38,
+   "text": "the tips that I gave you in this video,",
+   "asr": "the tips that I gave you in this video,",
+   "translation": "我在这期视频里分享的技巧，"
+  },
+  {
+   "id": 192,
+   "start": 593.42,
+   "end": 597.38,
+   "text": "I promise that you will improve and rank up extremely fast.",
+   "asr": "I promise that you will improve and rank up extremely fast.",
+   "translation": "我保证你会进步飞快，迅速上分"
+  },
+  {
+   "id": 193,
+   "start": 597.42,
+   "end": 598.86,
+   "text": "If you have any questions,",
+   "asr": "If you have any questions,",
+   "translation": "如果你有任何问题，"
+  },
+  {
+   "id": 194,
+   "start": 598.9,
+   "end": 600.4,
+   "text": "make sure to drop those down in the comment",
+   "asr": "make sure to drop those down in the comment",
+   "translation": "欢迎在下方评论区留言，"
+  },
+  {
+   "id": 195,
+   "start": 600.44,
+   "end": 603.24,
+   "text": "section below so I or others can help you out.",
+   "asr": "section below so I or others can help you out.",
+   "translation": "我或者其他人都可以帮你解答"
+  },
+  {
+   "id": 196,
+   "start": 603.28,
+   "end": 605.82,
+   "text": "If you did enjoy this video or find it helpful,",
+   "asr": "If you did enjoy this video or find it helpful,",
+   "translation": "如果你喜欢这期视频或者觉得有帮助，"
+  },
+  {
+   "id": 197,
+   "start": 605.86,
+   "end": 608.06,
+   "text": "then don't forget to drop a like down below and",
+   "asr": "then don't forget to drop a like down below and",
+   "translation": "别忘了点个赞，"
+  },
+  {
+   "id": 198,
+   "start": 608.1,
+   "end": 610.36,
+   "text": "subscribe to the channel if you have not already.",
+   "asr": "subscribe to the channel if you have not already.",
+   "translation": "还没关注的话也请关注一下频道"
+  },
+  {
+   "id": 199,
+   "start": 610.4,
+   "end": 612.52,
+   "text": "Thank you guys so much for all of your support.",
+   "asr": "Thank you guys so much for all of your support.",
+   "translation": "非常感谢大家的支持"
+  },
+  {
+   "id": 200,
+   "start": 612.56,
+   "end": 615.66,
+   "text": "I love you guys and I honestly cannot thank you guys enough.",
+   "asr": "I love you guys and I honestly cannot thank you guys enough.",
+   "translation": "我爱你们，真的感激不尽"
+  },
+  {
+   "id": 201,
+   "start": 615.7,
+   "end": 616.44,
+   "text": "With that being said,",
+   "asr": "With that being said,",
+   "translation": "话虽如此，"
+  },
+  {
+   "id": 202,
+   "start": 616.48,
+   "end": 620.73,
+   "text": "thank you so much for watching this video and I will catch you in the next one.",
+   "asr": "thank you so much for watching this video and I will catch you in the next one.",
+   "translation": "非常感谢你看完这期视频，我们下期再见"
+  },
+  {
+   "id": 203,
+   "start": 620.88,
+   "end": 621.68,
+   "text": "Peace out.",
+   "asr": "Peace out.",
+   "translation": "拜拜！"
+  }
+ ]
+}

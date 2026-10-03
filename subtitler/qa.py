@@ -49,7 +49,7 @@ class Issue:
     message: str
 
     def __str__(self) -> str:
-        m, s = divmod(self.start, 60)
+        m, s = divmod(round(self.start, 1), 60)
         return f"{self.level.upper():5s} #{self.index:<4d} {int(m):02d}:{s:04.1f}  [{self.code}] {self.message}"
 
 
@@ -123,6 +123,10 @@ def check_segments(
             if len(s_lines) > 2:
                 add("warn", "rows2", f"secondary (source) wraps to {len(s_lines)} rows")
 
+        if src and dur >= 3.0 and display_width(src) / dur < 1.0:
+            add("warn", "sparse", f"only '{src[:30]}' in {dur:.1f}s - Whisper may have dropped speech; "
+                                  f"re-check the audio (e.g. transcribe a clip of this span)")
+
         if dur > 0:
             cps = display_width(re.sub(r"[\s，。、！？,.!?…「」『』《》()（）]", "", primary)) / dur
             if cps > max_cps * 1.4:
@@ -131,8 +135,10 @@ def check_segments(
                 add("warn", "cps", f"reading speed {cps:.1f} em/s (limit {max_cps:g})")
 
         if knowledge is not None and domains and tgt:
+            # the term may land in a neighbouring line when a sentence is split differently
+            near = " ".join((x.translation or "") for x in segments[max(0, k - 1):k + 2])
             for term, want in knowledge.glossary_hints(src, list(domains)):
-                if not term_present(want, tgt):
+                if not term_present(want, near):
                     add("warn", "glossary", f"'{term}' should be translated as '{want}'")
     return issues
 

@@ -180,6 +180,7 @@ python -m subtitler transcribe game.mp4 --kb gaming_nintendo --kb-file my_video.
 | `tech_ai.json` | 人工智能、大语言模型、软件工程 | ChatGPT、DeepSeek、Faster-Whisper、LoRA量化、模型推理、上下文窗口 |
 | `anime_acg.json` | 动漫番剧、声优、制作委员会、网梗 | 京都动画、ufotable、圣地巡礼、异世界转生、作画崩坏、封神名回 |
 | `vlogger_slang.json` | 视频博主、自媒体、直播杂谈黑话 | 一键三连、订阅点赞、切片剪辑、游戏实况、生放送、高评价 |
+| `gaming_valorant.json` | 无畏契约 / VALORANT、FPS 术语 | 捷风、暴徒、冥驹、爆能器、急停、准星预瞄、经济局（国服官方译名） |
 
 #### 4. 生成双语双层字幕（如中英双语）
 ```bash

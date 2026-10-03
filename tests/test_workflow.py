@@ -242,3 +242,41 @@ def test_glossary_term_match_is_lenient():
     assert term_present("压轴登场", "作为压轴大作登场！")
     assert term_present("3D动作游戏", "继承了 3D 动作冒险玩法")
     assert not term_present("帝帝帝大王", "国王出现了")
+
+
+def test_valorant_domain():
+    ke = KnowledgeEngine()
+    assert ke.auto_detect_domain("15-Beginner-Tips-I-Wish-I-Knew-Sooner-in-VALORANT_1080p.mp4") == "gaming_valorant"
+    assert ke.correct_phonetics("buy a vandle and play cipher", "gaming_valorant") == "buy a Vandal and play Cypher"
+    hints = dict(ke.glossary_hints("Plant the Spike, then hold with the Operator", "gaming_valorant"))
+    assert hints["Spike"] == "爆能器" and hints["Operator"] == "冥驹"
+
+
+def test_time_display_never_shows_60_seconds():
+    from subtitler.project import _fmt_t
+    assert _fmt_t(239.97) == "04:00.0"
+    assert _fmt_t(3599.96) == "1:00:00.0"
+
+
+def test_qa_flags_sparse_lines_as_possible_asr_gaps():
+    segs = [SubtitleSegment(0, 6.3, "find a They", "找一个")]
+    assert "sparse" in {i.code for i in check_segments(segs, target_lang="zh")}
+
+
+def test_tiny_gaps_are_chained():
+    from subtitler.asr import close_gaps
+    segs = normalize_timing([SubtitleSegment(0, 1.0, "a"), SubtitleSegment(1.3, 2.5, "b"), SubtitleSegment(4.0, 5, "c")])
+    assert segs[0].end == segs[1].start and segs[1].end < segs[2].start
+    segs = close_gaps([SubtitleSegment(0, 1.0, "a"), SubtitleSegment(1.04, 2, "b")])
+    assert segs[0].end == 1.04
+
+
+def test_burn_bitrate_cap(tmp_path):
+    from subtitler.burner import _encoder_args, source_bitrate_cap
+    f = tmp_path / "v.bin"
+    f.write_bytes(b"\0" * 1_000_000)          # 8 Mbit over 1 s = 8000 kbps
+    assert source_bitrate_cap(str(f), 1.0, 1.5) == 12000
+    assert source_bitrate_cap(str(f), 100.0, 1.5) == 3000  # floor
+    assert source_bitrate_cap(str(f), 1.0, 0) is None
+    assert "-maxrate" in _encoder_args(True, 20, "medium", 5000)
+    assert "-maxrate" not in _encoder_args(False, 20, "medium", None)

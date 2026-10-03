@@ -73,12 +73,28 @@ class _StagedSubtitle:
         shutil.rmtree(self.tmp, ignore_errors=True)
 
 
-def _encoder_args(use_nvenc: bool, crf: int, preset: str) -> List[str]:
+def _encoder_args(use_nvenc: bool, crf: int, preset: str, max_kbps: Optional[int] = None) -> List[str]:
+    cap = ["-maxrate", f"{max_kbps}k", "-bufsize", f"{max_kbps * 2}k"] if max_kbps else []
     if use_nvenc:
-        # -b:v 0 is required for true constant-quality mode; otherwise NVENC caps bitrate.
+        # -b:v 0 = constant-quality mode (otherwise NVENC targets a default bitrate); -maxrate caps peaks.
         return ["-c:v", "h264_nvenc", "-preset", "p5", "-tune", "hq", "-rc", "vbr",
-                "-cq", str(crf), "-b:v", "0", "-pix_fmt", "yuv420p"]
-    return ["-c:v", "libx264", "-preset", preset, "-crf", str(crf), "-pix_fmt", "yuv420p"]
+                "-cq", str(crf), "-b:v", "0", *cap, "-pix_fmt", "yuv420p"]
+    return ["-c:v", "libx264", "-preset", preset, "-crf", str(crf), *cap, "-pix_fmt", "yuv420p"]
+
+
+def source_bitrate_cap(video_path: str, duration: float, factor: float) -> Optional[int]:
+    """
+    Peak-bitrate cap (kbps) = factor x the source's average bitrate (at least 3 Mbps).
+    Re-encoding an already compressed web video at constant quality otherwise spends 3-5x the
+    source bitrate faithfully reproducing its compression artifacts.
+    """
+    if not factor or factor <= 0 or duration <= 0:
+        return None
+    try:
+        src_kbps = os.path.getsize(video_path) * 8 / duration / 1000
+    except OSError:
+        return None
+    return int(max(3000, src_kbps * factor))
 
 
 def burn_subtitles_to_video(
@@ -91,6 +107,7 @@ def burn_subtitles_to_video(
     fonts_dir: Optional[str] = None,
     start: Optional[float] = None,
     end: Optional[float] = None,
+    bitrate_cap: float = 1.6,
 ) -> str:
     """
     Burn subtitles into a video.
@@ -99,6 +116,7 @@ def burn_subtitles_to_video(
     :param crf: quality (CRF for x264, CQ for NVENC). 18 = visually lossless, 20 default, 23 smaller.
     :param fonts_dir: optional directory with .ttf/.otf fonts referenced by the ASS styles.
     :param start/end: optional time range (seconds) for a quick test clip.
+    :param bitrate_cap: cap peak bitrate at this multiple of the source bitrate (0 = no cap).
     :return: output video path
     """
     if not os.path.exists(video_path):
@@ -118,6 +136,7 @@ def burn_subtitles_to_video(
     if start is not None or end is not None:
         duration = (end or info.duration) - (start or 0)
 
+    max_kbps = source_bitrate_cap(video_path, info.duration, bitrate_cap)
     with _StagedSubtitle(subtitle_path, fonts_dir) as staged:
         clip = start is not None or end is not None
 
@@ -131,7 +150,7 @@ def burn_subtitles_to_video(
             else:
                 cmd += ["-i", video_path]
             cmd += ["-vf", vf, "-map", "0:v:0", "-map", "0:a?"]
-            cmd += _encoder_args(nvenc, crf, preset)
+            cmd += _encoder_args(nvenc, crf, preset, max_kbps)
             if clip:
                 cmd += ["-af", "asetpts=PTS-STARTPTS", "-c:a", "aac", "-b:a", "192k"]
             else:
