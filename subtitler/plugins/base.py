@@ -21,8 +21,8 @@ class StyleTemplate:
     back_color: str = "&H80000000"
     bold: bool = True
     italic: bool = False
-    outline_width: int = 3
-    shadow_depth: int = 1
+    outline_width: float = 3
+    shadow_depth: float = 1
     alignment: int = 2                  # 2 = Bottom Center
     margin_v: int = 45
     margin_l: int = 80
@@ -30,6 +30,14 @@ class StyleTemplate:
     play_res_x: int = 1920
     play_res_y: int = 1080
     extra_ass_styles: Optional[str] = None
+    # Line budget for the primary line, in em (1 CJK char = 1, 1 Latin char = 0.5)
+    max_chars: float = 22
+    # Secondary line (bilingual mode): the smaller line under / over the primary one
+    secondary_font_size: int = 0        # 0 -> 65% of font_size
+    secondary_color: str = "&H00EAEAEA"
+    secondary_outline_width: float = 2.5
+    secondary_bold: bool = False
+    secondary_max_chars: float = 32
 
 
 class BasePlugin(ABC):

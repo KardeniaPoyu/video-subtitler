@@ -1,0 +1,219 @@
+[Script Info]
+Title: Subtitled by Video-Subtitler
+ScriptType: v4.00+
+WrapStyle: 2
+ScaledBorderAndShadow: yes
+YCbCr Matrix: TV.709
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Default,Microsoft YaHei,52,&H00FFFFFF,&H000000FF,&H00000000,&H80000000,-1,0,0,0,100,100,0,0,1,3.5,1,2,80,80,190,1
+Style: Secondary,Microsoft YaHei,34,&H00EAEAEA,&H000000FF,&H00000000,&H80000000,0,0,0,0,100,100,0,0,1,2.5,1,2,80,80,190,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:04.08,Default,,0,0,0,,如果你是游戏时长 500 小时以内的无畏契约新手\N{\rSecondary}If you're a beginner in VALORANT with 500 hours or less,
+Dialogue: 0,0:00:04.08,0:00:05.80,Default,,0,0,0,,那你就点对视频了\N{\rSecondary}then you've clicked on the right video.
+Dialogue: 0,0:00:05.80,0:00:08.22,Default,,0,0,0,,作为一个连续五年以上\N{\rSecondary}As someone who has consistently been Immortal
+Dialogue: 0,0:00:08.22,0:00:11.80,Default,,0,0,0,,稳定在超凡入圣、并且单排上过赋能战魂的玩家\N{\rSecondary}for over 5 years and soloqueued to Radiant,
+Dialogue: 0,0:00:11.80,0:00:15.40,Default,,0,0,0,,我会分享 15 个技巧，绝对能帮你\N{\rSecondary}I'm going to give you 15 tips that will absolutely help you in
+Dialogue: 0,0:00:15.40,0:00:18.74,Default,,0,0,0,,成为更强的玩家，让新手也能稳步上分\N{\rSecondary}becoming a better player and climb the ranks as a beginner.
+Dialogue: 0,0:00:18.74,0:00:22.48,Default,,0,0,0,,第一个技巧：要知道什么时候不该拉枪\N{\rSecondary}The first tip I have for you is to know when not to peek.
+Dialogue: 0,0:00:22.48,0:00:25.80,Default,,0,0,0,,大家总在说要多拉枪、打得激进一点\N{\rSecondary}Everyone always talks about peeking and playing aggressive,
+Dialogue: 0,0:00:25.80,0:00:29.06,Default,,0,0,0,,但不停地打无脑对枪、过度拉枪\N{\rSecondary}but constantly taking dumb fights and overpeaking is
+Dialogue: 0,0:00:29.06,0:00:32.60,Default,,0,0,0,,几乎是所有缺乏经验的玩家都会犯的错\N{\rSecondary}something that I see almost all inexperienced players do.
+Dialogue: 0,0:00:32.60,0:00:34.00,Default,,0,0,0,,如果你们人数占优\N{\rSecondary}If you're up numbers,
+Dialogue: 0,0:00:34.00,0:00:39.00,Default,,0,0,0,,也就是我方存活人数比敌方多，那就别单独拉枪\N{\rSecondary}meaning your team has more players alive\Nthan the enemy team, not solopeaking,
+Dialogue: 0,0:00:39.00,0:00:41.66,Default,,0,0,0,,而是和队友一起打，这样拿下\N{\rSecondary}and instead playing with your team will make securing
+Dialogue: 0,0:00:41.66,0:00:45.00,Default,,0,0,0,,我方已经拿到首杀的回合会容易得多\N{\rSecondary}rounds where your team got the first blood so much easier.
+Dialogue: 0,0:00:45.00,0:00:47.36,Default,,0,0,0,,当敌方人数劣势时\N{\rSecondary}When the enemy team is down players,
+Dialogue: 0,0:00:47.36,0:00:51.58,Default,,0,0,0,,他们会拼命想把人数打平，而你在不该拉枪的时候\N{\rSecondary}they are desperately looking to equalize\Nand you overpeeking and peeking
+Dialogue: 0,0:00:51.58,0:00:54.98,Default,,0,0,0,,过度拉枪，正好会帮他们赢下这个回合\N{\rSecondary}when you shouldn't is exactly what will help them win the round.
+Dialogue: 0,0:00:54.98,0:00:58.08,Default,,0,0,0,,架好交叉火力、跟着队友补枪拉出\N{\rSecondary}Setting up a crossfire, peeking off of your teammates,
+Dialogue: 0,0:00:58.08,0:01:02.41,Default,,0,0,0,,多和队友配合，会大幅提高你的回合胜率\N{\rSecondary}and just working together will\Ndrastically increase your round win rate.
+Dialogue: 0,0:01:06.09,0:01:10.73,Default,,0,0,0,,第二个技巧：找到最适合你的灵敏度\N{\rSecondary}The second tip that I have for you\Nis to find your perfect sensitivity.
+Dialogue: 0,0:01:10.73,0:01:11.79,Default,,0,0,0,,在我看来\N{\rSecondary}In my opinion,
+Dialogue: 0,0:01:11.79,0:01:14.45,Default,,0,0,0,,最简单的方法，就是根据你的 DPI\N{\rSecondary}the easiest way to find it is to set your sensitivity
+Dialogue: 0,0:01:14.45,0:01:17.57,Default,,0,0,0,,把灵敏度设为下面三个数值之一\N{\rSecondary}to one of these three depending on your dpi.
+Dialogue: 0,0:01:17.57,0:01:22.23,Default,,0,0,0,,如果你用 800 DPI，游戏内灵敏度设为 0.35\N{\rSecondary}If you're on 800 dpi, set your in-game sense to 0.35.
+Dialogue: 0,0:01:22.23,0:01:28.43,Default,,0,0,0,,如果你用 1600 DPI，游戏内灵敏度设为 0.175\N{\rSecondary}If you're on 1600 dpi, set your in-game sense to 0.175.
+Dialogue: 0,0:01:28.43,0:01:33.23,Default,,0,0,0,,如果你用 400 DPI，游戏内灵敏度设为 0.7\N{\rSecondary}And if you're on 400 dpi, set your in-game sense to 0.7.
+Dialogue: 0,0:01:33.23,0:01:36.41,Default,,0,0,0,,把它作为你的基准起始灵敏度\N{\rSecondary}Use this as your baseline starting sensitivity and
+Dialogue: 0,0:01:36.41,0:01:39.49,Default,,0,0,0,,然后根据手感往上或往下微调\N{\rSecondary}adjust it up or down depending on how it feels.
+Dialogue: 0,0:01:39.49,0:01:40.31,Default,,0,0,0,,在无畏契约里\N{\rSecondary}In VALORANT,
+Dialogue: 0,0:01:40.31,0:01:42.53,Default,,0,0,0,,通常建议用偏低的灵敏度，因为\N{\rSecondary}you typically want to have a lower sense because
+Dialogue: 0,0:01:42.53,0:01:44.97,Default,,0,0,0,,大部分瞄准都是微调\N{\rSecondary}most of the aiming is micro adjustments,
+Dialogue: 0,0:01:44.97,0:01:48.49,Default,,0,0,0,,但最重要的是找到一个让你舒服、适合你的灵敏度\N{\rSecondary}but it's important to find a sense\Nthat is comfortable and works for you,
+Dialogue: 0,0:01:48.49,0:01:51.13,Default,,0,0,0,,我看到很多新手用的灵敏度高得离谱\N{\rSecondary}and I see a lot of beginners playing on way too high
+Dialogue: 0,0:01:51.13,0:01:53.37,Default,,0,0,0,,仅仅是因为他们习惯了\N{\rSecondary}of a sensitivity just because they're used to it.
+Dialogue: 0,0:01:53.37,0:01:55.13,Default,,0,0,0,,既然说到了设置\N{\rSecondary}While we're on the topic of settings,
+Dialogue: 0,0:01:55.13,0:01:58.99,Default,,0,0,0,,你还要确保自己的延迟和网络路由已经优化好\N{\rSecondary}you also want to make sure that your\Nping and network routing is optimized,
+Dialogue: 0,0:01:58.99,0:02:01.85,Default,,0,0,0,,否则就会遇到卡顿和丢包\N{\rSecondary}otherwise you'll experience lag and packet loss,
+Dialogue: 0,0:02:01.85,0:02:04.11,Default,,0,0,0,,很多人都跟我说过他们被这个问题困扰\N{\rSecondary}which a lot of people have told me they're struggling with.
+Dialogue: 0,0:02:04.11,0:02:08.49,Default,,0,0,0,,所以我和 ExitLag 合作，来彻底解决这个问题\N{\rSecondary}This is exactly why I've partnered with\NExitLag to fix this problem for good.
+Dialogue: 0,0:02:08.49,0:02:12.39,Default,,0,0,0,,ExitLag 是一款网络路由优化软件\N{\rSecondary}ExitLag is a network routing optimization software that will help you
+Dialogue: 0,0:02:12.39,0:02:17.19,Default,,0,0,0,,通过 AI 路由优化技术帮你获得尽可能低的延迟\N{\rSecondary}get the best possible ping using AI routing optimization technology.
+Dialogue: 0,0:02:17.19,0:02:20.11,Default,,0,0,0,,只需注册账号并安装 ExitLag\N{\rSecondary}Simply create an account and install ExitLag,
+Dialogue: 0,0:02:20.11,0:02:22.19,Default,,0,0,0,,然后选择无畏契约作为你的游戏\N{\rSecondary}then select VALORANT as your game,
+Dialogue: 0,0:02:22.19,0:02:25.51,Default,,0,0,0,,再选好你所在的服务器，点击“应用路由”\N{\rSecondary}and then select which server you play on and hit apply routes,
+Dialogue: 0,0:02:25.51,0:02:29.25,Default,,0,0,0,,你就拥有了最优的延迟和路由\N{\rSecondary}and now you have the best most optimized ping and routing possible.
+Dialogue: 0,0:02:29.25,0:02:30.37,Default,,0,0,0,,就是这么简单\N{\rSecondary}It's really that easy.
+Dialogue: 0,0:02:30.37,0:02:34.23,Default,,0,0,0,,ExitLag 是一款非常可靠的软件，数百万玩家\N{\rSecondary}ExitLag is an extremely trusted software that millions of players,
+Dialogue: 0,0:02:34.23,0:02:35.75,Default,,0,0,0,,包括我自己都在用\N{\rSecondary}including myself use,
+Dialogue: 0,0:02:35.75,0:02:39.85,Default,,0,0,0,,点击简介顶部的链接，或扫描这个二维码\N{\rSecondary}so by clicking my link at the top of the\Ndescription or scanning this QR code,
+Dialogue: 0,0:02:39.85,0:02:44.09,Default,,0,0,0,,年度方案可享五折，再额外赠送 90 天\N{\rSecondary}you can get 50% off an annual plan plus 90 days for free.
+Dialogue: 0,0:02:44.09,0:02:46.45,Default,,0,0,0,,非常感谢 ExitLag 的赞助合作\N{\rSecondary}Huge thank you to ExitLag for their partnership.
+Dialogue: 0,0:02:46.45,0:02:47.87,Default,,0,0,0,,下面进入下一个技巧\N{\rSecondary}Now let's get into the next tip.
+Dialogue: 0,0:02:47.87,0:02:52.27,Default,,0,0,0,,第三个技巧：在没有接触敌人之前，千万别转点\N{\rSecondary}The third tip I have for you is to never rotate before contact.
+Dialogue: 0,0:02:52.27,0:02:56.57,Default,,0,0,0,,举个例子，假设你在亚海悬城防守 B 点\N{\rSecondary}To explain what I mean, imagine you're on defense playing B on Ascent.
+Dialogue: 0,0:02:56.57,0:02:59.79,Default,,0,0,0,,你探头看了一眼 B 主路，什么都没有\N{\rSecondary}You peek B main and see absolutely nothing.
+Dialogue: 0,0:02:59.79,0:03:02.61,Default,,0,0,0,,大多数玩家会心想：他们不在 B\N{\rSecondary}Most players will think to themselves, they aren't B,
+Dialogue: 0,0:03:02.61,0:03:05.25,Default,,0,0,0,,那我应该转去 A 点帮队友\N{\rSecondary}so I should rotate to A to go help out my team.
+Dialogue: 0,0:03:05.25,0:03:09.27,Default,,0,0,0,,但这其实是个坏主意，因为你看小地图\N{\rSecondary}But this is actually a bad idea,\Nbecause if you look at the mini-map,
+Dialogue: 0,0:03:09.27,0:03:11.15,Default,,0,0,0,,他们也没有在打 A\N{\rSecondary}they aren't pushing A either.
+Dialogue: 0,0:03:11.15,0:03:14.63,Default,,0,0,0,,敌方还没有在地图上任何地方和我们接触\N{\rSecondary}The enemy team has not made contact anywhere on the map yet,
+Dialogue: 0,0:03:14.63,0:03:17.03,Default,,0,0,0,,所以你不该转点，而是守住\N{\rSecondary}so you shouldn't rotate and instead hold your
+Dialogue: 0,0:03:17.03,0:03:19.39,Default,,0,0,0,,自己的位置，直到获得更多信息\N{\rSecondary}position until you get more information.
+Dialogue: 0,0:03:19.39,0:03:22.13,Default,,0,0,0,,太多玩家只要在自己的位置\N{\rSecondary}Too many players will instantly rotate because they
+Dialogue: 0,0:03:22.13,0:03:24.49,Default,,0,0,0,,没看到、没听到动静，就马上转点\N{\rSecondary}don't see or hear anything where they're playing,
+Dialogue: 0,0:03:24.49,0:03:27.39,Default,,0,0,0,,这是个坏习惯，会让敌方可以慢慢打\N{\rSecondary}and it's a bad habit that allows the enemy team to play
+Dialogue: 0,0:03:27.39,0:03:30.35,Default,,0,0,0,,等你一放弃点位，他们就能轻松拿下\N{\rSecondary}slow and then take your site easily once you give it up.
+Dialogue: 0,0:03:30.35,0:03:34.79,Default,,0,0,0,,第四个技巧：用好“3 秒爆能器法则”\N{\rSecondary}The fourth tip I have for you is to use the 3 second spike rule.
+Dialogue: 0,0:03:34.79,0:03:40.83,Default,,0,0,0,,拆包需要 7 秒，但拆到一半只需要 3.5 秒\N{\rSecondary}To defuse the bomb, it takes 7 seconds,\Nbut to half it, it takes 3.5 seconds.
+Dialogue: 0,0:03:40.83,0:03:43.65,Default,,0,0,0,,如果你在下包后的 1v1 残局里\N{\rSecondary}If you're in a 1v1 post plant and the enemy team
+Dialogue: 0,0:03:43.65,0:03:46.57,Default,,0,0,0,,敌人碰了一下包，而你手上没有技能\N{\rSecondary}taps the bomb when you don't have any utility,
+Dialogue: 0,0:03:46.57,0:03:49.86,Default,,0,0,0,,就在心里数到 3，数到 3 时拉出去\N{\rSecondary}count to 3 in your head and then peek on 3.
+Dialogue: 0,0:03:54.52,0:03:57.68,Default,,0,0,0,,这样如果他是想拆到一半\N{\rSecondary}This makes it so that if they were sticking the bomb to half it,
+Dialogue: 0,0:03:57.68,0:03:59.42,Default,,0,0,0,,你会正好在他拆到一半之前\N{\rSecondary}you'd peek them right before they were able
+Dialogue: 0,0:03:59.42,0:04:01.80,Default,,0,0,0,,拉到他，打断他或者直接击杀\N{\rSecondary}to half it and get them off or kill them.
+Dialogue: 0,0:04:01.80,0:04:04.94,Default,,0,0,0,,这个时间也刚好够长，如果他只是假拆\N{\rSecondary}It's also just long enough so that if they tap the bomb,
+Dialogue: 0,0:04:04.94,0:04:08.26,Default,,0,0,0,,大概率正在找你，你就能轻松拿下击杀\N{\rSecondary}they'd likely be looking for you, giving you an easy kill.
+Dialogue: 0,0:04:08.26,0:04:12.32,Default,,0,0,0,,第五个技巧：在对枪之前就开始用技能\N{\rSecondary}My fifth tip is to start using your abilities before you take a fight,
+Dialogue: 0,0:04:12.32,0:04:14.18,Default,,0,0,0,,而不是被动地交技能\N{\rSecondary}instead of using them reactively.
+Dialogue: 0,0:04:14.18,0:04:17.70,Default,,0,0,0,,很多玩家会在只准备了一半的情况下去对枪\N{\rSecondary}A lot of players will take a fight\Nthat they were half prepared for and
+Dialogue: 0,0:04:17.70,0:04:21.62,Default,,0,0,0,,然后在最糟糕的时机掏技能想自救\N{\rSecondary}then pull out their utility at a\Nterrible time to try to save themselves.
+Dialogue: 0,0:04:21.62,0:04:26.58,Default,,0,0,0,,相反，要提前规划，在对枪之前就把技能用掉\N{\rSecondary}Instead, try to always plan ahead and use\Nyour utility before you take a fight.
+Dialogue: 0,0:04:26.58,0:04:30.98,Default,,0,0,0,,比如先交捷风的突进再拉枪，而不是干拉\N{\rSecondary}For example, pop your Jett dash and then peek instead of dry fighting.
+Dialogue: 0,0:04:30.98,0:04:33.24,Default,,0,0,0,,拉枪前先射一发猎枭的侦察箭\N{\rSecondary}Use your Sova dart before you peek to give
+Dialogue: 0,0:04:33.24,0:04:35.76,Default,,0,0,0,,给敌人制造干扰，或者直接扫出他们的位置\N{\rSecondary}the enemy something to distract or scan them.
+Dialogue: 0,0:04:35.76,0:04:38.96,Default,,0,0,0,,在决定开打之前，先丢燃烧弹和闪光\N{\rSecondary}Throw your molly and flashes before you commit to the fight.
+Dialogue: 0,0:04:38.96,0:04:40.40,Default,,0,0,0,,这听起来可能很显而易见\N{\rSecondary}This might sound obvious,
+Dialogue: 0,0:04:40.40,0:04:42.96,Default,,0,0,0,,但很多玩家根本意识不到自己马上\N{\rSecondary}but a lot of players don't know that they are about to get
+Dialogue: 0,0:04:42.96,0:04:46.26,Default,,0,0,0,,就要对枪了，也完全不提前规划技能\N{\rSecondary}into a fight and don't plan ahead with their utility at all,
+Dialogue: 0,0:04:46.26,0:04:48.76,Default,,0,0,0,,结果在掏技能时被打死，或者输掉一场\N{\rSecondary}causing them to die while pulling it out or losing
+Dialogue: 0,0:04:48.76,0:04:51.20,Default,,0,0,0,,本来可以靠一颗闪光\N{\rSecondary}a fight that could have been won with a flash,
+Dialogue: 0,0:04:51.20,0:04:52.42,Default,,0,0,0,,侦察或燃烧弹赢下的对枪\N{\rSecondary}scan or molly.
+Dialogue: 0,0:04:52.42,0:04:55.76,Default,,0,0,0,,第六个技巧：不要频繁换弹\N{\rSecondary}My sixth tip is to reload your gun sparingly.
+Dialogue: 0,0:04:55.76,0:04:59.28,Default,,0,0,0,,很多刚入坑无畏契约的玩家喜欢“使命召唤式换弹”\N{\rSecondary}A lot of players getting into VALORANT like to Call of Duty reload,
+Dialogue: 0,0:04:59.28,0:05:01.04,Default,,0,0,0,,意思就是弹匣里\N{\rSecondary}which basically means reloading whenever
+Dialogue: 0,0:05:01.04,0:05:03.28,Default,,0,0,0,,子弹还绰绰有余的时候就换弹\N{\rSecondary}you have more than enough ammo in the mag.
+Dialogue: 0,0:05:03.28,0:05:07.24,Default,,0,0,0,,你完全可以一次弹都不换打出五杀\N{\rSecondary}You can get an ace without reloading a single time and people don't
+Dialogue: 0,0:05:07.24,0:05:11.30,Default,,0,0,0,,很多人不知道在这个游戏里 10 到 15 发子弹有多够用\N{\rSecondary}understand how much 10 or 15 bullets actually is in this game.
+Dialogue: 0,0:05:11.30,0:05:14.78,Default,,0,0,0,,在错误的时机换弹，不仅会让你\N{\rSecondary}Reloading at a bad time will not only make yourself a sitting duck
+Dialogue: 0,0:05:14.78,0:05:18.82,Default,,0,0,0,,没枪可用、变成活靶子\N还会给敌人暴露你位置的声音提示\N{\rSecondary}without a gun but also give the enemies\Na sound cue that you are there.
+Dialogue: 0,0:05:18.82,0:05:23.04,Default,,0,0,0,,只在确实必要、并且处于安全位置时\N{\rSecondary}Only reload when you absolutely have to\Nand when you're in a safe place to do
+Dialogue: 0,0:05:23.04,0:05:27.04,Default,,0,0,0,,再换弹，我经常看到有人这样死掉，自己还浑然不觉\N{\rSecondary}so because I see people die this way so\Noften and they don't even notice it.
+Dialogue: 0,0:05:27.04,0:05:30.02,Default,,0,0,0,,第七个技巧：充分利用小地图\N{\rSecondary}Tip number seven is to abuse your minimap.
+Dialogue: 0,0:05:30.02,0:05:33.34,Default,,0,0,0,,小地图是新手最容易忽视的东西之一\N{\rSecondary}The minimap is one of the most overlooked things for beginners but
+Dialogue: 0,0:05:33.34,0:05:36.88,Default,,0,0,0,,但它提供的信息量对赢下回合至关重要\N{\rSecondary}the amount of information it gives you is crucial to winning rounds.
+Dialogue: 0,0:05:36.88,0:05:39.00,Default,,0,0,0,,你可以看到地图另一边\N{\rSecondary}You can see who's fighting on the other side of the
+Dialogue: 0,0:05:39.00,0:05:41.66,Default,,0,0,0,,谁在交火，以及敌方往哪边堆人\N{\rSecondary}map and where the enemy team is stacked towards.
+Dialogue: 0,0:05:41.66,0:05:45.98,Default,,0,0,0,,还能看到不开麦的队友是不是和你架着同一个角度\N{\rSecondary}You can see if your no-comms teammate is\Nholding the exact same angle that you are.
+Dialogue: 0,0:05:45.98,0:05:49.46,Default,,0,0,0,,小地图能给你大量信息，所以\N{\rSecondary}You gather tons of information through your minimap so making sure
+Dialogue: 0,0:05:49.46,0:05:53.18,Default,,0,0,0,,养成时刻瞟一眼小地图的习惯非常重要\N{\rSecondary}you're constantly glancing at it is a super important habit to build.
+Dialogue: 0,0:05:53.18,0:05:57.80,Default,,0,0,0,,第八个技巧：学会静步跳和静音滑绳\N{\rSecondary}Tip number eight is learn how to silent jump and silent drop on ropes.
+Dialogue: 0,0:05:57.80,0:06:02.00,Default,,0,0,0,,静步跳只需要按住蹲同时起跳\N{\rSecondary}To silent jump you just need to hold crouch jump and then let go
+Dialogue: 0,0:06:02.00,0:06:05.59,Default,,0,0,0,,然后在空中松开蹲，落地时就不会发出声音\N{\rSecondary}of crouch while midair and you will make no sound when you land.
+Dialogue: 0,0:06:09.43,0:06:11.09,Default,,0,0,0,,这很适合用来跳拉获取信息\N{\rSecondary}This is good for jump peeking to get
+Dialogue: 0,0:06:11.09,0:06:13.51,Default,,0,0,0,,同时不暴露自己的位置\N{\rSecondary}information without giving away your position.
+Dialogue: 0,0:06:13.51,0:06:17.49,Default,,0,0,0,,静音滑绳：按住 Shift，在下落时\N{\rSecondary}To silent drop down ropes hold shift and then hold S while
+Dialogue: 0,0:06:17.49,0:06:21.08,Default,,0,0,0,,按住 S 抵消前冲的惯性，然后按 F\N{\rSecondary}you're falling to stop your forward momentum and then press F.
+Dialogue: 0,0:06:23.18,0:06:26.88,Default,,0,0,0,,这样下绳更快，而且不会发出任何声音\N{\rSecondary}This lets you drop down ropes way faster without making any noise
+Dialogue: 0,0:06:26.88,0:06:30.76,Default,,0,0,0,,还能缩短收枪的时间，帮你卡准时机\N{\rSecondary}and minimizes the time without your gun out helping you get timings.
+Dialogue: 0,0:06:30.76,0:06:34.24,Default,,0,0,0,,第九个技巧：永远不要让准星飘着\N{\rSecondary}Tip number nine is to never let your crosshair float.
+Dialogue: 0,0:06:34.24,0:06:36.48,Default,,0,0,0,,准星飘着，就是指你的准星\N{\rSecondary}Floating your crosshair means your crosshair
+Dialogue: 0,0:06:36.48,0:06:38.54,Default,,0,0,0,,指向了一个敌人\N{\rSecondary}is pointed at somewhere that's impossible
+Dialogue: 0,0:06:38.54,0:06:40.60,Default,,0,0,0,,根本不可能出现的地方，这往往是\N{\rSecondary}for you to die from and this happens when
+Dialogue: 0,0:06:40.60,0:06:42.42,Default,,0,0,0,,你对准星位置变得懒散时发生的\N{\rSecondary}you get lazy about where you're putting it.
+Dialogue: 0,0:06:42.42,0:06:46.40,Default,,0,0,0,,这大概是我看到新手最常见的问题\N{\rSecondary}This is probably the most common\Nstruggle that I see beginners have and
+Dialogue: 0,0:06:46.40,0:06:50.64,Default,,0,0,0,,养成好习惯是你必须重视的关键基本功\N{\rSecondary}building this habit is a crucial fundamental\Nthat you need to pay attention to.
+Dialogue: 0,0:06:50.64,0:06:53.44,Default,,0,0,0,,这个游戏里 90% 的瞄准都是准星预瞄\N{\rSecondary}90% of aim in this game is crosshair placement
+Dialogue: 0,0:06:53.44,0:06:55.30,Default,,0,0,0,,所以要多练，确保你\N{\rSecondary}so training it and making sure you're
+Dialogue: 0,0:06:55.30,0:06:59.16,Default,,0,0,0,,不会让准星飘到莫名其妙的地方，这非常重要\N{\rSecondary}not letting your crosshair float out in\Nthe middle of nowhere is very important.
+Dialogue: 0,0:06:59.16,0:07:02.24,Default,,0,0,0,,这就引出了第十个技巧：利用箱子\N{\rSecondary}This leads me to tip 10 which is to use boxes
+Dialogue: 0,0:07:02.24,0:07:04.84,Default,,0,0,0,,来对齐和练习你的准星预瞄\N{\rSecondary}to line up and learn your crosshair placement.
+Dialogue: 0,0:07:04.84,0:07:08.90,Default,,0,0,0,,大部分地图上很多箱子刚好就在头的高度\N{\rSecondary}A lot of the boxes on most maps will be exactly at head height so
+Dialogue: 0,0:07:08.90,0:07:12.18,Default,,0,0,0,,这样你就知道准星预瞄时爆头线在哪里\N{\rSecondary}you'll know where headshot level is for your crosshair placement.
+Dialogue: 0,0:07:12.18,0:07:15.30,Default,,0,0,0,,当然，最终你需要把它练成下意识的习惯\N{\rSecondary}Of course eventually you'll need to get this down subconsciously
+Dialogue: 0,0:07:15.30,0:07:18.36,Default,,0,0,0,,但这是一个学习和提升的简单方法\N{\rSecondary}but this is just an easy way to learn and improve upon it.
+Dialogue: 0,0:07:18.36,0:07:21.50,Default,,0,0,0,,第十一个技巧：找一个你喜欢的英雄作为主玩\N{\rSecondary}Tip 11 is to find a main agent that you'd like to play.
+Dialogue: 0,0:07:21.50,0:07:25.40,Default,,0,0,0,,可以考虑决斗者、哨卫、先锋或控场者\N{\rSecondary}Think about Duelists, Sentinels, Initiators or Controllers.
+Dialogue: 0,0:07:25.40,0:07:27.14,Default,,0,0,0,,它们在对局中定位各不相同\N{\rSecondary}They all have different roles in
+Dialogue: 0,0:07:27.14,0:07:30.14,Default,,0,0,0,,所以找一个适合你的去试试\N{\rSecondary}a game so find one that speaks to you and try it out.
+Dialogue: 0,0:07:30.14,0:07:33.04,Default,,0,0,0,,这能帮你打得更稳定，当你了解了\N{\rSecondary}This will help you become consistent and makes learning the
+Dialogue: 0,0:07:33.04,0:07:36.44,Default,,0,0,0,,自己英雄的技能，学习这个游戏也会轻松很多\N{\rSecondary}game much easier when you understand your agent's utility.
+Dialogue: 0,0:07:36.44,0:07:40.52,Default,,0,0,0,,第十二个技巧：永远和队友一起起枪、一起存钱\N{\rSecondary}Tip number 12 is to always buy and save with your team.
+Dialogue: 0,0:07:40.52,0:07:44.20,Default,,0,0,0,,低分段的经济很快就会变得一团糟\N{\rSecondary}Low elo economy gets really messy really fast but
+Dialogue: 0,0:07:44.20,0:07:46.50,Default,,0,0,0,,要避免出现你拿着正义\N{\rSecondary}one of the easiest ways to make sure that you don't
+Dialogue: 0,0:07:46.50,0:07:48.58,Default,,0,0,0,,而四个队友都拿着暴徒的情况\N{\rSecondary}have a Sheriff while your four teammates have
+Dialogue: 0,0:07:48.58,0:07:51.54,Default,,0,0,0,,最简单的方法就是每回合都和队友同步起枪存钱\N{\rSecondary}Vandals is to buy and save with them every round.
+Dialogue: 0,0:07:51.54,0:07:54.94,Default,,0,0,0,,在购买阶段，按 Tab 查看大家的经济\N{\rSecondary}In the buy phase, press tab and look at your credits.
+Dialogue: 0,0:07:54.94,0:07:59.12,Default,,0,0,0,,如果全队都在起步枪加重甲，你也应该跟着起\N{\rSecondary}If your whole team is buying rifle full armor then you should buy too.
+Dialogue: 0,0:07:59.12,0:08:02.90,Default,,0,0,0,,如果队友没钱需要存，那就跟着一起存\N{\rSecondary}If your team doesn't have money and needs to save then save with them.
+Dialogue: 0,0:08:02.90,0:08:06.76,Default,,0,0,0,,我看到太多新手赢了手枪局之后\N{\rSecondary}I see so many beginners win pistol round and then proceed to save the
+Dialogue: 0,0:08:06.76,0:08:10.10,Default,,0,0,0,,下一回合马上存钱，白白送掉一个本该赢的回合\N{\rSecondary}next round right after and throw a round that they should have won.
+Dialogue: 0,0:08:10.10,0:08:13.46,Default,,0,0,0,,你的经济比对面多，所以一定要起满\N{\rSecondary}You have more credits than the other team so make sure to buy up.
+Dialogue: 0,0:08:13.46,0:08:16.96,Default,,0,0,0,,第十三个技巧：多打死斗模式\N{\rSecondary}Tip number 13 is to play a lot of deathmatches.
+Dialogue: 0,0:08:16.96,0:08:19.02,Default,,0,0,0,,很多新手会忽视练习\N{\rSecondary}A lot of beginners will neglect practicing
+Dialogue: 0,0:08:19.02,0:08:21.66,Default,,0,0,0,,和基本功训练，而多打\N{\rSecondary}and training their fundamentals so playing a
+Dialogue: 0,0:08:21.66,0:08:23.78,Default,,0,0,0,,死斗是最快的方法\N{\rSecondary}ton of deathmatches will be the fastest way
+Dialogue: 0,0:08:23.78,0:08:25.82,Default,,0,0,0,,能让你更擅长赢下对枪\N{\rSecondary}for you to get better at winning gunfights.
+Dialogue: 0,0:08:25.82,0:08:27.80,Default,,0,0,0,,专注于你的准星预瞄\N{\rSecondary}Focus on your crosshair placement,
+Dialogue: 0,0:08:27.80,0:08:30.44,Default,,0,0,0,,微调和身法，你就已经\N{\rSecondary}micro adjustments and movement and you'll already
+Dialogue: 0,0:08:30.44,0:08:33.68,Default,,0,0,0,,领先排位里 90% 的玩家了\N{\rSecondary}be ahead of 90% of players in your ranked games.
+Dialogue: 0,0:08:33.68,0:08:37.22,Default,,0,0,0,,第十四个技巧：多利用非常规点位\N{\rSecondary}Tip number 14 is to abuse off angles.
+Dialogue: 0,0:08:37.22,0:08:40.20,Default,,0,0,0,,非常规点位是敌人意想不到你会站的位置\N{\rSecondary}Off angles are angles that people don't expect you to play
+Dialogue: 0,0:08:40.20,0:08:43.36,Default,,0,0,0,,因为那里通常没有掩体，打起来也很别扭\N{\rSecondary}because there's typically no cover and awkward to fight.
+Dialogue: 0,0:08:43.36,0:08:47.20,Default,,0,0,0,,举个例子，比如隐世修所 A 长的这个位置\N{\rSecondary}An example of an off angle is this spot on Haven A Long.
+Dialogue: 0,0:08:47.20,0:08:50.32,Default,,0,0,0,,如果有队友帮你打掉猎枭的侦察箭并帮你钓人\N{\rSecondary}If you have a teammate to break the Sova dart and bait for you,
+Dialogue: 0,0:08:50.32,0:08:52.40,Default,,0,0,0,,敌人就极难清掉\N{\rSecondary}it's extremely hard for the enemies to clear
+Dialogue: 0,0:08:52.40,0:08:54.62,Default,,0,0,0,,这个位置，他们根本不会防着你\N{\rSecondary}this spot and they will not be ready for you.
+Dialogue: 0,0:08:54.62,0:08:57.54,Default,,0,0,0,,这些强势点位能帮你\N{\rSecondary}These power positions will help you win rounds so
+Dialogue: 0,0:08:57.54,0:08:59.92,Default,,0,0,0,,更轻松地赢下回合，所以赶紧用起来吧\N{\rSecondary}much more easily so make sure to start using them.
+Dialogue: 0,0:08:59.92,0:09:00.82,Default,,0,0,0,,最后\N{\rSecondary}And finally,
+Dialogue: 0,0:09:00.82,0:09:05.80,Default,,0,0,0,,第十五个技巧：专注于自己，永远不要甩锅队友\N{\rSecondary}tip number 15 is to focus on yourself and never blame your teammates.
+Dialogue: 0,0:09:05.80,0:09:07.26,Default,,0,0,0,,相信我，我懂这种感觉\N{\rSecondary}Trust me, I get it.
+Dialogue: 0,0:09:07.26,0:09:11.36,Default,,0,0,0,,拿了全场 MVP，却因为四个队友只有个位数\N{\rSecondary}Being the match MVP and losing because\Nfour of your teammates had single digit
+Dialogue: 0,0:09:11.36,0:09:14.36,Default,,0,0,0,,击杀而输掉，确实很难受，但这是个坏习惯\N{\rSecondary}kills really sucks but this is a bad habit
+Dialogue: 0,0:09:14.36,0:09:16.42,Default,,0,0,0,,因为它把责任从你身上推开了\N{\rSecondary}because it shifts the blame off of you.
+Dialogue: 0,0:09:16.42,0:09:18.90,Default,,0,0,0,,如果你把责任放在自己身上\N{\rSecondary}If you put the accountability on yourself and
+Dialogue: 0,0:09:18.90,0:09:21.44,Default,,0,0,0,,忽略那些你无法控制的因素\N{\rSecondary}ignore factors that are out of your control,
+Dialogue: 0,0:09:21.44,0:09:23.12,Default,,0,0,0,,这才是让你\N{\rSecondary}this will be the fastest way for you to
+Dialogue: 0,0:09:23.12,0:09:25.44,Default,,0,0,0,,真正进步、成为更强玩家的最快方式\N{\rSecondary}actually improve and become a better player.
+Dialogue: 0,0:09:25.44,0:09:26.06,Default,,0,0,0,,当然\N{\rSecondary}Of course,
+Dialogue: 0,0:09:26.06,0:09:30.24,Default,,0,0,0,,这说起来容易做起来难，但我听到太多白银玩家\N{\rSecondary}this is a lot easier said than done but\Nthe amount of silver players that I hear
+Dialogue: 0,0:09:30.24,0:09:32.46,Default,,0,0,0,,说是队友害得他们\N{\rSecondary}saying that their teammates are the reason why
+Dialogue: 0,0:09:32.46,0:09:35.12,Default,,0,0,0,,卡在这个段位，说实话这太离谱了\N{\rSecondary}they're stuck in their rank is honestly insane.
+Dialogue: 0,0:09:35.12,0:09:36.64,Default,,0,0,0,,如果你专注于自己\N{\rSecondary}If you focus on yourself,
+Dialogue: 0,0:09:36.64,0:09:39.98,Default,,0,0,0,,提升基本功，成为更强的玩家\N{\rSecondary}improve your fundamentals and just become a better player,
+Dialogue: 0,0:09:39.98,0:09:41.60,Default,,0,0,0,,你一定能打出这个段位\N{\rSecondary}you will climb out of that rank.
+Dialogue: 0,0:09:41.60,0:09:42.46,Default,,0,0,0,,我保证\N{\rSecondary}I guarantee it.
+Dialogue: 0,0:09:42.46,0:09:43.96,Default,,0,0,0,,说了这么多\N{\rSecondary}With all of that being said,
+Dialogue: 0,0:09:43.96,0:09:46.96,Default,,0,0,0,,这就是我希望自己刚开始玩无畏契约时\N{\rSecondary}these are my 15 beginner tips that I wish I
+Dialogue: 0,0:09:46.96,0:09:49.06,Default,,0,0,0,,就能早点知道的 15 个新手技巧\N{\rSecondary}knew sooner when I started playing VALORANT.
+Dialogue: 0,0:09:49.06,0:09:51.38,Default,,0,0,0,,如果你坚持练习，并运用\N{\rSecondary}If you practice this consistently and apply
+Dialogue: 0,0:09:51.38,0:09:53.42,Default,,0,0,0,,我在这期视频里分享的技巧\N{\rSecondary}the tips that I gave you in this video,
+Dialogue: 0,0:09:53.42,0:09:57.42,Default,,0,0,0,,我保证你会进步飞快，迅速上分\N{\rSecondary}I promise that you will improve and rank up extremely fast.
+Dialogue: 0,0:09:57.42,0:09:58.90,Default,,0,0,0,,如果你有任何问题\N{\rSecondary}If you have any questions,
+Dialogue: 0,0:09:58.90,0:10:00.44,Default,,0,0,0,,欢迎在下方评论区留言\N{\rSecondary}make sure to drop those down in the comment
+Dialogue: 0,0:10:00.44,0:10:03.28,Default,,0,0,0,,我或者其他人都可以帮你解答\N{\rSecondary}section below so I or others can help you out.
+Dialogue: 0,0:10:03.28,0:10:05.86,Default,,0,0,0,,如果你喜欢这期视频或者觉得有帮助\N{\rSecondary}If you did enjoy this video or find it helpful,
+Dialogue: 0,0:10:05.86,0:10:08.10,Default,,0,0,0,,别忘了点个赞\N{\rSecondary}then don't forget to drop a like down below and
+Dialogue: 0,0:10:08.10,0:10:10.40,Default,,0,0,0,,还没关注的话也请关注一下频道\N{\rSecondary}subscribe to the channel if you have not already.
+Dialogue: 0,0:10:10.40,0:10:12.56,Default,,0,0,0,,非常感谢大家的支持\N{\rSecondary}Thank you guys so much for all of your support.
+Dialogue: 0,0:10:12.56,0:10:15.70,Default,,0,0,0,,我爱你们，真的感激不尽\N{\rSecondary}I love you guys and I honestly cannot thank you guys enough.
+Dialogue: 0,0:10:15.70,0:10:16.48,Default,,0,0,0,,话虽如此\N{\rSecondary}With that being said,
+Dialogue: 0,0:10:16.48,0:10:20.88,Default,,0,0,0,,非常感谢你看完这期视频，我们下期再见\N{\rSecondary}thank you so much for watching this video\Nand I will catch you in the next one.
+Dialogue: 0,0:10:20.88,0:10:21.68,Default,,0,0,0,,拜拜！\N{\rSecondary}Peace out.
