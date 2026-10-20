@@ -14,7 +14,7 @@ from subtitler.ffmpeg_utils import extract_audio, get_ffmpeg_path, probe_video
 from subtitler.plugins.manager import PluginManager
 from subtitler.subtitle import save_subtitles, save_to_ass, save_to_srt, save_to_vtt
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 def _domains_arg(topic) -> Optional[List[str]]:
@@ -55,10 +55,11 @@ def transcribe_video(
 
     import tempfile
     audio_dir = os.path.dirname(os.path.abspath(video_path)) if keep_audio else tempfile.gettempdir()
-    audio_path = os.path.join(audio_dir, os.path.splitext(os.path.basename(video_path))[0] + "_audio_16k.wav")
+    fd, audio_path = tempfile.mkstemp(prefix="subtitler_", suffix=".wav", dir=audio_dir)
+    os.close(fd)
     print("[1/3] Extracting 16 kHz audio...")
-    extract_audio(video_path, audio_path)
     try:
+        extract_audio(video_path, audio_path)
         hotwords = ke.get_asr_prompt(domains, max_words=60) if domains else None
         print("[2/3] Transcribing" + (" (with domain hotwords)" if hotwords else "") + "...")
         tr = WhisperTranscriber(model_size=model_size, device=device)

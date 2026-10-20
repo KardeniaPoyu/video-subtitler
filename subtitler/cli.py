@@ -33,7 +33,7 @@ from subtitler import __version__
 from subtitler.ffmpeg_utils import ensure_utf8_stdio
 
 COMMANDS = ("doctor", "transcribe", "status", "batch", "apply", "translate", "proofread", "check",
-            "render", "preview", "frames", "burn", "chapters", "kb", "styles", "run")
+            "render", "preview", "frames", "burn", "chapters", "kb", "styles", "run", "deliver", "demo")
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -173,6 +173,8 @@ def cmd_status(a) -> int:
 
 
 def cmd_batch(a) -> int:
+    if a.size < 1 or a.context < 0:
+        raise ValueError("--size 必须至少为 1，--context 不能小于 0。")
     proj = _load_project(a.project)
     ke = _knowledge(proj)
     text, ids = proj.batch_text(start_id=a.start, size=a.size, context=a.context, knowledge=ke,
@@ -399,11 +401,34 @@ def cmd_run(a) -> int:
 
 # ----------------------------------------------------------------------------- parser
 
+def cmd_deliver(a) -> int:
+    from subtitler.delivery import deliver
+    print(deliver(_load_project(a.project), a.output, draft=a.draft,
+                  style=a.style, mode=a.mode))
+    return 0
+
+
+def cmd_demo(a) -> int:
+    from subtitler.delivery import demo
+    print(demo(a.output))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="subtitler", description="AI video subtitling toolkit",
                                 formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     p.add_argument("-v", "--version", action="version", version=f"video-subtitler {__version__}")
     sub = p.add_subparsers(dest="cmd")
+    sp = sub.add_parser("demo", help="original offline example; no video, model or API needed")
+    sp.add_argument("--output", required=True, help="new delivery directory")
+    sp.set_defaults(fn=cmd_demo)
+    sp = sub.add_parser("deliver", help="checked SRT/VTT/ASS + editable project + QA report")
+    sp.add_argument("project")
+    sp.add_argument("--output", required=True, help="new delivery directory; never overwritten")
+    sp.add_argument("--draft", action="store_true", help="allow QA errors; mark as draft")
+    sp.add_argument("--style", default="bilingual", choices=_style_names())
+    sp.add_argument("--mode", default="auto", choices=["auto", "source", "target", "bilingual"])
+    sp.set_defaults(fn=cmd_deliver)
 
     def asr_opts(sp):
         sp.add_argument("-m", "--model", default="auto",
@@ -559,7 +584,7 @@ def main(argv: Optional[List[str]] = None) -> None:
         sys.exit(args.fn(args))
     except KeyboardInterrupt:
         sys.exit(130)
-    except (FileNotFoundError, RuntimeError, KeyError, ValueError) as e:
+    except (OSError, RuntimeError, KeyError, ValueError) as e:
         print(f"\n[Error] {e}", file=sys.stderr)
         sys.exit(1)
 

@@ -1,270 +1,75 @@
-# 🎬 Video-Subtitler: Plugin-Powered AI Subtitle & Hardsub Engine
+# Video Subtitler
 
-[![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Whisper](https://img.shields.io/badge/Powered%20By-Faster--Whisper-orange)](https://github.com/SYSTRAN/faster-whisper)
-[![Architecture](https://img.shields.io/badge/Architecture-Plugin--Driven-blueviolet)](#-插件化架构-plugin-architecture)
-[![Antigravity Skill](https://img.shields.io/badge/Antigravity-Skill%20Ready-purple)](./SKILL.md)
+从视频生成可修改的字幕项目，再交付 SRT、VTT、ASS 与检查报告。
+适合需要反复修改人名、术语、翻译和时间轴的创作者。
 
-[English](#english) | [中文说明](#中文说明)
+**0.4.0 候选版本**：本地工具与 Skill 包；SkillPay 安装、收费和审核尚待平台实测。
 
----
+## 先体验
 
-<a name="中文说明"></a>
-## 🇨🇳 中文说明
-
-**Video-Subtitler** 是一款轻量、高速、模块化的 **AI 视频字幕生成与硬字幕压制引擎**。
-
-开源社区中已有许多优秀的字幕工具（如功能全面的桌面端 GUI 工具 `pyvideotrans`，经典的命令行工具 `auto-subtitle`，以及擅长词级对齐的 `whisperX`）。**Video-Subtitler** 的定位则专注于：
-1. **轻量微内核与插件化扩展**（模块化接入 AI 润色、双语翻译与视觉样式）；
-2. **AI Agent 生态原生集成**（作为 Antigravity / Cursor / Claude Code 的对话技能与 MCP 工具直接调度）；
-3. **开箱即用的自动化压制体验**（自动环境探测、高质量断句排版与视觉模板）。
-
----
-
-### 🎯 设计取向与生态定位对比
-
-| 维度 / 取向 | 桌面 GUI 交互类工具 (如 `pyvideotrans`) | 基础 CLI 类工具 (如 `auto-subtitle`) | 🔬 **Video-Subtitler (本项目)** |
-| :--- | :--- | :--- | :--- |
-| **主要定位** | 独立图形界面，适合无终端经验的桌面用户直观操作 | 极简转录压制，适合基础命令行流水线 | **轻量微内核 + 插件总线**，兼顾 CLI 与 AI Agent 自动化驱动 |
-| **Agent 协作** | 依赖鼠标手动交互，不易被智能体直接调度 | 需自定义封装驱动 | **原生内置 Skill 规范**，自然语言直接下发任务并交付成品 |
-| **扩展机制** | 模块与 GUI 深度耦合 | 功能相对单一固定 | **插件化微内核** (`subtitler.plugins`)，后处理、翻译与样式可自由拔插 |
-| **文本与样式** | 提供界面配置项，依赖用户手动微调 | 输出默认字体排版 | **内置爆款模板与 LLM 校对插件**，支持同音字自愈与双语排版 |
-| **部署与依赖** | 需下载较完整的应用运行环境 | 依赖系统全局安装的 FFmpeg | **智能双轨探测**，支持系统环境与内嵌便携执行文件自动回退 |
-
----
-
-### 🔬 核心工程方法论：六阶字幕复核流水线 (6-Stage Verification Pipeline)
-
-在面对游戏、动漫、科技前沿、学术讲座等高密度领域视频时，单纯依靠端到端 ASR + 逐句机翻无法满足专业发布要求。**Video-Subtitler** 沉淀了一套严密的**六阶复核方法论**：
-
-```mermaid
-graph TD
-    A["Stage 1: 声学先验注入 (ASR Hotwords Conditioning)"] --> B["Stage 2: 画面字卡跨模态校验 (Telop / OCR Cross-Check)"]
-    B --> C["Stage 3: 音素映射与专名纠偏 (Phonetic & Domain Alignment)"]
-    C --> D["Stage 4: 滑动窗口语境审校 (Contextual LLM Proofreading)"]
-    D --> E["Stage 5: 排版边界与安全距离复核 (Typographic & Boundary Audit)"]
-    E --> F["Stage 6: 关键帧视觉抽检 (Visual Spot-Check & Smoke Test)"]
-```
-
-1. **Stage 1: 声学先验注入 (ASR Hotwords Conditioning)**：提取领域核心专有名词注入 Whisper `initial_prompt`，从底层偏置声学校验，大幅降低冷门片假名与术语漏识别率。
-2. **Stage 2: 画面字卡跨模态校验 (Telop / OCR Cross-Check)**：针对语速极快或混杂 BGM 的片段，若视频画面带有作者自带原文字卡（如游戏关卡名、角色名），以视觉 OCR 为基准地面真值校正听觉误差。
-3. **Stage 3: 音素映射与专名纠偏 (Phonetic & Domain Alignment)**：挂载领域专库（如任天堂全家桶、卡比宇宙、AI 技术栈），通过音素失真表与正则置换，强制锁定官方标准译名（例：杜绝将“プププランド”误听为“台北”）。
-4. **Stage 4: 滑动窗口语境审校 (Contextual LLM Proofreading)**：杜绝单句孤立翻译，向大模型传入前后 5~10 句上下文窗口，理解叙事逻辑与说话人口吻，消灭离谱幻觉机翻，润色为符合当代中文互联网语感的自然口语。
-5. **Stage 5: 排版边界与安全距离复核 (Typographic & Boundary Audit)**：
-   - **字数上限**：单行严格限制 20~22 中文字符（约 40 英文字符）；
-   - **语义断行**：禁止在英文单词/数字中硬拆，仅在标点、助词与语义顿挫处折行；
-   - **贴边视觉基准**：默认采用贴边距离（1080p 画布下 `MarginV: 45~50`），保持画面开阔清爽；当遇到底部密集信息条时，支持无缝切换至避让高度（`MarginV: 180~200`）。
-6. **Stage 6: 关键帧视觉抽检 (Visual Spot-Check & Smoke Test)**：成片导出前，自动截取多时间轴关键帧，人工/智能多模态抽检双语对齐、字体描边对比度与贴边舒适度。
-
----
-
-### 🧩 插件化架构 (Plugin Architecture)
-
-```
-                       ┌───────────────────────┐
-                       │   Input Video/Audio   │
-                       └───────────┬───────────┘
-                                   │
-                       ┌───────────▼───────────┐
-                       │     FFmpeg Engine     │  (Auto-detection & portable fallback)
-                       └───────────┬───────────┘
-                                   │
-                       ┌───────────▼───────────┐
-                       │ Faster-Whisper (ASR)  │  (CUDA / CPU int8)
-                       └───────────┬───────────┘
-                                   │
-         ═════════════════════ Plugin Bus ═════════════════════
-           │                                             │
-   ┌───────▼─────────────────┐               ┌───────────▼─────────────┐
-   │  LLM Proofreader Plugin │               │ LLM Translator Plugin   │
-   │  • 同音字与专有名词纠偏 │               │ • 上下文感知双语字幕    │
-   │  • 口吃停顿字平滑处理   │               │ • 双层对齐渲染          │
-   └─────────────────────────┘               └─────────────────────────┘
-                                   │
-         ══════════════════════════════════════════════════════
-                                   │
-                       ┌───────────▼───────────┐
-                       │  StyleTemplate Engine │  (bilibili / shorts / cinema)
-                       └───────────┬───────────┘
-                                   │
-                       ┌───────────▼───────────┐
-                       │ Hardsub Video Burner  │
-                       └───────────┬───────────┘
-                                   │
-                       ┌───────────▼───────────┐
-                       │  Subtitled Video MP4  │
-                       └───────────────────────┘
-```
-
----
-
-### 🛠️ 快速安装
+需要 Python 3.9+，建议使用虚拟环境：
 
 ```bash
-git clone https://github.com/KardeniaPoyu/video-subtitler.git
-cd video-subtitler
-
-pip install -r requirements.txt
+python -m venv .venv
+# Windows：.venv\Scripts\activate
+# macOS / Linux：source .venv/bin/activate
+python -m pip install .
+python -m subtitler demo --output demo-output
 ```
 
----
+打开 `demo-output/review.html`。原创合成示例不下载模型、不调用付费 API，
+也不是识别准确率测试。
 
-### 💻 命令行玩法 (CLI)
+## 处理自己的视频
 
-先自检环境（FFmpeg / libass / CUDA / NVENC / 字体 / 磁盘空间 / LLM 配置）：
 ```bash
 python -m subtitler doctor
+python -m subtitler transcribe video.mp4 --to zh --device cpu
+python -m subtitler batch video.subtitler.json --size 40
+python -m subtitler apply video.subtitler.json edits.json
+python -m subtitler check video.subtitler.json
+python -m subtitler deliver video.subtitler.json --output delivery-v1
 ```
 
-#### 1. 一键全自动（生成字幕并压制成新视频）
+`batch` 给当前 Agent 提供待翻译字幕，Agent 生成 `edits.json`：
+
+```json
+{"1":"第一条译文","2":{"text":"修正后的原文","translation":"第二条译文"}}
+```
+
+不需要翻译时省略 `--to zh` 和翻译步骤。各命令提供 `--help`。
+
+| 交付文件 | 用途 |
+|---|---|
+| subtitles.srt / .vtt / .ass | 播放器、网页与带样式字幕 |
+| project.json | 原文、译文、时间轴，方便继续修改 |
+| review.html / qa.json | 漏译、重叠、阅读速度等规则检查 |
+| manifest.json | 文件 SHA-256，核对完整性 |
+
+检查错误会阻止正式交付；`--draft` 可导出待修订稿。输出必须是新目录。
+交付包不携带原视频或本机词库路径。
+
+## 成本与边界
+
+- 首次识别需下载 Whisper 模型；内存与时间取决于模型、硬件和视频。
+- FFmpeg 为视频处理依赖；CUDA/GPU 可选，CPU 可运行但可能较慢。
+- 可用当前 Agent 翻译；独立翻译 API 需自行提供账号并承担费用。
+- 本地识别不主动上传视频；外部翻译 API 会接收字幕文本。
+- 检查通过不等于语义正确；人名、数字、专词和音画同步仍需抽查。
+- 不提供自动 OCR 核验、准确率保证、MCP 服务或托管算力。
+
+更多命令见 [使用流程](references/workflows.md)；商品材料见
+[SkillPay](docs/SKILLPAY.md)，测试边界见 [验收记录](docs/ACCEPTANCE.md)。
+
+## 开发
+
 ```bash
-python -m subtitler "D:ideos\demo.mp4"                       # 等价于 subtitler run ...
-python -m subtitler "D:ideoslog.mp4" --style shorts_punchy
-python -m subtitler "D:ideos\podcast.mp4" --no-burn
+python -m pip install pytest
+python -m pytest -q
+python tools/build_skill.py
 ```
 
-#### 2. 精校工作流（推荐：AI 助手 / 人工逐批翻译校对）
-一键模式适合快速出片；要做到“专有名词 100% 正确、口语自然”的成片，请用分步工作流。
-所有中间结果存放在可编辑的工程文件 `视频名.subtitler.json` 中：
-
-```bash
-# ① 转写：faster-whisper + 领域热词 + 同音错词修正 -> 工程文件
-python -m subtitler transcribe "D:ideos\direct.mp4" -l ja --kb gaming_nintendo --to zh        --notes "任天堂直面会卡比新作 reaction，语气轻松"
-
-# ② 分批输出待翻译行（带上下文 + 术语表提示），翻译后写成 JSON 回填；循环直到完成
-python -m subtitler batch  "D:ideos\direct.mp4" --size 60
-python -m subtitler apply  "D:ideos\direct.mp4" batch1.json   # {"12": "译文", "13": {"text": "修正原文", "translation": "译文"}}
-#    或者配置了 OpenAI 兼容 API 时直接：python -m subtitler translate "D:ideos\direct.mp4"
-
-# ③ 质检：未翻译 / 超过两行 / 超宽 / 阅读速度 / 重叠 / 日文残留 / 术语不一致
-python -m subtitler check  "D:ideos\direct.mp4"
-
-# ④ 渲染双语字幕 + 关键帧预览（会输出 contact_sheet.jpg 一张图看全）
-python -m subtitler render  "D:ideos\direct.mp4" --style bilingual        # 底部有原字卡时用 bilingual_avoid
-python -m subtitler preview "D:ideos\direct.mp4" "D:ideos\direct.ass"
-
-# ⑤ 压制（NVENC 自动检测，失败回退 CPU；--start/--end 可先压 10 秒试看）
-python -m subtitler burn "D:ideos\direct.mp4" "D:ideos\direct.ass"
-
-# ⑥ 章节：B站进度条时间轴文本 + 无损写入 MP4 章节
-python -m subtitler chapters "D:ideos\direct_subtitled.mp4" chapters.txt --embed
-```
-
-#### 3. 挂载领域知识库与术语库（消除专有名词机翻与口误）
-```bash
-python -m subtitler kb list                                   # 查看内置知识库
-python -m subtitler transcribe game.mp4 --kb gaming_nintendo,anime_acg
-python -m subtitler transcribe game.mp4 --kb gaming_nintendo --kb-file my_video.kb.json   # 单视频专用词典
-```
-
-#### LLM 配置（可选）
-`translate` / `proofread` / `run --translate` 使用任意 OpenAI 兼容接口（OpenAI、DeepSeek、Gemini、Ollama…）：
-`SUBTITLER_LLM_API_KEY`（或 `OPENAI_API_KEY`）、`SUBTITLER_LLM_BASE_URL`、`SUBTITLER_LLM_MODEL`。
-
----
-
-### 📚 领域知识库与术语增强系统 (Knowledge Base & Glossary System)
-
-针对语音识别与机翻中最致命的**专有名词识别错误**（如将《星之卡比》听成“卡比/星辰小宝”，将“完全新作”听成“感转进削”），本项目构建了双重知识库增强体系：
-
-1. **ASR 识别前注入（Hotwords Injection）**：自动提取领域高频专有名词，作为 faster-whisper 的 `hotwords` 注入每一个 30 秒解码窗口，从源头提高识别准确率；
-2. **同音错词自愈（Phonetic Error Correction）**：基于发音失真映射表，自动校正 ASR 转写文本；
-3. **权威术语表强制对齐（Glossary Alignment）**：翻译时作为提示提供给译者，回填后再强制替换残留的原文术语，并在 `check` 中报告不一致。
-
-替换是单次正则扫描、最长优先、已正确的目标词受保护（不会把 `エヴァンゲリオン` 再替换一遍）；英文键按单词边界匹配（`ai` 不会命中 `rain`）。只适用于某一个视频的修正请写进单独的 `--kb-file`，不要污染通用词库。
-
-| 内置知识库 | 涵盖领域 | 核心词条举例 |
-| :--- | :--- | :--- |
-| `gaming_nintendo.json` | 游戏、任天堂全家桶、卡比、主机 | 星之卡比、探索发现、超越世界、Switch 2、任天堂直面会、大招压轴 |
-| `tech_ai.json` | 人工智能、大语言模型、软件工程 | ChatGPT、DeepSeek、Faster-Whisper、LoRA量化、模型推理、上下文窗口 |
-| `anime_acg.json` | 动漫番剧、声优、制作委员会、网梗 | 京都动画、ufotable、圣地巡礼、异世界转生、作画崩坏、封神名回 |
-| `vlogger_slang.json` | 视频博主、自媒体、直播杂谈黑话 | 一键三连、订阅点赞、切片剪辑、游戏实况、生放送、高评价 |
-| `gaming_valorant.json` | 无畏契约 / VALORANT、FPS 术语 | 捷风、暴徒、冥驹、爆能器、急停、准星预瞄、经济局（国服官方译名） |
-
-#### 4. 生成双语双层字幕（如中英双语）
-```bash
-python -m subtitler "D:\videos\lecture.mp4" --translate en --style dual_contrast
-```
-
-#### 5. 仅生成字幕文件，不重新压制视频
-```bash
-python -m subtitler "D:\videos\podcast.mp4" --no-burn
-```
-
----
-
-### 🎨 内置视觉风格模板一览
-
-| 模板名称 | 风格特征 | 推荐场景 |
-| :--- | :--- | :--- |
-| `default` | 纯白加粗 + 3px 纯黑外描边，下中对齐 | 通用视频、日常记录 |
-| `bilibili_standard` | 大字号高对比加粗 + 深黑粗描边 | B站 / YouTube 知识科普、科技数码 |
-| `shorts_punchy` | 炫彩醒目金黄 + 4px 粗描边 + 底部抬升 | 抖音、TikTok、YouTube Shorts、Reels |
-| `cinema_minimal` | 宋体/衬线微弱阴影、经典电影下沉微距 | 影视解说、微电影、纪录片 |
-| `dual_contrast` | 双层对比对齐排版（上层母语，下层译文） | 跨国演讲、双语教程、影视外语翻译 |
-| `bilingual` | **双语字阶标准**：译文 52 粗体 3.5px 描边 + 原文 34 常规 #EAEAEA，MarginV 48 贴边 | B站搬运/翻译（默认推荐） |
-| `bilingual_avoid` | 同上，MarginV 190 避让原视频底部字卡 / 弹幕框 | 原视频底部有作者字幕时 |
-| `single_large` | 单语 54 粗体 3.5px 描边，MarginV 48 | 只要中文字幕时 |
-
-所有 ASS 输出会按视频真实宽高比设置画布（竖屏不再被横向拉伸，并自动缩小字号、抬高到短视频 UI 之上），按字号与可用宽度自动计算换行宽度。
-
----
-
-### 🔌 编写自定义插件
-
-只需继承 `PostProcessPlugin` 或 `TranslationPlugin` 即可接入插件流：
-
-```python
-from subtitler.plugins.base import PostProcessPlugin
-from subtitler.asr import SubtitleSegment
-from typing import List
-
-class CustomFilterPlugin(PostProcessPlugin):
-    name = "custom_filter"
-    description = "自定义过滤或替换指定关键词"
-
-    def process(self, segments: List[SubtitleSegment]) -> List[SubtitleSegment]:
-        for seg in segments:
-            seg.text = seg.text.replace("旧词", "新词")
-        return segments
-```
-
----
-
-<a name="english"></a>
-## 🌐 English
-
-**Video-Subtitler** is a lightweight, extensible, and plugin-driven AI subtitling and hardsub-burning engine designed for developers and AI Agent workflows.
-
-### Highlights
-- **Plugin-Driven Architecture**: Clean micro-kernel supporting pluggable post-processing, LLM homophone proofreading, bilingual translation, and aesthetic styling.
-- **Agent-Ready**: Native Antigravity skill specification for seamless invocation via natural language.
-- **Zero-Config Portability**: Automatic environment detection and bundled portable fallback.
-
-### Quickstart
-```bash
-git clone https://github.com/KardeniaPoyu/video-subtitler.git
-cd video-subtitler
-pip install -r requirements.txt
-
-# Run with punchy viral subtitles
-python -m subtitler "path/to/video.mp4" --style shorts_punchy
-
-# Step-by-step, review-grade workflow (project file = video.subtitler.json)
-python -m subtitler doctor
-python -m subtitler transcribe video.mp4 -l ja --kb gaming_nintendo --to zh
-python -m subtitler batch  video.mp4          # lines + context + glossary for the translator
-python -m subtitler apply  video.mp4 edits.json
-python -m subtitler check  video.mp4          # untranslated / rows / width / CPS / overlaps / glossary
-python -m subtitler render video.mp4 --style bilingual
-python -m subtitler preview video.mp4 video.ass
-python -m subtitler burn   video.mp4 video.ass
-python -m subtitler chapters video_subtitled.mp4 chapters.txt --embed
-```
-
----
-
-## 📄 License
-
-MIT License. See [LICENSE](LICENSE) for details.
+商品包采用文件白名单，排除实录字幕、历史视频、日志与缓存。
+CI 验证 Windows/Linux 的离线流程；模型识别和平台支付需单独验证。
+源码按 [MIT](LICENSE) 开源；付费商品不能取消原有 MIT 权利，
+不得宣称独占源码或未经验证的服务承诺。

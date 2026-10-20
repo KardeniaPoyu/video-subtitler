@@ -22,6 +22,8 @@ The agent-in-the-loop workflow is:
 from __future__ import annotations
 
 import json
+import copy
+import math
 import os
 import tempfile
 from dataclasses import dataclass, field
@@ -61,12 +63,18 @@ class Project:
     def load(cls, path: str) -> "Project":
         with open(path, "r", encoding="utf-8-sig") as f:
             data = json.load(f)
+        if not isinstance(data, dict) or not isinstance(data.get("segments"), list):
+            raise ValueError("项目必须是包含 segments 数组的 JSON 对象。")
+        if data.get("version", 1) != 1:
+            raise ValueError("不支持的项目版本。")
         segs = data.get("segments", [])
         for k, s in enumerate(segs, 1):
+            if not isinstance(s, dict):
+                raise ValueError(f"第 {k} 条字幕必须是对象。")
             s.setdefault("id", k)
             s.setdefault("translation", "")
             s.setdefault("asr", s.get("text", ""))
-        return cls(
+        project = cls(
             path=path,
             video=data.get("video", ""),
             video_info=data.get("video_info", {}),
@@ -78,8 +86,43 @@ class Project:
             model=data.get("model", ""),
             segments=segs,
         )
+        project.validate()
+        return project
+
+    def validate(self) -> None:
+        """Reject malformed projects before rendering or modifying their contents."""
+        if not isinstance(self.video_info, dict):
+            raise ValueError("video_info 必须是对象。")
+        for key in ("domains", "kb_files"):
+            value = getattr(self, key)
+            if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
+                raise ValueError(f"{key} 必须是字符串数组。")
+        for key in ("video", "notes", "model"):
+            if not isinstance(getattr(self, key), str):
+                raise ValueError(f"{key} 必须是字符串。")
+        for key in ("source_lang", "target_lang"):
+            if getattr(self, key) is not None and not isinstance(getattr(self, key), str):
+                raise ValueError(f"{key} 必须是字符串或 null。")
+        seen = set()
+        for segment in self.segments:
+            if not isinstance(segment, dict):
+                raise ValueError("字幕必须是对象。")
+            sid = segment.get("id")
+            if type(sid) is not int or sid <= 0 or sid in seen:
+                raise ValueError(f"字幕 id 必须是唯一正整数：{sid!r}")
+            seen.add(sid)
+            for key in ("start", "end"):
+                value = segment.get(key)
+                if (type(value) not in (int, float) or not math.isfinite(value) or value < 0):
+                    raise ValueError(f"字幕 {sid} 的 {key} 必须是有限非负数。")
+            if segment["end"] <= segment["start"]:
+                raise ValueError(f"字幕 {sid} 的结束时间必须晚于开始时间。")
+            for key in ("text", "asr", "translation"):
+                if not isinstance(segment.get(key, ""), str):
+                    raise ValueError(f"字幕 {sid} 的 {key} 必须是字符串。")
 
     def save(self, path: Optional[str] = None) -> str:
+        self.validate()
         path = path or self.path
         data = {
             "version": 1,
@@ -188,6 +231,16 @@ class Project:
 
     # ------------------------------------------------------------------ apply edits
     def apply(self, edits: Any, knowledge=None, glossary: bool = True) -> Dict[str, Any]:
+        """Apply all edits transactionally; invalid changes leave the project untouched."""
+        if not isinstance(edits, (dict, list)):
+            raise ValueError("编辑内容必须是 JSON 对象或数组。")
+        candidate = copy.deepcopy(self)
+        result = candidate._apply(copy.deepcopy(edits), knowledge, glossary)
+        candidate.validate()
+        self.segments = candidate.segments
+        return result
+
+    def _apply(self, edits: Any, knowledge=None, glossary: bool = True) -> Dict[str, Any]:
         """
         Merge agent edits. Accepted shapes:
           {"12": "译文"}                                   -> translation
