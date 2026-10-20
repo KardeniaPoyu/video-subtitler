@@ -1,0 +1,12 @@
+{
+  "sample_type": "Original Windows SAPI English TTS + FFmpeg synthetic video",
+  "language": "en",
+  "model": "tiny.en",
+  "device": "cpu",
+  "duration_seconds": 8.95,
+  "elapsed_seconds_including_model_load": 2.2,
+  "segments": 3,
+  "recognized_text": "Welcome to our garden. We water the plants every morning. Please check the subtitles before sharing this video.",
+  "check": "non-empty ASR, garden/subtitles recognized, formal delivery succeeded",
+  "limitations": "Single synthetic English sample; not an accuracy, multilingual or long-video benchmark."
+}

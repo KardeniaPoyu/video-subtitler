@@ -3,7 +3,9 @@ import hashlib
 import json
 
 import pytest
+import numpy as np
 
+from subtitler.asr import SubtitleSegment
 from subtitler.delivery import deliver, demo
 from subtitler.project import Project
 
@@ -70,3 +72,17 @@ def test_bundle_redacts_local_paths_and_escapes_html(tmp_path):
     out = deliver(p, str(tmp_path / "bundle"), draft=True)
     assert "/private/" not in (out / "project.json").read_text("utf-8")
     assert "<script>" not in (out / "review.html").read_text("utf-8")
+
+
+@pytest.mark.parametrize("scalar", [np.float32, np.float64])
+def test_asr_numpy_timestamps_save_and_deliver(tmp_path, scalar):
+    p = Project.from_segments(
+        str(tmp_path / "project.json"),
+        [SubtitleSegment(scalar(0.0), scalar(3.0), "Welcome to our garden.")],
+        source_lang="en",
+    )
+    p.save()
+    reloaded = Project.load(p.path)
+    assert type(reloaded.segments[0]["start"]) is float
+    assert type(reloaded.segments[0]["end"]) is float
+    assert (deliver(reloaded, str(tmp_path / "delivery")) / "subtitles.srt").is_file()

@@ -147,7 +147,8 @@ class Project:
     # ------------------------------------------------------------------ conversion
     @classmethod
     def from_segments(cls, path: str, segments: List[SubtitleSegment], **meta) -> "Project":
-        segs = [{"id": i, "start": round(s.start, 3), "end": round(s.end, 3), "text": s.text,
+        # ASR backends can return NumPy scalars; the project format uses JSON-native numbers.
+        segs = [{"id": i, "start": round(float(s.start), 3), "end": round(float(s.end), 3), "text": s.text,
                  "asr": s.text, "translation": s.translation or ""}
                 for i, s in enumerate(segments, 1)]
         return cls(path=path, segments=segs, **meta)

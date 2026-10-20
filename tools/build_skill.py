@@ -10,7 +10,7 @@ from pathlib import Path
 
 def build() -> Path:
     root = Path(__file__).resolve().parents[1]
-    allowed = ["SKILL.md", "README.md", "CHANGELOG.md", "docs/*.md", "docs/pricing-evidence.json", "LICENSE", "pyproject.toml",
+    allowed = ["SKILL.md", "README.md", "CHANGELOG.md", "docs/*.md", "docs/*.json", "LICENSE", "pyproject.toml",
                "subtitler/**/*.py", "subtitler/knowledge/data/*.json", "references/*.md"]
     paths = sorted({p for pattern in allowed for p in root.glob(pattern) if p.is_file()})
     if not (root / "SKILL.md") in paths:
