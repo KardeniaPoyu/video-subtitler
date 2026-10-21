@@ -14,7 +14,7 @@ from subtitler.ffmpeg_utils import extract_audio, get_ffmpeg_path, probe_video
 from subtitler.plugins.manager import PluginManager
 from subtitler.subtitle import save_subtitles, save_to_ass, save_to_srt, save_to_vtt
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 
 
 def _domains_arg(topic) -> Optional[List[str]]:
@@ -55,10 +55,11 @@ def transcribe_video(
 
     import tempfile
     audio_dir = os.path.dirname(os.path.abspath(video_path)) if keep_audio else tempfile.gettempdir()
-    audio_path = os.path.join(audio_dir, os.path.splitext(os.path.basename(video_path))[0] + "_audio_16k.wav")
+    fd, audio_path = tempfile.mkstemp(prefix="subtitler_", suffix=".wav", dir=audio_dir)
+    os.close(fd)
     print("[1/3] Extracting 16 kHz audio...")
-    extract_audio(video_path, audio_path)
     try:
+        extract_audio(video_path, audio_path)
         hotwords = ke.get_asr_prompt(domains, max_words=60) if domains else None
         print("[2/3] Transcribing" + (" (with domain hotwords)" if hotwords else "") + "...")
         tr = WhisperTranscriber(model_size=model_size, device=device)
@@ -83,6 +84,9 @@ def transcribe_video(
         fixed = sum(a != s.text for a, s in zip(raw, segments))
         print(f"[3/3] Applied ASR corrections to {fixed} lines.")
     meta = {"language": lang, "domains": domains, "video_info": info, "model": tr.model_size, "raw": raw}
+    if keep_audio:
+        meta["audio_path"] = audio_path
+        print(f"[Audio] Retained audio: {audio_path}")
     return segments, meta
 
 
@@ -113,6 +117,22 @@ def process_video(
     """
     from subtitler.knowledge import KnowledgeEngine
     from subtitler.project import Project, default_project_path
+
+    base, _ = os.path.splitext(video_path)
+    fmt = subtitle_format.lower()
+    output_subtitle_path = output_subtitle_path or f"{base}.{fmt}"
+    output_video_path = output_video_path or f"{base}_subtitled.mp4"
+    outputs = [output_subtitle_path]
+    if save_project:
+        outputs.append(default_project_path(video_path))
+    if burn:
+        outputs.append(output_video_path)
+    absolute_outputs = [os.path.abspath(p) for p in outputs]
+    if len(set(absolute_outputs)) != len(absolute_outputs) or os.path.abspath(video_path) in absolute_outputs:
+        raise ValueError("输出路径不能相互重叠或覆盖原视频。")
+    for path in outputs:
+        if os.path.lexists(path):
+            raise FileExistsError(f"输出已存在，请先选择新的输出路径：{path}")
 
     ke = knowledge_engine or KnowledgeEngine(extra_files=kb_files)
     pm = plugin_manager or PluginManager()

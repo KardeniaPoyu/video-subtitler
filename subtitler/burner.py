@@ -15,6 +15,7 @@ import tempfile
 from typing import List, Optional, Sequence
 
 from subtitler.ffmpeg_utils import get_ffmpeg_path, probe_video, run_ffmpeg
+from subtitler.safe_io import publish_file
 
 SRT_FORCE_STYLE = ("Fontname=Microsoft YaHei,Fontsize=18,PrimaryColour=&H00FFFFFF,"
                    "OutlineColour=&H00000000,BorderStyle=1,Outline=2,Shadow=1,MarginV=12")
@@ -128,6 +129,8 @@ def burn_subtitles_to_video(
         output_video_path = f"{base}_subtitled.mp4"
     output_video_path = os.path.abspath(output_video_path)
     video_path = os.path.abspath(video_path)
+    if os.path.lexists(output_video_path):
+        raise FileExistsError(f"输出文件已存在，请指定新文件：{output_video_path}")
 
     if use_nvenc is None:
         use_nvenc = is_nvenc_available()
@@ -137,7 +140,9 @@ def burn_subtitles_to_video(
         duration = (end or info.duration) - (start or 0)
 
     max_kbps = source_bitrate_cap(video_path, info.duration, bitrate_cap)
-    with _StagedSubtitle(subtitle_path, fonts_dir) as staged:
+    with tempfile.TemporaryDirectory(prefix=".burn-", dir=os.path.dirname(output_video_path)) as output_dir, \
+            _StagedSubtitle(subtitle_path, fonts_dir) as staged:
+        temporary_video = os.path.join(output_dir, "video" + os.path.splitext(output_video_path)[1])
         clip = start is not None or end is not None
 
         def build(nvenc: bool, audio_copy: bool) -> List[str]:
@@ -157,7 +162,7 @@ def burn_subtitles_to_video(
                 cmd += ["-c:a", "copy"] if audio_copy else ["-c:a", "aac", "-b:a", "192k"]
             if output_video_path.lower().endswith((".mp4", ".mov", ".m4v")):
                 cmd += ["-movflags", "+faststart"]
-            return cmd + [output_video_path]
+            return cmd + [temporary_video]
 
         attempts = [(use_nvenc, True)] + ([] if clip else [(use_nvenc, False)])
         if use_nvenc:
@@ -166,13 +171,9 @@ def burn_subtitles_to_video(
         for nvenc, acopy in attempts:
             enc = "NVENC h264_nvenc" if nvenc else "CPU libx264"
             print(f"[Burner] Encoding with {enc} -> {os.path.basename(output_video_path)}")
-            cwd = os.getcwd()
-            os.chdir(staged.tmp)
-            try:
-                res = run_ffmpeg(build(nvenc, acopy), duration=duration, label="Burn")
-            finally:
-                os.chdir(cwd)
+            res = run_ffmpeg(build(nvenc, acopy), duration=duration, label="Burn", cwd=staged.tmp)
             if res.returncode == 0:
+                publish_file(temporary_video, output_video_path)
                 print(f"[Burner] Done: {output_video_path}")
                 return output_video_path
             last_err = res.stderr
@@ -217,12 +218,7 @@ def render_preview_frames(
             with _StagedSubtitle(subtitle_path, fonts_dir) as staged:
                 cmd = [get_ffmpeg_path(), "-y", "-ss", f"{t:.3f}", "-copyts", "-i", video_path,
                        "-vf", staged.filter, "-frames:v", "1", "-q:v", "2", out]
-                cwd = os.getcwd()
-                os.chdir(staged.tmp)
-                try:
-                    res = run_ffmpeg(cmd)
-                finally:
-                    os.chdir(cwd)
+                res = run_ffmpeg(cmd, cwd=staged.tmp)
         else:
             res = run_ffmpeg([get_ffmpeg_path(), "-y", "-ss", f"{t:.3f}", "-i", video_path,
                               "-frames:v", "1", "-q:v", "2", out])

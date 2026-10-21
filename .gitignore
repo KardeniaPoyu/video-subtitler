@@ -35,3 +35,7 @@ huggingface/
 .idea/
 .DS_Store
 Thumbs.db
+
+pytest-of-*/
+.delivery-*/
+demo-output/

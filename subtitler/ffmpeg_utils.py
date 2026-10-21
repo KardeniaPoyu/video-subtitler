@@ -91,14 +91,15 @@ def probe_video(path: str) -> VideoInfo:
     return info
 
 
-def run_ffmpeg(cmd: List[str], duration: Optional[float] = None, label: str = "FFmpeg") -> subprocess.CompletedProcess:
+def run_ffmpeg(cmd: List[str], duration: Optional[float] = None, label: str = "FFmpeg",
+               cwd: Optional[str] = None) -> subprocess.CompletedProcess:
     """
     Run an FFmpeg command, printing percentage progress when ``duration`` is known.
     Returns a CompletedProcess whose ``stderr`` holds the (tail of the) log as text.
     """
     if duration and duration > 0:
         cmd = cmd[:1] + ["-hide_banner", "-nostats", "-progress", "pipe:1"] + cmd[1:]
-        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
         import threading
         err_chunks: List[bytes] = []
         t = threading.Thread(target=lambda: err_chunks.append(proc.stderr.read()), daemon=True)
@@ -122,7 +123,7 @@ def run_ffmpeg(cmd: List[str], duration: Optional[float] = None, label: str = "F
         t.join(timeout=5)
         stderr = b"".join(err_chunks).decode("utf-8", errors="ignore")
         return subprocess.CompletedProcess(cmd, proc.returncode, "", stderr[-6000:])
-    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    res = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, cwd=cwd)
     return subprocess.CompletedProcess(cmd, res.returncode, "",
                                        res.stderr.decode("utf-8", errors="ignore")[-6000:])
 
