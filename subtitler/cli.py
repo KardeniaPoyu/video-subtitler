@@ -33,7 +33,7 @@ from subtitler import __version__
 from subtitler.ffmpeg_utils import ensure_utf8_stdio
 
 COMMANDS = ("doctor", "transcribe", "status", "batch", "apply", "translate", "proofread", "check",
-            "render", "preview", "frames", "burn", "chapters", "kb", "styles", "run", "deliver", "demo")
+            "render", "preview", "frames", "burn", "chapters", "kb", "styles", "run", "deliver", "demo", "evolve")
 
 
 # ----------------------------------------------------------------------------- helpers
@@ -69,7 +69,8 @@ def _load_project(arg: str):
 def _knowledge(project=None, extra: Optional[List[str]] = None):
     from subtitler.knowledge import KnowledgeEngine
     files = list(project.kb_files if project else []) + list(extra or [])
-    return KnowledgeEngine(extra_files=[f for f in files if os.path.exists(f)])
+    return KnowledgeEngine(extra_files=[f for f in files if os.path.exists(f)],
+                           warn_unknown=not bool(project and project.evolution))
 
 
 def _style_names():
@@ -179,6 +180,15 @@ def cmd_batch(a) -> int:
     ke = _knowledge(proj)
     text, ids = proj.batch_text(start_id=a.start, size=a.size, context=a.context, knowledge=ke,
                                 only_missing=not a.all)
+    from subtitler.evolution.runtime import require_policy
+    from subtitler.evolution.rules import applicable
+    policy = getattr(a, "evolution_policy", None)
+    require_policy(proj, policy)
+    if policy is not None:
+        context = policy.context(proj)
+        relevant = [{"id": row["id"], "rule": row["spec"]} for row in policy.snapshot["rules"]
+                    if any(applicable(row["spec"], s, context) for s in proj.segments if s["id"] in ids)]
+        text += "\n# VERIFIED CONSTRAINTS (also enforced by apply/check/deliver):\n" + json.dumps(relevant, ensure_ascii=False)
     if a.out:
         with open(a.out, "w", encoding="utf-8") as f:
             f.write(text + "\n")
@@ -192,7 +202,8 @@ def cmd_apply(a) -> int:
     proj = _load_project(a.project)
     with open(a.edits, "r", encoding="utf-8-sig") as f:
         edits = json.load(f)
-    report = proj.apply(edits, knowledge=_knowledge(proj), glossary=not a.no_glossary)
+    report = proj.apply(edits, knowledge=_knowledge(proj), glossary=not a.no_glossary,
+                        policy=getattr(a, "evolution_policy", None))
     proj.save()
     print(f"Applied: {report['translations']} translations, {report['source_fixes']} source fixes, "
           f"{report['timing']} timing edits, {report.get('split', 0)} lines added by splits, "
@@ -206,6 +217,9 @@ def cmd_apply(a) -> int:
 def cmd_translate(a) -> int:
     from subtitler.plugins.translator import LLMTranslatorPlugin
     proj = _load_project(a.project)
+    from subtitler.evolution.runtime import require_policy
+    policy = getattr(a, "evolution_policy", None)
+    require_policy(proj, policy)
     target = a.to or proj.target_lang
     if not target:
         sys.exit("No target language: pass --to zh (or set target_lang in the project).")
@@ -222,6 +236,8 @@ def cmd_translate(a) -> int:
     for d, s in zip(proj.segments, segs):
         if s.translation:
             d["translation"] = ke.apply_glossary(s.translation, proj.domains) if proj.domains else s.translation
+    if policy is not None:
+        policy.apply(proj)
     proj.save()
     print(proj.status())
     return 0
@@ -230,6 +246,9 @@ def cmd_translate(a) -> int:
 def cmd_proofread(a) -> int:
     from subtitler.plugins.corrector import LLMProofreaderPlugin
     proj = _load_project(a.project)
+    from subtitler.evolution.runtime import require_policy
+    policy = getattr(a, "evolution_policy", None)
+    require_policy(proj, policy)
     ke = _knowledge(proj)
     p = LLMProofreaderPlugin(model=a.model)
     p.hotwords = ke.get_hotwords(proj.domains) if proj.domains else []
@@ -239,6 +258,8 @@ def cmd_proofread(a) -> int:
         if s.text != d["text"]:
             changed += 1
             d["text"] = s.text
+    if policy is not None:
+        policy.apply(proj)
     proj.save()
     print(f"Proofread: {changed} lines changed.")
     return 0
@@ -254,6 +275,8 @@ def cmd_check(a) -> int:
         issues = check_segments(segs, style=style, max_cps=a.max_cps)
     else:
         proj = _load_project(a.target)
+        from subtitler.evolution.runtime import require_policy
+        require_policy(proj, getattr(a, "evolution_policy", None), final=True)
         ke = _knowledge(proj)
         segs = proj.to_segments()
         ids = [int(s["id"]) for s in proj.segments]
@@ -274,7 +297,9 @@ def cmd_render(a) -> int:
     from subtitler.subtitle import save_subtitles
     from subtitler.asr import close_gaps
     proj = _load_project(a.project)
-    segs = close_gaps(proj.to_segments())
+    from subtitler.evolution.runtime import require_policy
+    require_policy(proj, getattr(a, "evolution_policy", None), final=True)
+    segs = proj.to_segments() if proj.evolution else close_gaps(proj.to_segments())
     if a.output:
         base = a.output
     elif proj.video:
@@ -404,7 +429,8 @@ def cmd_run(a) -> int:
 def cmd_deliver(a) -> int:
     from subtitler.delivery import deliver
     print(deliver(_load_project(a.project), a.output, draft=a.draft,
-                  style=a.style, mode=a.mode, approved_kb_files=a.kb_file))
+                  style=a.style, mode=a.mode, approved_kb_files=a.kb_file,
+                  policy=getattr(a, "evolution_policy", None)))
     return 0
 
 
@@ -419,6 +445,8 @@ def build_parser() -> argparse.ArgumentParser:
                                 formatter_class=argparse.RawDescriptionHelpFormatter, epilog=__doc__)
     p.add_argument("-v", "--version", action="version", version=f"video-subtitler {__version__}")
     sub = p.add_subparsers(dest="cmd")
+    from subtitler.evolution.cli import add_parser
+    add_parser(sub)
     sp = sub.add_parser("demo", help="original offline example; no video, model or API needed")
     sp.add_argument("--output", required=True, help="new delivery directory")
     sp.set_defaults(fn=cmd_demo)
@@ -567,6 +595,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("--proofread", action="store_true")
     sp.add_argument("--no-burn", action="store_true")
     sp.set_defaults(fn=cmd_run)
+    for name in ("batch", "apply", "translate", "proofread", "check", "render", "deliver"):
+        sub.choices[name].add_argument("--memory", help="required for a memory-bound project; learned constraints cannot be skipped")
     return p
 
 
@@ -582,7 +612,14 @@ def main(argv: Optional[List[str]] = None) -> None:
         parser.print_help()
         sys.exit(0)
     try:
-        sys.exit(args.fn(args))
+        from subtitler.evolution.runtime import open_policy
+        if args.cmd in {"batch", "apply", "translate", "proofread", "check", "render", "deliver"}:
+            with open_policy(args.memory) as policy:
+                args.evolution_policy = policy
+                code = args.fn(args)
+        else:
+            code = args.fn(args)
+        sys.exit(code)
     except KeyboardInterrupt:
         sys.exit(130)
     except (OSError, RuntimeError, KeyError, ValueError) as e:

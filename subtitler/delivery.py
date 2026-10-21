@@ -20,7 +20,19 @@ from subtitler.safe_io import publish_directory
 
 def deliver(project: Project, output: str, *, draft: bool = False,
             style: str = "bilingual", mode: str = "auto",
-            approved_kb_files=()) -> Path:
+            approved_kb_files=(), memory=None, policy=None) -> Path:
+    from subtitler.evolution.runtime import open_policy, require_policy
+    if memory is not None and policy is not None:
+        raise ValueError("provide memory or an open policy, not both")
+    with open_policy(memory) as opened:
+        policy = policy or opened
+        require_policy(project, policy, final=True)
+        return _deliver(project, output, draft=draft, style=style, mode=mode,
+                        approved_kb_files=approved_kb_files, policy=policy)
+
+
+def _deliver(project: Project, output: str, *, draft: bool, style: str, mode: str,
+             approved_kb_files, policy) -> Path:
     """Check one snapshot and publish into an exclusively reserved new directory."""
     from subtitler.knowledge import KnowledgeEngine
     from subtitler.plugins.templates import get_template
@@ -38,7 +50,7 @@ def deliver(project: Project, output: str, *, draft: bool = False,
     if os.path.lexists(destination):
         raise FileExistsError(f"交付目录已存在，请换一个名称：{destination}")
     template = get_template(style)
-    segments = close_gaps(project.to_segments())
+    segments = project.to_segments() if project.evolution else close_gaps(project.to_segments())
     for record, segment in zip(project.segments, segments):
         record["end"] = segment.end
     qa_segments = copy.deepcopy(segments)
@@ -52,7 +64,7 @@ def deliver(project: Project, output: str, *, draft: bool = False,
     issues = check_segments(
         qa_segments, style=template, target_lang=target_lang,
         ids=[s["id"] for s in project.segments], domains=project.domains,
-        knowledge=KnowledgeEngine(extra_files=project.kb_files),
+        knowledge=KnowledgeEngine(extra_files=project.kb_files, warn_unknown=not bool(project.evolution)),
     )
     errors = sum(i.level == "error" for i in issues)
     if errors and not draft:
@@ -65,6 +77,9 @@ def deliver(project: Project, output: str, *, draft: bool = False,
         # Delivery must not disclose the creator's home directory or local glossary paths.
         clean.video = PureWindowsPath(clean.video.replace("\\", "/")).name
         clean.kb_files = []
+        if clean.evolution:
+            # Raw edit history remains private; retain binding/receipt for future edits.
+            clean.evolution["history"] = []
         clean.save(str(staged / "project.json"))
         size = (project.video_info.get("width"), project.video_info.get("height"))
         for extension in ("srt", "vtt", "ass"):
@@ -98,6 +113,8 @@ def deliver(project: Project, output: str, *, draft: bool = False,
         manifest = {"schema_version": 1, "status": status, "files": {
             p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(staged.iterdir())}}
         (staged / "manifest.json").write_text(json.dumps(manifest, indent=2), "utf-8")
+        if policy is not None:
+            policy.check(project)  # recheck TTL at publication, not only at the start
         publish_directory(staged, destination)
     return destination
 

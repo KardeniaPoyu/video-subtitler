@@ -1,0 +1,187 @@
+{
+  "kind": "original synthetic text fixtures; not an ASR/translation-accuracy benchmark",
+  "network": {
+    "executed": true,
+    "url": "https://docs.python.org/zh-cn/3/glossary.html",
+    "quote": "atomic operation -- 原子化操作",
+    "source_sha": "cefa6cc0c9cddecb5dd472204bf9fef1f1865b7b9908a6f6c55456835c828c07",
+    "created": 1792555824.5253882,
+    "expires": 1795147824.5253882,
+    "evaluation": {
+      "passed": true,
+      "cases": 2,
+      "improved_cases": 1,
+      "negative_cases": 1,
+      "regression_cases": 2,
+      "failures": []
+    },
+    "application": {
+      "changed_segments": 1,
+      "changes": [
+        {
+          "segment_id": 1,
+          "rule_ids": [
+            "r_9a125aae259b40b3"
+          ]
+        }
+      ],
+      "revision": 4
+    },
+    "before": "原子操作会完成。",
+    "after": "原子化操作会完成。"
+  },
+  "edit_evaluation": {
+    "passed": true,
+    "cases": 2,
+    "improved_cases": 1,
+    "negative_cases": 1,
+    "regression_cases": 0,
+    "failures": []
+  },
+  "knowledge_evaluation": {
+    "passed": true,
+    "cases": 2,
+    "improved_cases": 1,
+    "negative_cases": 1,
+    "regression_cases": 2,
+    "failures": []
+  },
+  "application": {
+    "changed_segments": 2,
+    "changes": [
+      {
+        "segment_id": 1,
+        "rule_ids": [
+          "r_e6be8b3210404e5a"
+        ]
+      },
+      {
+        "segment_id": 3,
+        "rule_ids": [
+          "r_124b8d86a8c34f91"
+        ]
+      }
+    ],
+    "revision": 2
+  },
+  "before": [
+    {
+      "id": 1,
+      "start": 0.0,
+      "end": 4.0,
+      "text": "An agent learns.",
+      "asr": "An agent learns.",
+      "translation": "代理会学习。"
+    },
+    {
+      "id": 2,
+      "start": 4.5,
+      "end": 8.5,
+      "text": "A real estate agent helps.",
+      "asr": "A real estate agent helps.",
+      "translation": "房产经纪人提供帮助。"
+    },
+    {
+      "id": 3,
+      "start": 9.0,
+      "end": 13.0,
+      "text": "Thank you for joining.",
+      "asr": "Thank you for joining.",
+      "translation": "谢谢加入。"
+    }
+  ],
+  "after": [
+    {
+      "id": 1,
+      "start": 0.0,
+      "end": 4.0,
+      "text": "An agent learns.",
+      "asr": "An agent learns.",
+      "translation": "智能体会学习。"
+    },
+    {
+      "id": 2,
+      "start": 4.5,
+      "end": 8.5,
+      "text": "A real estate agent helps.",
+      "asr": "A real estate agent helps.",
+      "translation": "房产经纪人提供帮助。"
+    },
+    {
+      "id": 3,
+      "start": 9.0,
+      "end": 13.0,
+      "text": "Thank you for joining.",
+      "asr": "Thank you for joining.",
+      "translation": "感谢收看。"
+    }
+  ],
+  "gates": [
+    {
+      "name": "省略记忆库的正式导出",
+      "blocked": true,
+      "reason": "memory-bound project requires --memory; learned constraints cannot be skipped"
+    },
+    {
+      "name": "验证后修改字幕再导出",
+      "blocked": true,
+      "reason": "subtitle content changed after validation; run evolve apply"
+    },
+    {
+      "name": "规则撤销后沿用旧验证结果",
+      "blocked": true,
+      "reason": "memory revision changed; run evolve apply before final output"
+    }
+  ],
+  "undo_restored": true,
+  "after_revocation": [
+    {
+      "id": 1,
+      "start": 0.0,
+      "end": 4.0,
+      "text": "An agent learns.",
+      "asr": "An agent learns.",
+      "translation": "代理会学习。"
+    },
+    {
+      "id": 2,
+      "start": 4.5,
+      "end": 8.5,
+      "text": "A real estate agent helps.",
+      "asr": "A real estate agent helps.",
+      "translation": "房产经纪人提供帮助。"
+    },
+    {
+      "id": 3,
+      "start": 9.0,
+      "end": 13.0,
+      "text": "Thank you for joining.",
+      "asr": "Thank you for joining.",
+      "translation": "感谢收看。"
+    }
+  ],
+  "delivery_note": "delivery was valid at creation; library revocation intentionally invalidates its old receipt",
+  "before_sha": "fb534360fb6ed4103c8196a8831e3ff3490d9ae498096d1b0630f2553cdc1b30",
+  "after_sha": "ed9bfb79ec016b74de80a7fbde076aa8deea15e79d9447a718c74d81dd5ab804",
+  "verification": {
+    "date": "2026-10-20",
+    "version": "0.5.0",
+    "platform": "Windows / Python 3.11",
+    "tests": "109 passed, 1 skipped",
+    "network": "real HTTPS fetch; no paid model requests",
+    "skill_validation": "passed"
+  },
+  "code_sha256": {
+    "subtitler/evolution/cli.py": "0a95c288207313eea35dfabb12dc7ffd7a223ddc398f1dd14486d1dde4fb1749",
+    "subtitler/evolution/demo.py": "9c68c4a37658d234049e39bfdfca26102d8ddd0be131f5c286878f0647a3e63b",
+    "subtitler/evolution/rules.py": "b9f064d1fcb960197e47c9f70162bbec4f76f819e203952b918faf62b4751177",
+    "subtitler/evolution/runtime.py": "c717e9d58884df2501deab701990ffefbd27621395aa3f80d1a2dd194de0f80d",
+    "subtitler/evolution/sources.py": "6c3fb610910e5d7f11f2b71f076a131cf8be8e2b61641e1698d6193d907ad318",
+    "subtitler/evolution/store.py": "5191de7786e658d957f9e6f2c7be380c997407c2afd2d85c34ab609739595f41",
+    "subtitler/evolution/__init__.py": "10448098c9d3cf36949a13bf3b80398f5b6dc07c0df0ca705470db17a930c9df",
+    "subtitler/project.py": "b9045f46b12f5afa493d962ea9bf4e9616bc38af4f4cbef245f1e069d0d698c0",
+    "subtitler/cli.py": "012524cc2cf29a12e266c587e0d6fb4351a5da24160e807272cd4703c098da1e",
+    "subtitler/delivery.py": "db9699493f02a2b1d8711b194337a4df11e9a1805c9053b9a5f574a8cf105cf4"
+  },
+  "code_hash_normalization": "UTF-8 text with CRLF normalized to LF"
+}
