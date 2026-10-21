@@ -2,7 +2,8 @@
 
 ## 已验证
 
-- Windows / Python 3.11：`python -m pytest -q`，54 项通过，包括识别模型的 NumPy 时间类型回归测试。
+- Windows / Python 3.11：`python -m pytest -q`，69 项通过、1 项 POSIX 符号链接测试跳过；该项由 Linux CI 验证。
+- 本轮 Sourcery review 的 20 项问题已逐项修改，覆盖并发保护、词库边界、交付 QA、拆分重试和测试断言；见 [修订对照](REVIEW_FIXES.md)。
 - 真实 FFmpeg 测试覆盖视频生成、16kHz 单声道提取、CPU 压制与原文件保护。
 - 原创英文合成语音短片（8.95 秒）经 tiny.en / CPU 识别出 3 条字幕，并成功生成正式交付包；[实测结果](ASR_SMOKE.json)。
 - Skill frontmatter 校验通过；离线 demo 生成报告。

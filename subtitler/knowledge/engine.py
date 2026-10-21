@@ -19,9 +19,11 @@ from __future__ import annotations
 import json
 import os
 import re
+import stat
 from typing import Dict, Iterable, List, Optional, Sequence, Tuple, Union
 
 DomainSpec = Union[None, str, Sequence[str]]
+MAX_KB_BYTES = 1_048_576
 
 _DETECT_HINTS = {
     "gaming_nintendo": ["nintendo", "switch", "kirby", "mario", "zelda", "pokemon", "splatoon",
@@ -96,12 +98,20 @@ class KnowledgeEngine:
 
     def load_file(self, path: str) -> str:
         """Load (or merge into) a domain from a JSON file. Returns the domain name."""
-        try:
-            with open(path, "r", encoding="utf-8-sig") as f:
-                data = json.load(f)
-        except Exception as e:
-            print(f"[KnowledgeEngine] Warning: failed to load {path}: {e}")
-            return ""
+        if not stat.S_ISREG(os.lstat(path).st_mode):
+            raise ValueError("词库必须是普通文件，不允许设备、目录或符号链接。")
+        flags = os.O_RDONLY | getattr(os, "O_NONBLOCK", 0) | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        with os.fdopen(fd, "rb") as f:
+            info = os.fstat(f.fileno())
+            if not stat.S_ISREG(info.st_mode) or info.st_size > MAX_KB_BYTES:
+                raise ValueError("词库必须是最大 1 MiB 的普通 JSON 文件。")
+            raw = f.read(MAX_KB_BYTES + 1)
+        if len(raw) > MAX_KB_BYTES:
+            raise ValueError("词库超过 1 MiB。")
+        data = json.loads(raw.decode("utf-8-sig"))
+        if not isinstance(data, dict):
+            raise ValueError("词库必须是 JSON 对象。")
         name = data.get("domain") or os.path.splitext(os.path.basename(path))[0]
         if name in self.domains:  # merge: project-local entries override the built-in ones
             base = self.domains[name]

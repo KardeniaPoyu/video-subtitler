@@ -21,11 +21,14 @@ def test_bundle_can_be_reopened_and_hashes_match(tmp_path):
     dest = demo(str(tmp_path / "delivery"))
     assert len(Project.load(str(dest / "project.json")).segments) == 2
     manifest = json.loads((dest / "manifest.json").read_text("utf-8"))
-    assert {"subtitles.ass", "subtitles.srt", "subtitles.vtt", "qa.json"} <= manifest["files"].keys()
+    assert set(manifest["files"]) == {
+        "subtitles.ass", "subtitles.srt", "subtitles.vtt", "qa.json", "project.json", "review.html"}
     for name, digest in manifest["files"].items():
         assert hashlib.sha256((dest / name).read_bytes()).hexdigest() == digest
+    before = {p.name: p.read_bytes() for p in dest.iterdir()}
     with pytest.raises(FileExistsError):
         demo(str(dest))
+    assert {p.name: p.read_bytes() for p in dest.iterdir()} == before
 
 
 def test_no_output_on_failed_checks_and_draft_is_labeled(tmp_path):

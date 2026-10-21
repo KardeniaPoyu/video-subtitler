@@ -8,29 +8,49 @@ import json
 import os
 import tempfile
 from dataclasses import asdict
-from pathlib import Path
+from pathlib import Path, PureWindowsPath
 from typing import Optional
 
 from subtitler.project import Project
 from subtitler.qa import check_segments
 from subtitler.subtitle import save_subtitles
+from subtitler.asr import close_gaps
+from subtitler.safe_io import publish_directory
 
 
 def deliver(project: Project, output: str, *, draft: bool = False,
-            style: str = "bilingual", mode: str = "auto") -> Path:
-    """Create a new directory atomically; never overwrite an existing delivery."""
+            style: str = "bilingual", mode: str = "auto",
+            approved_kb_files=()) -> Path:
+    """Check one snapshot and publish into an exclusively reserved new directory."""
     from subtitler.knowledge import KnowledgeEngine
     from subtitler.plugins.templates import get_template
 
+    project = copy.deepcopy(project)
     project.validate()
+    if mode not in {"auto", "source", "target", "bilingual"}:
+        raise ValueError("不支持的导出模式。")
+    approved = {os.path.abspath(p) for p in approved_kb_files}
+    if any(os.path.abspath(p) not in approved for p in project.kb_files):
+        raise ValueError("项目包含外部词库；请通过 --kb-file 明确指定允许读取的词库。")
     if not project.segments:
         raise ValueError("项目没有字幕，无法生成交付包。")
-    destination = Path(output).resolve()
-    if destination.exists():
+    destination = Path(os.path.abspath(output))
+    if os.path.lexists(destination):
         raise FileExistsError(f"交付目录已存在，请换一个名称：{destination}")
     template = get_template(style)
+    segments = close_gaps(project.to_segments())
+    for record, segment in zip(project.segments, segments):
+        record["end"] = segment.end
+    qa_segments = copy.deepcopy(segments)
+    effective_mode = mode if mode != "auto" else (
+        "bilingual" if project.target_lang or any(s.translation for s in segments) else "source")
+    target_lang = project.target_lang or ("und" if effective_mode in {"target", "bilingual"} else None)
+    if effective_mode == "source":
+        target_lang = None
+        for segment in qa_segments:
+            segment.translation = None
     issues = check_segments(
-        project.to_segments(), style=template, target_lang=project.target_lang,
+        qa_segments, style=template, target_lang=target_lang,
         ids=[s["id"] for s in project.segments], domains=project.domains,
         knowledge=KnowledgeEngine(extra_files=project.kb_files),
     )
@@ -43,18 +63,18 @@ def deliver(project: Project, output: str, *, draft: bool = False,
         staged.mkdir()
         clean = copy.deepcopy(project)
         # Delivery must not disclose the creator's home directory or local glossary paths.
-        clean.video = Path(clean.video).name
+        clean.video = PureWindowsPath(clean.video.replace("\\", "/")).name
         clean.kb_files = []
         clean.save(str(staged / "project.json"))
         size = (project.video_info.get("width"), project.video_info.get("height"))
         for extension in ("srt", "vtt", "ass"):
-            options = {"mode": mode}
+            options = {"mode": effective_mode}
             if extension == "ass":
                 options.update(template=style, video_size=size if all(size) else None)
             else:
                 options.update(max_chars=template.max_chars,
                                secondary_max_chars=template.secondary_max_chars)
-            save_subtitles(project.to_segments(), str(staged / f"subtitles.{extension}"), **options)
+            save_subtitles(segments, str(staged / f"subtitles.{extension}"), **options)
         status = "draft" if draft else "checks_passed"
         report = {"schema_version": 1, "status": status, "segments": len(project.segments),
                   "errors": errors, "warnings": sum(i.level == "warn" for i in issues),
@@ -78,7 +98,7 @@ def deliver(project: Project, output: str, *, draft: bool = False,
         manifest = {"schema_version": 1, "status": status, "files": {
             p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(staged.iterdir())}}
         (staged / "manifest.json").write_text(json.dumps(manifest, indent=2), "utf-8")
-        os.rename(staged, destination)
+        publish_directory(staged, destination)
     return destination
 
 

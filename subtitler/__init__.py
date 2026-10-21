@@ -84,6 +84,9 @@ def transcribe_video(
         fixed = sum(a != s.text for a, s in zip(raw, segments))
         print(f"[3/3] Applied ASR corrections to {fixed} lines.")
     meta = {"language": lang, "domains": domains, "video_info": info, "model": tr.model_size, "raw": raw}
+    if keep_audio:
+        meta["audio_path"] = audio_path
+        print(f"[Audio] Retained audio: {audio_path}")
     return segments, meta
 
 
@@ -114,6 +117,22 @@ def process_video(
     """
     from subtitler.knowledge import KnowledgeEngine
     from subtitler.project import Project, default_project_path
+
+    base, _ = os.path.splitext(video_path)
+    fmt = subtitle_format.lower()
+    output_subtitle_path = output_subtitle_path or f"{base}.{fmt}"
+    output_video_path = output_video_path or f"{base}_subtitled.mp4"
+    outputs = [output_subtitle_path]
+    if save_project:
+        outputs.append(default_project_path(video_path))
+    if burn:
+        outputs.append(output_video_path)
+    absolute_outputs = [os.path.abspath(p) for p in outputs]
+    if len(set(absolute_outputs)) != len(absolute_outputs) or os.path.abspath(video_path) in absolute_outputs:
+        raise ValueError("输出路径不能相互重叠或覆盖原视频。")
+    for path in outputs:
+        if os.path.lexists(path):
+            raise FileExistsError(f"输出已存在，请先选择新的输出路径：{path}")
 
     ke = knowledge_engine or KnowledgeEngine(extra_files=kb_files)
     pm = plugin_manager or PluginManager()

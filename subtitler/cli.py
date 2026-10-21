@@ -161,7 +161,7 @@ def cmd_transcribe(a) -> int:
                                  notes=a.notes or "", model=meta["model"])
     for seg, raw in zip(proj.segments, meta["raw"]):
         seg["asr"] = raw
-    proj.save()
+    proj.save(overwrite=a.force)
     print("\n" + proj.status())
     print(f"\nNext: subtitler batch \"{out}\"   (or `subtitler translate` with an LLM API key)")
     return 0
@@ -404,7 +404,7 @@ def cmd_run(a) -> int:
 def cmd_deliver(a) -> int:
     from subtitler.delivery import deliver
     print(deliver(_load_project(a.project), a.output, draft=a.draft,
-                  style=a.style, mode=a.mode))
+                  style=a.style, mode=a.mode, approved_kb_files=a.kb_file))
     return 0
 
 
@@ -426,6 +426,7 @@ def build_parser() -> argparse.ArgumentParser:
     sp.add_argument("project")
     sp.add_argument("--output", required=True, help="new delivery directory; never overwritten")
     sp.add_argument("--draft", action="store_true", help="allow QA errors; mark as draft")
+    sp.add_argument("--kb-file", action="append", default=[], help="explicitly approve a project glossary file")
     sp.add_argument("--style", default="bilingual", choices=_style_names())
     sp.add_argument("--mode", default="auto", choices=["auto", "source", "target", "bilingual"])
     sp.set_defaults(fn=cmd_deliver)

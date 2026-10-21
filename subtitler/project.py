@@ -22,6 +22,7 @@ The agent-in-the-loop workflow is:
 from __future__ import annotations
 
 import json
+import hashlib
 import copy
 import math
 import os
@@ -30,6 +31,7 @@ from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Tuple
 
 from subtitler.asr import SubtitleSegment
+from subtitler.safe_io import project_lock
 
 PROJECT_SUFFIX = ".subtitler.json"
 
@@ -57,12 +59,16 @@ class Project:
     notes: str = ""
     model: str = ""
     segments: List[Dict[str, Any]] = field(default_factory=list)
+    applied_splits: Dict[str, Any] = field(default_factory=dict)
+    _revision: Optional[str] = field(default=None, repr=False)
+    _saved_path: Optional[str] = field(default=None, repr=False)
 
     # ------------------------------------------------------------------ io
     @classmethod
     def load(cls, path: str) -> "Project":
-        with open(path, "r", encoding="utf-8-sig") as f:
-            data = json.load(f)
+        with open(path, "rb") as f:
+            raw = f.read()
+        data = json.loads(raw.decode("utf-8-sig"))
         if not isinstance(data, dict) or not isinstance(data.get("segments"), list):
             raise ValueError("项目必须是包含 segments 数组的 JSON 对象。")
         if data.get("version", 1) != 1:
@@ -85,6 +91,9 @@ class Project:
             notes=data.get("notes", ""),
             model=data.get("model", ""),
             segments=segs,
+            applied_splits=data.get("applied_splits", {}),
+            _revision=hashlib.sha256(raw).hexdigest(),
+            _saved_path=os.path.abspath(path),
         )
         project.validate()
         return project
@@ -93,6 +102,18 @@ class Project:
         """Reject malformed projects before rendering or modifying their contents."""
         if not isinstance(self.video_info, dict):
             raise ValueError("video_info 必须是对象。")
+        if not isinstance(self.applied_splits, dict):
+            raise ValueError("applied_splits 必须是对象。")
+        def finite_nonnegative(value):
+            try:
+                return type(value) in (int, float) and math.isfinite(value) and value >= 0
+            except OverflowError:
+                return False
+        for key in ("width", "height", "duration", "fps"):
+            if key in self.video_info and not finite_nonnegative(self.video_info[key]):
+                raise ValueError(f"video_info.{key} 必须是有限非负数。")
+        if not isinstance(self.segments, list):
+            raise ValueError("segments 必须是数组。")
         for key in ("domains", "kb_files"):
             value = getattr(self, key)
             if not isinstance(value, list) or any(not isinstance(x, str) for x in value):
@@ -104,6 +125,7 @@ class Project:
             if getattr(self, key) is not None and not isinstance(getattr(self, key), str):
                 raise ValueError(f"{key} 必须是字符串或 null。")
         seen = set()
+        previous_start = -1
         for segment in self.segments:
             if not isinstance(segment, dict):
                 raise ValueError("字幕必须是对象。")
@@ -113,15 +135,18 @@ class Project:
             seen.add(sid)
             for key in ("start", "end"):
                 value = segment.get(key)
-                if (type(value) not in (int, float) or not math.isfinite(value) or value < 0):
+                if not finite_nonnegative(value):
                     raise ValueError(f"字幕 {sid} 的 {key} 必须是有限非负数。")
             if segment["end"] <= segment["start"]:
                 raise ValueError(f"字幕 {sid} 的结束时间必须晚于开始时间。")
+            if segment["start"] < previous_start:
+                raise ValueError("字幕必须按开始时间排序；请先调整时间轴。")
+            previous_start = segment["start"]
             for key in ("text", "asr", "translation"):
                 if not isinstance(segment.get(key, ""), str):
                     raise ValueError(f"字幕 {sid} 的 {key} 必须是字符串。")
 
-    def save(self, path: Optional[str] = None) -> str:
+    def save(self, path: Optional[str] = None, *, overwrite: bool = False) -> str:
         self.validate()
         path = path or self.path
         data = {
@@ -135,13 +160,36 @@ class Project:
             "notes": self.notes,
             "model": self.model,
             "segments": self.segments,
+            "applied_splits": self.applied_splits,
         }
         d = os.path.dirname(os.path.abspath(path))
-        fd, tmp = tempfile.mkstemp(prefix=".subtitler_", suffix=".json", dir=d)
-        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as f:
-            json.dump(data, f, ensure_ascii=False, indent=1)
-        os.replace(tmp, path)  # atomic: a crash never leaves a half-written project
+        payload = json.dumps(data, ensure_ascii=False, indent=1).encode("utf-8")
+        with project_lock(os.path.abspath(path)):
+            if os.path.lexists(path):
+                if os.path.islink(path):
+                    raise ValueError("拒绝通过符号链接保存项目。")
+                with open(path, "rb") as existing:
+                    revision = hashlib.sha256(existing.read()).hexdigest()
+                if self._saved_path == os.path.abspath(path):
+                    if self._revision != revision:
+                        raise RuntimeError("项目已被其他任务修改；请重新加载后应用本次编辑。")
+                elif not overwrite:
+                    raise FileExistsError(f"项目已存在：{path}")
+            elif self._saved_path == os.path.abspath(path) and self._revision is not None:
+                raise RuntimeError("项目已被其他任务移除；请重新加载或另存为。")
+            fd, tmp = tempfile.mkstemp(prefix=".subtitler_", suffix=".json", dir=d)
+            try:
+                with os.fdopen(fd, "wb") as f:
+                    f.write(payload)
+                    f.flush()
+                    os.fsync(f.fileno())
+                os.replace(tmp, path)
+            finally:
+                if os.path.exists(tmp):
+                    os.unlink(tmp)
         self.path = path
+        self._saved_path = os.path.abspath(path)
+        self._revision = hashlib.sha256(payload).hexdigest()
         return path
 
     # ------------------------------------------------------------------ conversion
@@ -235,10 +283,17 @@ class Project:
         """Apply all edits transactionally; invalid changes leave the project untouched."""
         if not isinstance(edits, (dict, list)):
             raise ValueError("编辑内容必须是 JSON 对象或数组。")
+        has_split = isinstance(edits, dict) and any(
+            str(k).isdigit() and isinstance(v, list) for k, v in edits.items())
+        request = hashlib.sha256(json.dumps(edits, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+        if has_split and request in self.applied_splits:
+            return {**copy.deepcopy(self.applied_splits[request]), "replayed": True}
         candidate = copy.deepcopy(self)
         result = candidate._apply(copy.deepcopy(edits), knowledge, glossary)
         candidate.validate()
         self.segments = candidate.segments
+        if has_split:
+            self.applied_splits[request] = copy.deepcopy(result)
         return result
 
     def _apply(self, edits: Any, knowledge=None, glossary: bool = True) -> Dict[str, Any]:
