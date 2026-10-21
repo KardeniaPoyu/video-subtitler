@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="620" viewBox="0 0 1200 620" role="img" aria-labelledby="title description">
+<title id="title">自进化字幕：把一次校对，变成下一期的字幕经验</title>
+<desc id="description">改稿、本地词库、联网资料经过正反例和回归测试，逐句预览后应用。课程使用智能体，房产保留经纪人。</desc>
+<rect width="1200" height="620" rx="28" fill="#102f29"/>
+<g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif">
+<text x="60" y="64" font-size="16" letter-spacing="4" fill="#a7d2b5">VIDEO SUBTITLER · SELF-EVOLVING SUBTITLES</text>
+<text x="60" y="137" font-size="47" font-weight="700" fill="#f6f5ed">把一次校对，</text>
+<text x="60" y="200" font-size="47" font-weight="700" fill="#cced9c">变成下一期的字幕经验。</text>
+<text x="60" y="250" font-size="21" fill="#c7d9d2">课程 / 访谈 / 知识视频 / 产品演示</text>
+<g font-size="19" fill="#e9f2e5"><rect x="60" y="293" width="330" height="61" rx="12" fill="#25483e"/>
+<text x="80" y="332">改稿 · 本地词库 · 联网资料</text>
+<path d="M409 324h44m-9-8 9 8-9 8" fill="none" stroke="#cced9c" stroke-width="3"/>
+<rect x="471" y="293" width="300" height="61" rx="12" fill="#25483e"/><text x="494" y="332">正例 / 反例 / 旧案例回归</text>
+<path d="M790 324h44m-9-8 9 8-9 8" fill="none" stroke="#cced9c" stroke-width="3"/>
+<rect x="852" y="293" width="288" height="61" rx="12" fill="#cced9c"/><text x="881" y="332" fill="#15382b">逐句预览 → 应用 → 交付</text></g>
+<rect x="60" y="389" width="1080" height="157" rx="14" fill="#f0f4e9"/>
+<text x="85" y="428" font-size="15" fill="#486354">原创可复现样例 · 通过审阅的规则才会执行</text>
+<text x="85" y="476" font-size="26" fill="#233d34">课程：代理会学习。</text><text x="391" y="476" font-size="26" fill="#197051">→ 智能体会学习。</text>
+<text x="738" y="476" font-size="20" fill="#233d34">房产：房产经纪人</text><text x="738" y="513" font-size="18" fill="#197051">保持原样 · 不套用课程规则</text>
+<text x="85" y="514" font-size="18" fill="#486354">能看依据，能停用规则，能撤回自动改稿。</text>
+<text x="60" y="587" font-size="16" fill="#b2c8bd">自进化 = 可验证的知识与规则积累；适用范围与样例需审阅，不等于模型训练或零错承诺。</text>
+</g></svg>

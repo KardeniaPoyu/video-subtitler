@@ -78,10 +78,11 @@ def build_replacer(mapping: Dict[str, str], protect_targets: bool = True):
 class KnowledgeEngine:
     """Loads domain knowledge bases and applies hotwords, ASR corrections and glossary rules."""
 
-    def __init__(self, data_dir: Optional[str] = None, extra_files: Iterable[str] = ()):
+    def __init__(self, data_dir: Optional[str] = None, extra_files: Iterable[str] = (), *, warn_unknown: bool = True):
         if data_dir is None:
             data_dir = os.path.join(os.path.dirname(__file__), "data")
         self.data_dir = data_dir
+        self.warn_unknown = warn_unknown
         self.domains: Dict[str, Dict] = {}
         self._cache: Dict[Tuple[str, Tuple[str, ...]], object] = {}
         self._load_dir(data_dir)
@@ -131,7 +132,7 @@ class KnowledgeEngine:
             return list(self.domains)
         names = [d.strip() for d in (domain.split(",") if isinstance(domain, str) else domain) if d and d.strip()]
         unknown = [d for d in names if d not in self.domains]
-        if unknown:
+        if unknown and self.warn_unknown:
             print(f"[KnowledgeEngine] Warning: unknown domain(s) {unknown}; available: {self.list_domains()}")
         return [d for d in names if d in self.domains]
 

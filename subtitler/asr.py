@@ -103,7 +103,10 @@ class WhisperTranscriber:
         :param device: 'cuda', 'cpu', or None/'auto'.
         :param compute_type: 'float16', 'int8_float16', 'int8', ... (auto if None).
         """
-        from faster_whisper import WhisperModel
+        try:
+            from faster_whisper import WhisperModel
+        except ImportError as exc:
+            raise RuntimeError('Speech recognition requires media dependencies; from the Skill directory run: python -m pip install ".[media]"') from exc
 
         add_cuda_dll_dirs()
         device = resolve_device(device)

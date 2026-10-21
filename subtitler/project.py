@@ -60,6 +60,7 @@ class Project:
     model: str = ""
     segments: List[Dict[str, Any]] = field(default_factory=list)
     applied_splits: Dict[str, Any] = field(default_factory=dict)
+    evolution: Optional[Dict[str, Any]] = None
     _revision: Optional[str] = field(default=None, repr=False)
     _saved_path: Optional[str] = field(default=None, repr=False)
 
@@ -92,6 +93,7 @@ class Project:
             model=data.get("model", ""),
             segments=segs,
             applied_splits=data.get("applied_splits", {}),
+            evolution=data.get("evolution"),
             _revision=hashlib.sha256(raw).hexdigest(),
             _saved_path=os.path.abspath(path),
         )
@@ -100,6 +102,8 @@ class Project:
 
     def validate(self) -> None:
         """Reject malformed projects before rendering or modifying their contents."""
+        from subtitler.evolution.runtime import validate_binding
+        validate_binding(self.evolution)
         if not isinstance(self.video_info, dict):
             raise ValueError("video_info 必须是对象。")
         if not isinstance(self.applied_splits, dict):
@@ -161,6 +165,7 @@ class Project:
             "model": self.model,
             "segments": self.segments,
             "applied_splits": self.applied_splits,
+            "evolution": self.evolution,
         }
         d = os.path.dirname(os.path.abspath(path))
         payload = json.dumps(data, ensure_ascii=False, indent=1).encode("utf-8")
@@ -279,19 +284,26 @@ class Project:
         return "\n".join(out), ids
 
     # ------------------------------------------------------------------ apply edits
-    def apply(self, edits: Any, knowledge=None, glossary: bool = True) -> Dict[str, Any]:
+    def apply(self, edits: Any, knowledge=None, glossary: bool = True, policy=None) -> Dict[str, Any]:
         """Apply all edits transactionally; invalid changes leave the project untouched."""
+        from subtitler.evolution.runtime import require_policy
+        require_policy(self, policy)
         if not isinstance(edits, (dict, list)):
             raise ValueError("编辑内容必须是 JSON 对象或数组。")
         has_split = isinstance(edits, dict) and any(
             str(k).isdigit() and isinstance(v, list) for k, v in edits.items())
         request = hashlib.sha256(json.dumps(edits, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
         if has_split and request in self.applied_splits:
+            if policy is not None:
+                policy.check(self)
             return {**copy.deepcopy(self.applied_splits[request]), "replayed": True}
         candidate = copy.deepcopy(self)
         result = candidate._apply(copy.deepcopy(edits), knowledge, glossary)
         candidate.validate()
+        if policy is not None:
+            result["evolution"] = policy.apply(candidate)
         self.segments = candidate.segments
+        self.evolution = candidate.evolution
         if has_split:
             self.applied_splits[request] = copy.deepcopy(result)
         return result

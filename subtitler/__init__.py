@@ -14,7 +14,7 @@ from subtitler.ffmpeg_utils import extract_audio, get_ffmpeg_path, probe_video
 from subtitler.plugins.manager import PluginManager
 from subtitler.subtitle import save_subtitles, save_to_ass, save_to_srt, save_to_vtt
 
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 
 def _domains_arg(topic) -> Optional[List[str]]:

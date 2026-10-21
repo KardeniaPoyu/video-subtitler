@@ -14,6 +14,7 @@ stretched) and derives the wrap width from the font size and the available canva
 from __future__ import annotations
 
 import re
+import html
 from typing import List, Optional, Tuple, Union
 
 from subtitler.asr import SubtitleSegment
@@ -141,6 +142,7 @@ def save_to_vtt(segments: List[SubtitleSegment], output_path: str, encoding: str
     blocks = ["WEBVTT\n"]
     for idx, seg in enumerate(segments, 1):
         text = _text_block(seg, mode, max_chars, secondary_max_chars, tidy_punct)
+        text = html.escape(text, quote=False)  # literal code/terms must not become WebVTT cue markup
         blocks.append(f"{idx}\n{format_timestamp_vtt(seg.start)} --> {format_timestamp_vtt(seg.end)}\n{text}\n")
     with open(output_path, "w", encoding=encoding, newline="\n") as f:
         f.write("\n".join(blocks))

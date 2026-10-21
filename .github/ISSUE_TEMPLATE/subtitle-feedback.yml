@@ -1,0 +1,39 @@
+name: 使用反馈 / 字幕问题
+description: 报告安装、改稿预览、规则复用或字幕交付的问题
+title: "[反馈] "
+body:
+  - type: markdown
+    attributes:
+      value: "欢迎如实反馈。公开 Issue 不要放原始订单、账号、密钥或未授权的字幕/视频；交易售后请通过平台指定渠道联系卖家。"
+  - type: input
+    id: environment
+    attributes:
+      label: 版本与运行环境
+      placeholder: "例如：0.5.0 / Windows / Python 3.11 / Codex"
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: 在哪一步遇到问题
+      options:
+        - 安装或环境检查
+        - 语音识别或翻译
+        - 规则学习或测试
+        - 改前预览或应用
+        - 检查、导出或撤回
+        - 使用建议
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 你想完成什么，实际发生了什么
+      description: "附脱敏命令、错误和最小可复现样例；可用原创测试句替代私人素材。"
+    validations:
+      required: true
+  - type: textarea
+    id: repeat
+    attributes:
+      label: 连续做下一期时，有哪些错误仍需要重复改
+      description: "可选。也欢迎说明哪些步骤最费力，或哪些功能没有帮助。"

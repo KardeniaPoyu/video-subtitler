@@ -10,6 +10,23 @@ def publish_file(source, destination):
     os.link(source, destination)
 
 
+def publish_files(pairs):
+    """Publish new files without clobbering; on failure remove only our own links."""
+    created = []
+    try:
+        for source, destination in pairs:
+            publish_file(source, destination)
+            created.append((source, destination))
+    except BaseException:
+        for source, destination in reversed(created):
+            try:
+                if os.path.samestat(os.stat(source), os.lstat(destination)):
+                    os.unlink(destination)
+            except FileNotFoundError:
+                pass
+        raise
+
+
 def publish_directory(source, destination):
     """Reserve a new directory exclusively, then publish its flat, staged files."""
     destination = Path(destination)
