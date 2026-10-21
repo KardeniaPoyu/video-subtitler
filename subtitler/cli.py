@@ -68,8 +68,12 @@ def _load_project(arg: str):
 
 def _knowledge(project=None, extra: Optional[List[str]] = None):
     from subtitler.knowledge import KnowledgeEngine
-    files = list(project.kb_files if project else []) + list(extra or [])
-    return KnowledgeEngine(extra_files=[f for f in files if os.path.exists(f)],
+    approved = {os.path.abspath(f) for f in (extra or [])}
+    files = list(project.kb_files if project else [])
+    if any(os.path.abspath(f) not in approved for f in files):
+        raise ValueError("项目包含外部词库；请通过 --kb-file 明确指定允许读取的词库。")
+    files = list(dict.fromkeys(files + list(extra or [])))
+    return KnowledgeEngine(extra_files=files,
                            warn_unknown=not bool(project and project.evolution))
 
 
@@ -87,6 +91,15 @@ def cmd_doctor(a) -> int:
     import tempfile
     ok = True
     print(f"video-subtitler {__version__}  |  Python {platform.python_version()}  |  {platform.platform()}")
+    if getattr(a, "core", False):
+        import sqlite3
+        with sqlite3.connect(':memory:') as db:
+            print(f"[OK]   SQLite {db.execute('SELECT sqlite_version()').fetchone()[0]}")
+        with tempfile.TemporaryFile() as handle:
+            handle.write(b'video-subtitler-core')
+        print('[OK]   Core learning, preview and subtitle export need no model or third-party runtime package.')
+        print('[INFO] Install ".[media]" and run doctor without --core for transcription / burn-in checks.')
+        return 0
     try:
         from subtitler.ffmpeg_utils import get_ffmpeg_path
         ff = get_ffmpeg_path()
@@ -177,7 +190,7 @@ def cmd_batch(a) -> int:
     if a.size < 1 or a.context < 0:
         raise ValueError("--size 必须至少为 1，--context 不能小于 0。")
     proj = _load_project(a.project)
-    ke = _knowledge(proj)
+    ke = _knowledge(proj, extra=getattr(a, "kb_file", None))
     text, ids = proj.batch_text(start_id=a.start, size=a.size, context=a.context, knowledge=ke,
                                 only_missing=not a.all)
     from subtitler.evolution.runtime import require_policy
@@ -190,8 +203,17 @@ def cmd_batch(a) -> int:
                     if any(applicable(row["spec"], s, context) for s in proj.segments if s["id"] in ids)]
         text += "\n# VERIFIED CONSTRAINTS (also enforced by apply/check/deliver):\n" + json.dumps(relevant, ensure_ascii=False)
     if a.out:
-        with open(a.out, "w", encoding="utf-8") as f:
-            f.write(text + "\n")
+        import tempfile
+        from pathlib import Path
+        from subtitler.safe_io import publish_file
+        target = Path(a.out).absolute()
+        if os.path.lexists(target):
+            raise FileExistsError(f"批次文件已存在，请换一个名称：{target}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(prefix='.batch-', dir=target.parent) as temporary:
+            staged = Path(temporary) / 'batch.txt'
+            staged.write_text(text + '\n', encoding='utf-8')
+            publish_file(staged, target)
         print(f"Wrote batch ({len(ids)} lines) to {a.out}")
     else:
         print(text)
@@ -202,7 +224,7 @@ def cmd_apply(a) -> int:
     proj = _load_project(a.project)
     with open(a.edits, "r", encoding="utf-8-sig") as f:
         edits = json.load(f)
-    report = proj.apply(edits, knowledge=_knowledge(proj), glossary=not a.no_glossary,
+    report = proj.apply(edits, knowledge=_knowledge(proj, extra=getattr(a, "kb_file", None)), glossary=not a.no_glossary,
                         policy=getattr(a, "evolution_policy", None))
     proj.save()
     print(f"Applied: {report['translations']} translations, {report['source_fixes']} source fixes, "
@@ -224,7 +246,7 @@ def cmd_translate(a) -> int:
     if not target:
         sys.exit("No target language: pass --to zh (or set target_lang in the project).")
     proj.target_lang = target
-    ke = _knowledge(proj)
+    ke = _knowledge(proj, extra=getattr(a, "kb_file", None))
     tr = LLMTranslatorPlugin(model=a.model, batch_size=a.batch)
     if not tr.client.available:
         sys.exit("No LLM API configured (SUBTITLER_LLM_API_KEY / OPENAI_API_KEY [+ _BASE_URL, SUBTITLER_LLM_MODEL]).\n"
@@ -249,7 +271,7 @@ def cmd_proofread(a) -> int:
     from subtitler.evolution.runtime import require_policy
     policy = getattr(a, "evolution_policy", None)
     require_policy(proj, policy)
-    ke = _knowledge(proj)
+    ke = _knowledge(proj, extra=getattr(a, "kb_file", None))
     p = LLMProofreaderPlugin(model=a.model)
     p.hotwords = ke.get_hotwords(proj.domains) if proj.domains else []
     segs = p.process(proj.to_segments())
@@ -277,7 +299,7 @@ def cmd_check(a) -> int:
         proj = _load_project(a.target)
         from subtitler.evolution.runtime import require_policy
         require_policy(proj, getattr(a, "evolution_policy", None), final=True)
-        ke = _knowledge(proj)
+        ke = _knowledge(proj, extra=getattr(a, "kb_file", None))
         segs = proj.to_segments()
         ids = [int(s["id"]) for s in proj.segments]
         issues = check_segments(segs, style=style, target_lang=proj.target_lang, knowledge=ke,
@@ -292,13 +314,17 @@ def cmd_check(a) -> int:
 
 
 def cmd_render(a) -> int:
+    import tempfile
+    from pathlib import Path
+    from subtitler.safe_io import publish_files
     from subtitler.plugins.templates import get_template
     from subtitler.project import PROJECT_SUFFIX
     from subtitler.subtitle import save_subtitles
     from subtitler.asr import close_gaps
     proj = _load_project(a.project)
     from subtitler.evolution.runtime import require_policy
-    require_policy(proj, getattr(a, "evolution_policy", None), final=True)
+    policy = getattr(a, "evolution_policy", None)
+    require_policy(proj, policy, final=True)
     segs = proj.to_segments() if proj.evolution else close_gaps(proj.to_segments())
     if a.output:
         base = a.output
@@ -307,17 +333,35 @@ def cmd_render(a) -> int:
     else:
         base = proj.path[: -len(PROJECT_SUFFIX)] if proj.path.endswith(PROJECT_SUFFIX) else os.path.splitext(proj.path)[0]
     size = (proj.video_info.get("width"), proj.video_info.get("height"))
-    for ext in [x.strip().lower() for x in a.format.split(",") if x.strip()]:
+    formats = [x.strip().lower() for x in a.format.split(",")]
+    if not formats or any(x not in {"ass", "srt", "vtt"} for x in formats) or len(set(formats)) != len(formats):
+        raise ValueError("--format requires unique ass,srt,vtt formats")
+    outputs = []
+    for ext in formats:
         path = base if base.lower().endswith("." + ext) else f"{base}.{ext}"
-        kwargs = dict(mode=a.mode, tidy_punct=not a.keep_punct)
-        if ext == "ass":
-            kwargs.update(template=a.style, video_size=size if all(size) else None,
-                          secondary_above=a.secondary_above)
-        else:
-            st = get_template(a.style)
-            kwargs.update(max_chars=st.max_chars, secondary_max_chars=st.secondary_max_chars)
-        save_subtitles(segs, path, **kwargs)
-        print(f"Wrote {path}")
+        target = Path(path).absolute()
+        if os.path.lexists(target):
+            raise FileExistsError(f"字幕已存在，请换一个输出名称：{target}")
+        outputs.append((ext, target))
+    parent = outputs[0][1].parent
+    parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix=".render-", dir=parent) as temporary:
+        pairs = []
+        for ext, target in outputs:
+            staged = Path(temporary) / target.name
+            kwargs = dict(mode=a.mode, tidy_punct=not (a.keep_punct or proj.evolution))
+            if ext == "ass":
+                kwargs.update(template=a.style, video_size=size if all(size) else None,
+                              secondary_above=a.secondary_above)
+            else:
+                st = get_template(a.style)
+                kwargs.update(max_chars=st.max_chars, secondary_max_chars=st.secondary_max_chars)
+            save_subtitles(segs, str(staged), **kwargs)
+            pairs.append((staged, target))
+        require_policy(proj, policy, final=True)
+        publish_files(pairs)
+    for _, target in outputs:
+        print(f"Wrote {target}")
     return 0
 
 
@@ -472,6 +516,7 @@ def build_parser() -> argparse.ArgumentParser:
         sp.add_argument("--keep-audio", action="store_true")
 
     sp = sub.add_parser("doctor", help="check FFmpeg / CUDA / NVENC / fonts / LLM config")
+    sp.add_argument("--core", action="store_true", help="check learning / preview / export without media dependencies")
     sp.set_defaults(fn=cmd_doctor)
 
     sp = sub.add_parser("transcribe", help="ASR -> editable project JSON")
@@ -597,6 +642,8 @@ def build_parser() -> argparse.ArgumentParser:
     sp.set_defaults(fn=cmd_run)
     for name in ("batch", "apply", "translate", "proofread", "check", "render", "deliver"):
         sub.choices[name].add_argument("--memory", help="required for a memory-bound project; learned constraints cannot be skipped")
+    for name in ("batch", "apply", "translate", "proofread", "check"):
+        sub.choices[name].add_argument("--kb-file", action="append", default=[], help="explicitly approve a project glossary file")
     return p
 
 

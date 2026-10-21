@@ -83,7 +83,7 @@ def _deliver(project: Project, output: str, *, draft: bool, style: str, mode: st
         clean.save(str(staged / "project.json"))
         size = (project.video_info.get("width"), project.video_info.get("height"))
         for extension in ("srt", "vtt", "ass"):
-            options = {"mode": effective_mode}
+            options = {"mode": effective_mode, "tidy_punct": not bool(project.evolution)}
             if extension == "ass":
                 options.update(template=style, video_size=size if all(size) else None)
             else:

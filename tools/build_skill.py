@@ -11,7 +11,7 @@ from pathlib import Path
 def build() -> Path:
     root = Path(__file__).resolve().parents[1]
     allowed = ["SKILL.md", "README.md", "CHANGELOG.md", "docs/*.md", "docs/*.json", "LICENSE", "pyproject.toml",
-               "subtitler/**/*.py", "subtitler/knowledge/data/*.json", "references/*.md"]
+               "subtitler/**/*.py", "subtitler/knowledge/data/*.json", "references/*.md", "assets/*.svg", "assets/*.png"]
     paths = sorted({p for pattern in allowed for p in root.glob(pattern) if p.is_file()})
     if not (root / "SKILL.md") in paths:
         raise RuntimeError("SKILL.md missing")

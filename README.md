@@ -1,10 +1,21 @@
 # Video Subtitler · 自进化字幕
 
-**这次改过的，下一次少改。** 从改稿、本地知识库和联网资料积累字幕经验，
-通过程序验证后，实际用于下一次字幕处理。适用于课程、访谈、知识视频、生活内容等，
-按频道、项目与内容领域隔离经验，不局限游戏。
+**把一次校对，变成下一期的字幕经验。** 为持续制作课程、访谈、知识视频和产品演示的创作者，
+把改稿、本地词库和联网资料沉淀为可复用的字幕规则。**先看改前对照，再应用；规则可以停用，自动改稿可以撤回。**
+
+![自进化字幕：从资料形成可验证规则，预览后用于下一期](assets/cover.svg)
 
 **0.5.0 开发版**：自进化执行闭环已实现；本版尚未发布到 SkillPay。
+
+| 你遇到的事 | 这个 Skill 如何帮你 |
+|---|---|
+| 同一术语，每期都要重新改 | 从已审阅词库建立术语规则，适用范围内确定性替换已知旧译法 |
+| 新知识查到了，担心引用不可靠 | 保留来源与逐字引文；联网证据过期或变化会阻止旧规则继续交付 |
+| 不知道 Agent 到底改了什么 | HTML 改前预览列出每句变化、依据与待处理项；预览不改原稿 |
+| 课程的 agent 与房产的 agent 混用 | 用频道、语言、领域和排除项隔离；正例改善、反例不误改才允许启用 |
+
+例如，课程中的「代理会学习。」可变为「智能体会学习。」；房产语境的「房产经纪人」保持原样。
+这是仓库原创样例的可复现行为，不代表对任意语境的正确率承诺。
 
 ## 自进化做了什么
 
@@ -31,12 +42,14 @@ python -m venv .venv
 # Windows：.venv\Scripts\activate
 # macOS / Linux：source .venv/bin/activate
 python -m pip install .
+python -m subtitler doctor --core
 python -m subtitler evolve demo --output evolution-demo
 ```
 
 打开 `evolution-demo/index.html`：查看第一次改稿、下一段实际变化、
 房产语境反例、被拦截的导出和撤销结果。数据来自程序实际执行。
 原创文本样例不下载模型、不调用付费 API，不是识别准确率测试。
+核心安装无第三方运行时依赖；可先体验再配置视频识别。上述命令从本项目/Skill 文件夹运行。
 
 增加真实联网学习演示（从 Python 官方中文术语表获取证据）：
 
@@ -50,12 +63,14 @@ python -m subtitler evolve demo --online --output evolution-demo-online
 ## 处理自己的视频
 
 ```bash
+python -m pip install ".[media]"
 python -m subtitler doctor
 python -m subtitler transcribe video.mp4 --to zh --device cpu
 python -m subtitler batch video.subtitler.json --size 40
 python -m subtitler apply video.subtitler.json edits.json
 python -m subtitler evolve init --memory channel.sqlite3
 python -m subtitler evolve bind video.subtitler.json --memory channel.sqlite3 --profile my-channel --domain education
+python -m subtitler evolve preview video.subtitler.json --memory channel.sqlite3 --output change-preview-v1
 python -m subtitler evolve apply video.subtitler.json --memory channel.sqlite3
 python -m subtitler check video.subtitler.json --memory channel.sqlite3
 python -m subtitler deliver video.subtitler.json --output delivery-v1 --memory channel.sqlite3
@@ -70,7 +85,9 @@ python -m subtitler deliver video.subtitler.json --output delivery-v1 --memory c
 不需要翻译时省略 `--to zh` 和翻译步骤。各命令提供 `--help`。
 同一频道后续视频复用已有 `channel.sqlite3`，不要重复 `init`。
 新库初始没有规则；按自进化说明学习并启用后才会自动改写字幕。
-绑定后再使用 `apply` / `translate` / `proofread` 时也要传 `--memory`。
+绑定后再使用 `batch` / `apply` / `translate` / `proofread` 时也要传 `--memory`。
+支持分批翻译并保存进度；未完成的译文在预览中标出，正式交付仍执行检查。
+若项目引用外部词库，读取该词库的命令还须加 `--kb-file /absolute/words.json`。
 
 记忆库包含私人改稿与来源快照，不应进入商品 ZIP。联网证据抓取不发送视频或字幕，
 只 GET 明确允许的公网 HTTPS 页面。规则通过测试只证明符合已审阅案例。
@@ -96,11 +113,12 @@ python -m subtitler deliver video.subtitler.json --output delivery-v1 --memory c
 
 更多命令见 [使用流程](references/workflows.md)；商品材料见
 [SkillPay](docs/SKILLPAY.md)，测试边界见 [验收记录](docs/ACCEPTANCE.md)。
+参赛材料与四项复核见 [比赛准备与待验证项](docs/LAUNCH_REVIEW.md)。
 
 ## 开发
 
 ```bash
-python -m pip install pytest
+python -m pip install ".[media]" pytest
 python -m pytest -q
 python tools/build_skill.py
 ```

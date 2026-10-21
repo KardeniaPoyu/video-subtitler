@@ -1,12 +1,17 @@
 {
   "kind": "original synthetic text fixtures; not an ASR/translation-accuracy benchmark",
+  "preview": {
+    "changed_segments": 2,
+    "blocked_segments": 0,
+    "pending_translations": 0
+  },
   "network": {
     "executed": true,
     "url": "https://docs.python.org/zh-cn/3/glossary.html",
     "quote": "atomic operation -- 原子化操作",
     "source_sha": "cefa6cc0c9cddecb5dd472204bf9fef1f1865b7b9908a6f6c55456835c828c07",
-    "created": 1792555824.5253882,
-    "expires": 1795147824.5253882,
+    "created": 1792563485.6185384,
+    "expires": 1795155485.6185384,
     "evaluation": {
       "passed": true,
       "cases": 2,
@@ -21,11 +26,12 @@
         {
           "segment_id": 1,
           "rule_ids": [
-            "r_9a125aae259b40b3"
+            "r_57df167820cd4af7"
           ]
         }
       ],
-      "revision": 4
+      "revision": 4,
+      "pending_translations": 0
     },
     "before": "原子操作会完成。",
     "after": "原子化操作会完成。"
@@ -52,17 +58,18 @@
       {
         "segment_id": 1,
         "rule_ids": [
-          "r_e6be8b3210404e5a"
+          "r_e9671ad892944f4c"
         ]
       },
       {
         "segment_id": 3,
         "rule_ids": [
-          "r_124b8d86a8c34f91"
+          "r_7725cb7545954689"
         ]
       }
     ],
-    "revision": 2
+    "revision": 2,
+    "pending_translations": 0
   },
   "before": [
     {
@@ -165,23 +172,47 @@
   "after_sha": "ed9bfb79ec016b74de80a7fbde076aa8deea15e79d9447a718c74d81dd5ab804",
   "verification": {
     "date": "2026-10-20",
+    "timezone": "America/Los_Angeles",
     "version": "0.5.0",
     "platform": "Windows / Python 3.11",
-    "tests": "109 passed, 1 skipped",
+    "tests": "136 passed, 1 skipped",
+    "new_review_tests": 27,
     "network": "real HTTPS fetch; no paid model requests",
-    "skill_validation": "passed"
+    "skill_validation": "passed",
+    "core_install": "isolated venv, wheel install, pip check, doctor --core and offline demo outside repository",
+    "browser_preview": "not verified: browser policy rejects file URLs"
   },
   "code_sha256": {
-    "subtitler/evolution/cli.py": "0a95c288207313eea35dfabb12dc7ffd7a223ddc398f1dd14486d1dde4fb1749",
-    "subtitler/evolution/demo.py": "9c68c4a37658d234049e39bfdfca26102d8ddd0be131f5c286878f0647a3e63b",
-    "subtitler/evolution/rules.py": "b9f064d1fcb960197e47c9f70162bbec4f76f819e203952b918faf62b4751177",
-    "subtitler/evolution/runtime.py": "c717e9d58884df2501deab701990ffefbd27621395aa3f80d1a2dd194de0f80d",
-    "subtitler/evolution/sources.py": "6c3fb610910e5d7f11f2b71f076a131cf8be8e2b61641e1698d6193d907ad318",
-    "subtitler/evolution/store.py": "5191de7786e658d957f9e6f2c7be380c997407c2afd2d85c34ab609739595f41",
+    "subtitler/__init__.py": "5c227c09f45ae05ec4004fff2ac15428a0318235e28531e2dda3b0b7edd0f323",
+    "subtitler/__main__.py": "823d1471b73fabf6172389d1d7ae91cbb9361d4110470d03e3cc8a04f907f34f",
+    "subtitler/asr.py": "6cb73636a9d34b765579907b767b24fbc9a273ee03cf7e0148e2901a2dcc90dd",
+    "subtitler/burner.py": "9f29be3ceeb639930c835e2ef3bf3936001b9ca6a4d01d97afa110bc4ef2c820",
+    "subtitler/chapters.py": "61332a0935ccdf272caf306427c5d714aa197604614a299f94a16841ff47a113",
+    "subtitler/cli.py": "cbc9bf12a703fd35f2c1687fceacc2c889d241d77a090342b4c0a4cbfbc5346e",
+    "subtitler/delivery.py": "0f625e2fbc19c5d71b35859c811d4338bc0ab40de1d749864dc0b6eb48ea1d0d",
     "subtitler/evolution/__init__.py": "10448098c9d3cf36949a13bf3b80398f5b6dc07c0df0ca705470db17a930c9df",
+    "subtitler/evolution/cli.py": "2842ee951776e8fe45927a71577933f3ae35912f3ff62fa294918054bd231f14",
+    "subtitler/evolution/demo.py": "bc3cb58e910a131eb739c520eca0a1e39be4b7110ace49f68dbcdf7424f4bb79",
+    "subtitler/evolution/preview.py": "b29cc155a0017f71e5b055dcff49ad504f2309e6c16d65f6f39d9d6926f12237",
+    "subtitler/evolution/rules.py": "99d4cbec8a2e6a285f1249b79df02f171a49dd64adb7386ed9a266e4dc4e7c08",
+    "subtitler/evolution/runtime.py": "32e5bac2e20892ce18b2ccefa7cd40701a7cf73b9e805bb949f53acbb7a60e8f",
+    "subtitler/evolution/sources.py": "cee228bc21042f97a0bd561f2827ddedcd7d02504d7efdea3e5de5e9d6dcbf27",
+    "subtitler/evolution/store.py": "c4f95193e6a64c7a414d7dba202f56ca7e4e3953857d5509958facb0b9043e5a",
+    "subtitler/ffmpeg_utils.py": "32bdf72ad4d62ef5baf115f414381f70f46e7c7f734f39dbd2e3495d100f562d",
+    "subtitler/knowledge/__init__.py": "6c7f9b4da0db53913e97617c0f3643788c2075409c248bdba2b10b37ee4cb101",
+    "subtitler/knowledge/engine.py": "00ef2bf5316575ee2c6701aa787c6ff928e51a5377a75dd74d8e63de0a244880",
+    "subtitler/plugins/__init__.py": "6a50946c97931f5c025427cd44220d8a203ca6c802080b87009643d620d57ac6",
+    "subtitler/plugins/base.py": "f3360d9ab35e72668d010c0c2a0ddc2bda2fc90b231969b84261ac358265a2a8",
+    "subtitler/plugins/corrector.py": "19dc1e5776fb9015059c7960100bc6974ab891feafb2335a8bc2dec0b6957f38",
+    "subtitler/plugins/llm.py": "1bb2ac19d88eaaf732ab0b1de5afc79a5a66a97b25826d28fe1b15a522ffd764",
+    "subtitler/plugins/manager.py": "b779f8590645a6cde679e7b05752f0a837c0cb0fcf55366476d59ab6d203403c",
+    "subtitler/plugins/templates.py": "b33f2aae991b5d847a180e35677f4781af6ba9c14ec141a08fd2068f57f16a17",
+    "subtitler/plugins/translator.py": "785d0c2b27701db4f24bd5d7b169f7e8aa2740385c7274168e55c908cea9e59a",
     "subtitler/project.py": "b9045f46b12f5afa493d962ea9bf4e9616bc38af4f4cbef245f1e069d0d698c0",
-    "subtitler/cli.py": "012524cc2cf29a12e266c587e0d6fb4351a5da24160e807272cd4703c098da1e",
-    "subtitler/delivery.py": "db9699493f02a2b1d8711b194337a4df11e9a1805c9053b9a5f574a8cf105cf4"
+    "subtitler/qa.py": "eb8f2343e79bde325db52091ec32527ff9c48c1946207901fa239f65f14d8c36",
+    "subtitler/safe_io.py": "d363a6439e2682c2a252554bd0df5e589fcfefb4cb47832a8a278301e8dabe5e",
+    "subtitler/subtitle.py": "f4b9c9acd4f17b75dd4c663b191f59bc930d0eb4fd31fabd8f8bed8f929aca72",
+    "subtitler/wrapper.py": "bf25d2661f8fcdea8796e79a9a8b27f555e261cbaca981e86016699a35aa6686"
   },
   "code_hash_normalization": "UTF-8 text with CRLF normalized to LF"
 }

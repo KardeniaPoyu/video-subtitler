@@ -59,6 +59,10 @@ class Memory:
             connection.execute("PRAGMA foreign_keys=ON")
             connection.execute("PRAGMA trusted_schema=OFF")
             connection.execute("BEGIN IMMEDIATE" if write else "BEGIN")
+            # WAL readers do not block writer commits: they cannot protect the
+            # validation-to-publication interval this store promises to hold.
+            if connection.execute("PRAGMA journal_mode").fetchone()[0].lower() not in {"delete", "truncate", "persist"}:
+                raise ValueError("memory requires rollback journaling; close other connections and use PRAGMA journal_mode=DELETE")
             schema = connection.execute("SELECT value FROM meta WHERE key='schema'").fetchone()
             if not schema or schema[0] != "1":
                 raise ValueError("unsupported evolution memory schema")
@@ -271,7 +275,9 @@ class Memory:
             if row["quote"] not in source["text"]:
                 raise ValueError("active rule evidence quote mismatch")
             result.append({"id": row["id"], "source_id": row["source_id"], "spec": spec, "cases": cases,
-                           "source_expires": source["expires"]})
+                           "source_expires": source["expires"],
+                           "evidence": {"kind": source["kind"], "locator": source["locator"],
+                                        "sha": source["sha"], "quote": row["quote"]}})
         specs = [r["spec"] for r in result]
         conflicts(specs)
         for row in result:

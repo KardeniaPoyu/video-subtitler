@@ -129,21 +129,34 @@ python -m subtitler evolve activate RULE_ID --reviewer reviewer-name --memory ch
 ## 4. 实际应用与交付
 
 ```bash
+python -m subtitler evolve preview video.subtitler.json --memory channel.sqlite3 --output change-preview-v1
 python -m subtitler evolve apply video.subtitler.json --memory channel.sqlite3
 python -m subtitler check video.subtitler.json --memory channel.sqlite3
 python -m subtitler deliver video.subtitler.json --memory channel.sqlite3 --output delivery-v2
 ```
 
+打开 `change-preview-v1/index.html`，可逐句看原译文、预计改稿、证据引文与待处理项。
+预览不修改原项目，也不代替正式验证；`apply` 会重新检查当前规则。预览有阻塞时返回非零状态，
+仍保留报告方便修订。报告含用户字幕，应留在本地，不作为公开营销素材。
+
 已绑定项目的普通 `apply`、API `translate`、`proofread` 也执行有效规则；候选不执行。
+分批翻译允许后续句子暂留空白，返回 `pending_translations`；已经提供的非空译文仍须满足规则。
+缺失译文不会被术语规则伪造，项目级最终检查会拦截未满足的学习约束。
 自动修改一次性保存，失败不留下半成品。每次改写保留修改前字幕和内容哈希；
 每个项目最多保存 20 次自动修改快照，超限需归档。
 交付副本保留绑定和验证结果，去掉原始改稿历史、视频绝对路径和本地词库路径。
 
 交付检查：证据有效、记忆库匹配、规则版本一致、字幕未经验证后修改、适用约束均满足。
 读取记忆库的事务保持到保存/发布结束，防止检查后、发布前规则被并发替换。
+记忆库必须使用 SQLite rollback journal 模式；若被外部工具改为 WAL，先关闭连接，
+备份后在 SQLite 工具中执行 `PRAGMA journal_mode=DELETE`。程序会拒绝用 WAL 作交付检查。
+验证结果同时绑定频道与记忆库身份；改频道不能沿用旧验证。升级早期 0.5.0 开发版项目后，
+请重新运行 `evolve apply` 更新验证结果，保留原始项目备份。
 `--no-glossary` 只控制旧词库；`--draft` 只控制常规 QA 草稿，不能关闭进化约束。
 项目级 `render` 同样检查。底层独立 SRT/视频工具无法判断文件所属记忆库，
 自进化流程应以项目级 `render` / `deliver` 为交付入口。
+这两个入口保留绑定项目的已验证标点和时间轴；排版仍会换行，ASS 仍会转义格式控制字符。
+`render` 暂存全部格式并再次检查证据有效期后才发布；已有字幕文件不能覆盖。
 
 ## 5. 来源更新、停用和撤销
 

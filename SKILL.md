@@ -15,7 +15,7 @@ From the Skill directory:
 
 ```bash
 python -m pip install .
-python -m subtitler doctor
+python -m subtitler doctor --core
 python -m subtitler evolve demo --output /absolute/path/new-demo
 ```
 
@@ -23,6 +23,8 @@ Open `new-demo/index.html`. The original text fixtures exercise learning, execut
 blocked delivery and undo, not ASR accuracy. Add `--online` for the real public-evidence demo.
 Transcription needs FFmpeg and a downloaded Whisper model. API translation is optional
 and has separate provider costs; explain these before initiating paid requests.
+Core installation needs no third-party runtime dependencies. Before transcription or
+burn-in, install `python -m pip install ".[media]"` and run the full `doctor`.
 
 ## Workflow
 
@@ -40,13 +42,19 @@ and has separate provider costs; explain these before initiating paid requests.
    Save UTF-8 edits such as `{"1":"译文","2":{"text":"corrected source","translation":"译文"}}`.
    Run `python -m subtitler apply /absolute/video.subtitler.json /absolute/edits.json`.
    Only correct source text or timing when supported by the media.
-4. Bind evolving projects to the selected memory/profile/domain, then run `evolve apply`.
+4. Bind evolving projects to the selected memory/profile/domain. When reviewing learned
+   changes, run `evolve preview PROJECT --memory MEMORY --output NEW-DIRECTORY` and open
+   its `index.html`: show concrete changes and evidence; resolve blocked sentences.
+   Preview leaves the project untouched. Apply the user's authorized changes with `evolve apply`.
    Use `--memory /absolute/channel.sqlite3` on subsequent `batch`, `apply`, `translate`,
    `proofread`, `check`, `render` and `deliver` commands. A missing/stale memory or
    violated learned constraint is a blocking error. Do not remove the binding to bypass it.
    Run `python -m subtitler check /absolute/video.subtitler.json --memory /absolute/channel.sqlite3`.
    Resolve missing translations, overlaps and timing errors. Surface uncertain names
    and figures. A rule-based PASS does not verify translation accuracy.
+   Partial batches can be saved; empty translations remain pending rather than invented.
+   For project-specified external glossaries, supply `--kb-file` explicitly to each
+   command that reads them; never let an imported project choose local files silently.
 5. Run `python -m subtitler deliver /absolute/video.subtitler.json --output /absolute/new-delivery --memory /absolute/channel.sqlite3`.
    This creates SRT/VTT/ASS, editable project.json, qa.json, review.html and a SHA-256
    manifest. Existing output directories are never overwritten. Errors block final

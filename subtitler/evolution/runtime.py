@@ -13,7 +13,8 @@ def content_hash(project):
     segments = [{**s, "asr": s.get("asr", s.get("text", "")), "translation": s.get("translation", "")}
                 for s in project.segments]
     return digest({"source_lang": project.source_lang, "target_lang": project.target_lang,
-                   "domains": project.domains, "segments": segments})
+                   "domains": project.domains, "segments": segments,
+                   "binding": {k: project.evolution[k] for k in ("store_id", "profile")} if project.evolution else None})
 
 
 def validate_binding(binding):
@@ -70,7 +71,7 @@ class Policy:
             segment.setdefault("translation", "")
         after, changes = [], []
         for segment in before:
-            updated = transform(self.rules, segment, context)
+            updated = transform(self.rules, segment, context, allow_untranslated=True)
             after.append(updated)
             if updated != segment:
                 changes.append({"segment_id": segment["id"], "rule_ids": [
@@ -88,7 +89,8 @@ class Policy:
         binding.update(revision=self.snapshot["revision"], rules_sha=self.snapshot["rules_sha"],
                        receipt={"content_sha": final_hash, "changes": changes})
         project.segments, project.evolution = after, binding
-        return {"changed_segments": len(changes), "changes": changes, "revision": binding["revision"]}
+        return {"changed_segments": len(changes), "changes": changes, "revision": binding["revision"],
+                "pending_translations": len(project.untranslated_ids()) if project.target_lang else 0}
 
     def check(self, project):
         context = self.context(project)

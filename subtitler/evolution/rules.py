@@ -114,7 +114,7 @@ def violations(rules, segment, context):
     return result
 
 
-def transform(rules, segment, context):
+def transform(rules, segment, context, *, allow_untranslated=False):
     """One pass over the original segment, followed by a hard postcondition check.
 
     Simultaneous proposals never feed one another. Ambiguity is an error, not an
@@ -147,7 +147,9 @@ def transform(rules, segment, context):
         text = text[:start] + replacement + text[end:]
     result["translation"] = text
     # Source correction can expose another rule; require a new reviewed pass, never cascade.
-    failed = violations(rules, result, context)
+    pending = allow_untranslated and not result.get("translation", "").strip()
+    checked = [r for r in rules if r["kind"] == "source"] if pending else rules
+    failed = violations(checked, result, context)
     if failed:
         raise ValueError("unresolved learned constraints: " + canonical(failed))
     return result

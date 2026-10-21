@@ -70,6 +70,11 @@ def run(a):
         elif action == "revoke":
             memory.revoke(a.rule_id, a.reason)
             result = {"rule_id": a.rule_id, "state": "revoked"}
+        elif action == "preview":
+            from .preview import preview
+            report = preview(_load_project(a.project), a.memory, a.output)
+            result = {key: report[key] for key in ('changed_segments', 'blocked_segments', 'pending_translations')}
+            result['output'] = a.output
         elif action in {"bind", "apply", "undo"}:
             project = _load_project(a.project)
             if action == "undo":
@@ -94,7 +99,8 @@ def run(a):
         else:
             raise ValueError("unknown evolution command")
     print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 1 if action == "evaluate" and not result["passed"] else 0
+    return 1 if (action == "evaluate" and not result["passed"] or
+                 action == "preview" and result['blocked_segments']) else 0
 
 
 def add_parser(sub):
@@ -143,6 +149,9 @@ def add_parser(sub):
             sp.add_argument("--reviewer", required=True, help="local audit label, not authenticated identity")
         elif name == "revoke":
             sp.add_argument("--reason", required=True)
+    sp = command("preview", "show proposed changes and evidence without modifying the project")
+    sp.add_argument("project")
+    sp.add_argument("--output", required=True, help="new HTML/JSON preview directory")
     for name in ("bind", "apply", "undo"):
         sp = command(name, {"bind": "bind a project to a memory and profile",
                             "apply": "apply active rules transactionally with undo snapshot and receipt",

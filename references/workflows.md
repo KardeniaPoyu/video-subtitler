@@ -21,7 +21,7 @@ ASS 外观取决于播放器和字体，不覆盖原片。
 `python -m subtitler kb list` 列出内置领域。转录支持 `--kb`、`--kb-file`。
 词库匹配仅辅助修正，不能保证专名正确。自定义词库不自动进入交付包。
 
-交付已有项目时，必须再次明确允许读取项目中的外部词库：
+对 `batch`、`apply`、`translate`、`proofread`、`check` 和 `deliver`，必须明确允许读取项目中的外部词库：
 
 `python -m subtitler deliver video.subtitler.json --output delivery-v2 --kb-file /absolute/words.json`
 
@@ -33,6 +33,7 @@ ASS 外观取决于播放器和字体，不覆盖原片。
 `deliver --mode source` 只检查原文；`target` 和 `bilingual` 要求译文完整。
 正式交付与 QA 使用同一份项目快照。未绑定项目统一填平小于 0.3 秒的正向间隙；
 绑定记忆库后保持已验证时间轴，避免导出时改动验证快照。
+绑定项目也保留已验证的句末标点。`render` 的所有输出须是新文件，支持格式只有 SRT/VTT/ASS。
 
 压制先写到独立临时文件，成功后才创建最终文件；失败不会留下半成品。
 交付目录在发布时独占创建，再逐个发布暂存文件；目录中的全部文件并非
@@ -54,6 +55,8 @@ ASS 外观取决于播放器和字体，不覆盖原片。
 `subtitler/plugins/llm.py` 为准。先确认服务、费用和发送的数据范围。
 不要在项目文件、Skill 或日志中写密钥。无需独立服务时用
 `batch → 当前 Agent 翻译 → apply`。
+远程 API 必须使用 HTTPS；HTTP 仅用于 localhost/回环地址。客户端不跟随重定向，
+避免将密钥和字幕转发给其他地址。无效 JSON 值不会被强转为译文。
 
 ## 失败处理
 

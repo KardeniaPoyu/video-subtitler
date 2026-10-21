@@ -10,7 +10,7 @@ import ssl
 import stat
 import time
 from html.parser import HTMLParser
-from urllib.parse import urlsplit
+from urllib.parse import quote, urlsplit
 
 MAX_BYTES = 1_048_576
 
@@ -53,7 +53,7 @@ def public_address(address):
 
 
 def validate_url(url, allowed_hosts):
-    if not isinstance(url, str) or len(url) > 4096 or any(ord(c) <= 32 for c in url) or "\\" in url:
+    if not isinstance(url, str) or len(url) > 4096 or any(ord(c) <= 32 or ord(c) == 127 for c in url) or "\\" in url:
         raise ValueError("invalid evidence URL")
     parts = urlsplit(url)
     host = parts.hostname
@@ -91,7 +91,7 @@ def fetch_public(url, allowed_hosts):
     connection = PinnedHTTPSConnection(host, addresses[0])
     start = time.monotonic()
     try:
-        connection.request("GET", parts.path or "/", headers={
+        connection.request("GET", quote(parts.path or "/", safe="/%:@!$&'()*+,;=-._~"), headers={
             "User-Agent": "video-subtitler-evidence/0.5", "Accept": "text/plain,text/html,application/json",
             "Accept-Encoding": "identity"})
         response = connection.getresponse()
@@ -113,6 +113,10 @@ def fetch_public(url, allowed_hosts):
             size += len(block)
             if size > MAX_BYTES:
                 raise ValueError("evidence exceeds 1 MiB")
+        if getattr(response, "length", None) not in (None, 0):
+            raise ValueError("incomplete evidence response; Content-Length was not satisfied")
+        if time.monotonic() - start > 20:
+            raise TimeoutError("evidence download exceeded 20 seconds")
         raw = b"".join(chunks)
     except http.client.HTTPException as exc:
         raise ValueError(f"invalid evidence HTTP response: {exc}") from exc

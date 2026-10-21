@@ -11,12 +11,28 @@ Configuration (first match wins):
 from __future__ import annotations
 
 import json
+import ipaddress
 import os
 import re
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit
 from typing import Any, Dict, Iterator, Optional, Tuple
+
+
+def local_host(host):
+    if host == 'localhost':
+        return True
+    try:
+        return ipaddress.ip_address(host or '').is_loopback
+    except ValueError:
+        return False
+
+
+class NoCredentialRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        raise urllib.error.HTTPError(req.full_url, code, 'LLM redirects are disabled', headers, fp)
 
 
 class LLMClient:
@@ -31,9 +47,14 @@ class LLMClient:
     @property
     def available(self) -> bool:
         # local servers (Ollama / LM Studio) don't need a key
-        return bool(self.api_key) or "localhost" in self.base_url or "127.0.0.1" in self.base_url
+        return bool(self.api_key) or local_host(urlsplit(self.base_url).hostname)
 
     def chat(self, system: str, user: str, temperature: float = 0.2, retries: int = 3) -> str:
+        parts = urlsplit(self.base_url)
+        if (not parts.hostname or parts.username or parts.password or parts.query or parts.fragment or
+                parts.scheme not in {'https', 'http'} or parts.scheme == 'http' and not local_host(parts.hostname)):
+            raise ValueError('LLM endpoint requires HTTPS (HTTP allowed only for localhost/loopback), without credentials or query')
+        opener = urllib.request.build_opener(NoCredentialRedirect())
         payload = {
             "model": self.model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
@@ -48,14 +69,15 @@ class LLMClient:
                                          data=json.dumps(payload).encode("utf-8"),
                                          headers=headers, method="POST")
             try:
-                with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                with opener.open(req, timeout=self.timeout) as resp:
                     data = json.loads(resp.read().decode("utf-8"))
                 return data["choices"][0]["message"]["content"]
             except urllib.error.HTTPError as e:
                 last = e
-                if e.code in (400, 401, 403, 404):
-                    detail = e.read().decode("utf-8", "ignore")[:300]
-                    raise RuntimeError(f"LLM request rejected ({e.code}): {detail}")
+                if 300 <= e.code < 400 or e.code in (400, 401, 403, 404):
+                    e.close()
+                    raise RuntimeError(f"LLM request rejected ({e.code}); check the endpoint and credentials; redirects are disabled") from e
+                e.close()
             except Exception as e:  # timeouts, connection resets, 5xx, 429
                 last = e
             time.sleep(2 ** attempt)
@@ -88,23 +110,27 @@ def to_id_map(obj: Any, value_key: str) -> Dict[int, str]:
     """Accept {"1": "..."} or [{"id": 1, value_key: "..."}] and return {1: "..."}."""
     out: Dict[int, str] = {}
     if isinstance(obj, dict):
-        for k, v in obj.items():
-            if isinstance(v, dict):
-                v = v.get(value_key) or v.get("text") or v.get("translation") or ""
-            try:
-                out[int(k)] = str(v)
-            except (TypeError, ValueError):
-                continue
+        items = [(k, v.get(value_key) if isinstance(v, dict) else v) for k, v in obj.items()]
     elif isinstance(obj, list):
-        for item in obj:
-            if isinstance(item, dict) and "id" in item:
-                v = item.get(value_key, item.get("text", item.get("translation", "")))
-                out[int(item["id"])] = str(v)
+        items = [(v.get("id"), v.get(value_key)) for v in obj if isinstance(v, dict)]
+    else:
+        raise ValueError("model response must be an ID-keyed object or list")
+    for key, value in items:
+        if not (type(key) is int or isinstance(key, str) and key.isascii() and key.isdecimal()):
+            continue
+        number = int(key)
+        if number < 0 or not isinstance(value, str) or not value.strip():
+            continue
+        if number in out:
+            raise ValueError(f"duplicate model response ID: {number}")
+        out[number] = value
     return out
 
 
 def windows(n: int, size: int, context: int) -> Iterator[Tuple[int, int, int, int]]:
     """Yield (ctx_start, start, end, ctx_end) index windows for sliding-context batching."""
+    if type(size) is not int or size < 1 or type(context) is not int or context < 0:
+        raise ValueError("batch size must be positive and context nonnegative")
     for start in range(0, n, size):
         end = min(n, start + size)
         yield max(0, start - context), start, end, min(n, end + context)

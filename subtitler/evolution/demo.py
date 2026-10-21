@@ -11,6 +11,7 @@ from subtitler.project import Project
 from .rules import digest
 from .runtime import open_policy, undo
 from .store import Memory
+from .preview import preview
 
 
 def demo(output, online=False):
@@ -62,6 +63,8 @@ def demo(output, online=False):
     original = copy.deepcopy(second.segments)
     with open_policy(memory.path) as policy:
         policy.bind(second, "learning-studio")
+    preview_report = preview(second, memory.path, root / "change-preview")
+    with open_policy(memory.path) as policy:
         applied = policy.apply(second)
         policy.check(second)
         second.save()
@@ -123,6 +126,7 @@ def demo(output, online=False):
                    "evaluation": evaluation, "application": web_changes,
                    "before": "原子操作会完成。", "after": web_project.segments[0]["translation"]}
     results = {"kind": "original synthetic text fixtures; not an ASR/translation-accuracy benchmark",
+               "preview": {k: preview_report[k] for k in ('changed_segments', 'blocked_segments', 'pending_translations')},
                "network": network,
                "edit_evaluation": edit_evaluation, "knowledge_evaluation": term_evaluation,
                "application": applied, "before": original, "after": after, "gates": gates,
@@ -154,7 +158,8 @@ th{background:#173e32;color:white}td.changed{font-weight:700;color:#14734b}li{ma
         f'<div class="stats"><div class="stat"><b>{applied["changed_segments"]} / {len(original)}</b>下一段实际修改的字幕</div>'
         f'<div class="stat"><b>{term_evaluation["regression_cases"]}</b>新增术语时复测的旧案例</div>'
         f'<div class="stat"><b>{len(gates)}</b>违规交付尝试被拦截</div></div>'
-        '<h2>学习结果直接进入字幕</h2><table><tr><th>原文</th><th>学习前</th><th>学习后</th></tr>' + rows + '</table>'
+        '<h2>学习结果直接进入字幕</h2><p><a href="change-preview/index.html">打开改前预览：逐句查看变化与证据</a></p>'
+        '<table><tr><th>原文</th><th>学习前</th><th>学习后</th></tr>' + rows + '</table>'
         '<h2>错误路径也要能证明</h2><ul>' + gate_rows + '</ul>'
         '<h2>撤销后发生什么</h2><p>本演示已撤销术语规则，并验证自动修改可以完整撤回。重新运行后，课程片尾表达仍会复用；被撤销的术语不再改写字幕。</p>'
         + network_html +
